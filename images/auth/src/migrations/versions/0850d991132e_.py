@@ -1,17 +1,15 @@
 """empty message
 
-Revision ID: 826e33130dca
+Revision ID: 0850d991132e
 Revises:
-Create Date: 2024-10-08 21:16:02.356043
+Create Date: 2025-03-09 15:30:08.460086
 
 """
 import sqlalchemy as sa
 from alembic import op
 
-from models.session import create_partition
-
 # revision identifiers, used by Alembic.
-revision = '826e33130dca'
+revision = '0850d991132e'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -25,6 +23,7 @@ def upgrade():
         sa.Column('password_hash', sa.String(length=255), nullable=True),
         sa.Column('is_active', sa.Boolean(), nullable=True),
         sa.Column('is_email_confirmed', sa.Boolean(), nullable=True),
+        sa.Column('created_at', sa.DateTime(), nullable=True),
         sa.PrimaryKeyConstraint('id')
     )
     with op.batch_alter_table('users', schema=None) as batch_op:
@@ -38,8 +37,7 @@ def upgrade():
         sa.Column('user_device_type', sa.String(), nullable=False),
         sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='CASCADE'),
         sa.PrimaryKeyConstraint('id', 'user_device_type'),
-        postgresql_partition_by='LIST (user_device_type);',
-        listeners=[('after_create', create_partition)],
+        postgresql_partition_by='LIST (user_device_type);'
     )
     # ### end Alembic commands ###
 

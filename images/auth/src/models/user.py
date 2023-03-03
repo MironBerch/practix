@@ -1,4 +1,5 @@
 import uuid
+from datetime import datetime, timezone
 
 from sqlalchemy.dialects.postgresql import UUID
 
@@ -25,6 +26,11 @@ class User(db.Model):
 
     is_active = db.Column(db.Boolean())
     is_email_confirmed = db.Column(db.Boolean())
+
+    created_at = db.Column(
+        db.DateTime,
+        default=datetime.now(timezone.utc),
+    )
 
     sessions = db.relationship(
         'Session',
