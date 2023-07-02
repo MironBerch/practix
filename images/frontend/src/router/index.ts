@@ -62,17 +62,6 @@ const router = createRouter(
             props: true
           },
           {
-            path: 'genres',
-            name: 'genres',
-            component: () => import('../pages/GenresPage.vue')
-          },
-          {
-            path: 'genres/:uuid',
-            name: 'genre',
-            component: () => import('../pages/GenrePage.vue'),
-            props: true
-          },
-          {
             path: 'persons',
             name: 'persons',
             component: () => import('../pages/persons/PersonsPage.vue')
