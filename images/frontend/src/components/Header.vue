@@ -1,5 +1,5 @@
 <script setup lang="ts">
-  import { ref, onMounted, onUnmounted } from 'vue'
+  import { ref, onMounted, onUnmounted, computed } from 'vue'
   import { useRouter } from 'vue-router'
   import { useAuth } from '../composables/useAuth'
 
@@ -8,6 +8,11 @@
   const isDropdownOpen = ref(false)
   const dropdownRef = ref<HTMLElement | null>(null)
   const avatarRef = ref<HTMLElement | null>(null)
+
+  // Проверяем авторизацию пользователя
+  const isAuthenticated = computed(() => {
+    return !!localStorage.getItem('access_token')
+  })
 
   // Переключение дропдауна
   const toggleDropdown = () => {
@@ -76,7 +81,8 @@
           </button>
         </form>
 
-        <div class="avatar-container">
+        <!-- Для авторизованных пользователей - аватарка и dropdown -->
+        <div v-if="isAuthenticated" class="avatar-container">
           <div 
             ref="avatarRef"
             class="avatar" 
@@ -96,6 +102,16 @@
             <div class="dropdown-divider"></div>
             <button @click="handleLogout" class="dropdown-item logout">Log Out</button>
           </div>
+        </div>
+
+        <!-- Для неавторизованных пользователей - ссылки на вход и регистрацию -->
+        <div v-else class="auth-links">
+          <router-link :to="{ name: 'signin' }" class="auth-link signin">
+            Sign In
+          </router-link>
+          <router-link :to="{ name: 'signup' }" class="auth-link signup">
+            Sign Up
+          </router-link>
         </div>
       </div>
     </div>
@@ -298,6 +314,42 @@
     font-weight: 500;
   }
 
+  /* Стили для ссылок авторизации */
+  .auth-links {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .auth-link {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    transition: all 0.3s ease;
+  }
+
+  .auth-link.signin {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+  }
+
+  .auth-link.signin:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.5);
+  }
+
+  .auth-link.signup {
+    background: #e50914;
+    border: 1px solid #e50914;
+  }
+
+  .auth-link.signup:hover {
+    background: #f40612;
+    border-color: #f40612;
+  }
+
   /* Адаптивность */
   @media (max-width: 768px) {
     .navbar {
@@ -312,6 +364,15 @@
     .search-input {
       width: 150px;
     }
+
+    .auth-links {
+      gap: 0.5rem;
+    }
+
+    .auth-link {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.9rem;
+    }
   }
 
   @media (max-width: 480px) {
@@ -321,6 +382,17 @@
     
     .search-form {
       display: none;
+    }
+
+    .auth-links {
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .auth-link {
+      text-align: center;
+      padding: 0.5rem;
+      font-size: 0.8rem;
     }
   }
 </style>

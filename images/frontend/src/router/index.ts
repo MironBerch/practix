@@ -1,5 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import AuthLayout from '../layouts/AuthLayout.vue';
 import MainLayout from '../layouts/MainLayout.vue';
 
 const router = createRouter(
@@ -9,7 +8,7 @@ const router = createRouter(
       // Auth routes
       {
         path: '/auth',
-        component: AuthLayout,
+        component: MainLayout,
         children: [
           {
             path: 'signup',
