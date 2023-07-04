@@ -121,7 +121,6 @@
         userInfoLoading.value = true
         try {
             const userData = await getUserInfo(token)
-            console.log(userData.user_email, userData.user_id, userData.user_cre)
             if (userData) {
                 userInfo.value = userData
                 // Сохраняем email в localStorage для использования в других компонентах
