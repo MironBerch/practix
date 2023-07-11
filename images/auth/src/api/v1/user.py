@@ -283,12 +283,10 @@ def get_user_sessions() -> tuple[Response, HTTPStatus]:
     )
     return (
         jsonify(
-            {
-                'sessions': UserSessionSchema().dump(
-                    paginated_user_sessions.items,
-                    many=True,
-                ),
-            }
+            UserSessionSchema().dump(
+                paginated_user_sessions.items,
+                many=True,
+            ),
         ),
         HTTPStatus.OK,
     )
