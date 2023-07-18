@@ -103,10 +103,9 @@ export interface ChangePasswordRequest {
 }
 
 export interface UserSession {
-  date: string;
+  event_date: string;
   user_agent: string;
   user_device_type: string;
-  user_id: string;
 }
 
 // UGC API v1 interfaces

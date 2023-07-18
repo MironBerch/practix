@@ -338,10 +338,19 @@ export const useAuth = () => {
         }
     }
 
-    const getUserSessions = async (): Promise<UserSessionCollection[] | null> => {
+    const getUserSessions = async (access_token: string): Promise<UserSessionCollection[] | null> => {
         try {
             loading.value = true;
-            const response = await fetch(`${API_URL}/user_sessions`);
+            const response = await fetch(
+                `${API_URL}/user_sessions`,
+                {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${access_token}`,
+                    },
+                },
+            );
 
             if (!response.ok) {
                 throw new Error('Failed to fetch pastes');

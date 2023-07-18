@@ -16,6 +16,8 @@
   import { defineComponent, ref, onMounted } from 'vue'
   import { useAuth } from '../../composables/useAuth'
 
+  const token = localStorage.getItem('access_token')
+
   export default defineComponent(
     {
       setup() {
@@ -23,7 +25,7 @@
         const sessions = ref([])
 
         onMounted(async () => {
-          const data = await getUserSessions()
+          const data = await getUserSessions(token)
           if (data) {
             sessions.value = data
           }
