@@ -1,16 +1,16 @@
 """empty message
 
-Revision ID: 0850d991132e
+Revision ID: 6b6cf716fc4d
 Revises:
-Create Date: 2025-03-09 15:30:08.460086
+Create Date: 2025-10-17 00:05:10.721921
 
 """
-
-import sqlalchemy as sa
 from alembic import op
+import sqlalchemy as sa
+
 
 # revision identifiers, used by Alembic.
-revision = '0850d991132e'
+revision = '6b6cf716fc4d'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -26,7 +26,7 @@ def upgrade():
         sa.Column('is_active', sa.Boolean(), nullable=True),
         sa.Column('is_email_confirmed', sa.Boolean(), nullable=True),
         sa.Column('created_at', sa.DateTime(), nullable=True),
-        sa.PrimaryKeyConstraint('id'),
+        sa.PrimaryKeyConstraint('id')
     )
     with op.batch_alter_table('users', schema=None) as batch_op:
         batch_op.create_index(batch_op.f('ix_users_email'), ['email'], unique=True)
@@ -37,10 +37,9 @@ def upgrade():
         sa.Column('event_date', sa.DateTime(), nullable=True),
         sa.Column('user_id', sa.UUID(), nullable=False),
         sa.Column('user_agent', sa.String(), nullable=True),
-        sa.Column('user_device_type', sa.String(), nullable=False),
+        sa.Column('user_device_type', sa.String(), nullable=True),
         sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='CASCADE'),
-        sa.PrimaryKeyConstraint('id', 'user_device_type'),
-        postgresql_partition_by='LIST (user_device_type);',
+        sa.PrimaryKeyConstraint('id')
     )
     # ### end Alembic commands ###
 
