@@ -10,6 +10,14 @@ dependencies = [
     "redis==5.2.1",
 ]
 
+[dependency-groups]
+dev = [
+    "black>=25.1.0",
+    "flake8>=7.3.0",
+    "isort>=6.0.1",
+    "wemake-python-styleguide>=1.2.0",
+]
+
 [tool.flake8]
 max-line-length = 100
 exclude = [".venv"]
