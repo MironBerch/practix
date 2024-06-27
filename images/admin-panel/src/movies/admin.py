@@ -39,7 +39,7 @@ class GenreAdmin(admin.ModelAdmin):
 class FilmworkAdmin(admin.ModelAdmin):
     list_display = (
         'title',
-        'created',
+        'release_date',
         'rating',
         'get_genres',
         'get_persons',

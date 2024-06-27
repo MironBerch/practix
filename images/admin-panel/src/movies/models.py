@@ -9,8 +9,8 @@ from movies.enums import FilmworkAccessType, FilmworkAgeRating, FilmworkType, Pe
 class TimeStampedMixin(models.Model):
     """Абстрактый класс для отметки времени создания и модификации объектов модели."""
 
-    created = models.DateTimeField(auto_now_add=True)
-    updated = models.DateTimeField(auto_now=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
         abstract = True
@@ -105,7 +105,7 @@ class GenreFilmwork(UUIDMixin):
         'Genre',
         on_delete=models.CASCADE,
     )
-    created = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         db_table = 'content\".\"genre_film_work'
@@ -144,7 +144,7 @@ class PersonFilmwork(UUIDMixin):
         choices=PersonRole.choices,
         default=PersonRole.ACTOR,
     )
-    created = models.DateTimeField(auto_now_add=True)
+    created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         db_table = 'content\".\"person_film_work'
