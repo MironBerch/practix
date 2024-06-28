@@ -140,7 +140,7 @@ class PersonFilmwork(UUIDMixin):
         'Person',
         on_delete=models.CASCADE,
     )
-    role = models.TextField(
+    role = models.CharField(
         choices=PersonRole.choices,
         default=PersonRole.ACTOR,
     )
