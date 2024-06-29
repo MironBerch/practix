@@ -16,7 +16,7 @@ class UUIDMixin:
 
 
 @dataclass
-class GenreSQLite(UUIDMixin, TimeStampedMixin):
+class Genre(UUIDMixin, TimeStampedMixin):
     name: str
     description: str | None
 
@@ -39,7 +39,7 @@ class GenreSQLite(UUIDMixin, TimeStampedMixin):
 
 
 @dataclass
-class PersonSQLite(UUIDMixin, TimeStampedMixin):
+class Person(UUIDMixin, TimeStampedMixin):
     full_name: str
 
     def to_tuple(self) -> tuple:
@@ -55,7 +55,7 @@ class PersonSQLite(UUIDMixin, TimeStampedMixin):
 
 
 @dataclass
-class FilmworkSQLite(UUIDMixin, TimeStampedMixin):
+class Filmwork(UUIDMixin, TimeStampedMixin):
     title: str
     description: str | None
     release_date: date | None
@@ -99,7 +99,7 @@ class FilmworkSQLite(UUIDMixin, TimeStampedMixin):
 
 
 @dataclass
-class GenreFilmworkSQLite(UUIDMixin):
+class GenreFilmwork(UUIDMixin):
     film_work_id: UUID
     genre_id: UUID
     created_at: datetime
@@ -122,7 +122,7 @@ class GenreFilmworkSQLite(UUIDMixin):
 
 
 @dataclass
-class PersonFilmworkSQLite(UUIDMixin):
+class PersonFilmwork(UUIDMixin):
     film_work_id: UUID
     person_id: UUID
     role: str
@@ -146,18 +146,18 @@ class PersonFilmworkSQLite(UUIDMixin):
         return ('id', 'film_work_id', 'person_id', 'role', 'created_at')
 
 
-SQLiteSchema = Union[
-    FilmworkSQLite,
-    GenreSQLite,
-    PersonSQLite,
-    GenreFilmworkSQLite,
-    PersonFilmworkSQLite,
+Schema = Union[
+    Filmwork,
+    Genre,
+    Person,
+    GenreFilmwork,
+    PersonFilmwork,
 ]
 
-schemas: dict[str, SQLiteSchema] = {
-    'film_works': FilmworkSQLite,
-    'genres': GenreSQLite,
-    'persons': PersonSQLite,
-    'genre_film_work': GenreFilmworkSQLite,
-    'person_film_works': PersonFilmworkSQLite,
+schemas: dict[str, Schema] = {
+    'film_works': Filmwork,
+    'genres': Genre,
+    'persons': Person,
+    'genre_film_work': GenreFilmwork,
+    'person_film_works': PersonFilmwork,
 }
