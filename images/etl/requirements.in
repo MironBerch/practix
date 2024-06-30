@@ -1,0 +1,14 @@
+# Python
+pydantic==2.7.1
+
+# Database
+psycopg2-binary==2.9.9
+redis==5.0.4
+
+# Elasticsearch
+elasticsearch==8.13.1
+
+# Linters
+flake8==7.0.0
+isort==5.13.2
+pep8-naming==0.13.3
