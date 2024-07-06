@@ -99,7 +99,8 @@ def load_from_sqlite(
     sqlite_connection: sqlite3.Connection,
     postgres_connection: postgres_connection_object,
 ):
-    logging.info('Начато извлечение данных из  и загрузка в PostgreSQL')
+    logging.info('Начато извлечение данных из SQLite')
+    logging.info('Начата загрузка данных в PostgreSQL')
 
     sqlite_data_extraction = DataExtraction(sqlite_connection)
     postgres_data_loader = PostgresDataLoader(postgres_connection)
