@@ -17,6 +17,9 @@ services:
       - "DB_PASSWORD=postgres"
       - "DB_HOST=movies_db"
       - "DB_PORT=5432"
+      - "REDIS_HOST=redis"
+      - "REDIS_PORT=6379"
+      - "REDIS_DB=0"
     depends_on:
       movies_db:
         condition: service_healthy
