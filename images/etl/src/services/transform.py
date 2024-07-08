@@ -1,5 +1,4 @@
 from dataclasses import dataclass
-from typing import Iterator
 
 from psycopg2.extras import DictRow
 from redis import Redis
@@ -14,18 +13,17 @@ class DataTransform(object):
 
     redis: Redis
 
-    def add_film_work_ids(self, film_work_ids: list[str]) -> None:
+    def add_film_work_id(self, film_work_id: str) -> None:
         """Добавляют данные в список первичный ключей кинопроизведений."""
-        if film_work_ids != [] and film_work_ids is not None:
-            self.redis.lpush('film_work_ids', *film_work_ids)
+        self.redis.lpush('film_work_ids', film_work_id)
 
     def get_film_work_ids(self) -> list[str]:
         """Возвращает и очищает список первичный ключей кинопроизведений из Redis."""
         data = self.redis.lrange('film_work_ids', 0, -1)
         self.redis.delete('film_work_ids')
-        return data
+        return [doc.decode('utf-8') for doc in data]
 
-    def transform_film_works(self, film_works: Iterator[DictRow]) -> list[Filmwork]:
+    def transform_film_works(self, film_works: list[DictRow]) -> list[Filmwork]:
         pydantic_film_works = []
         film_works = [dict(film_work) for film_work in film_works]
         for film_work in film_works:
@@ -57,19 +55,18 @@ class DataTransform(object):
                         actors.append(person)
                     if film_work['person_roles'][i] == 'writer':
                         writers.append(person)
-            pydantic_film_works.append(
-                Filmwork(
-                    id=film_work['id'],
-                    title=film_work['title'],
-                    description=film_work['description'],
-                    rating=film_work['rating'] if film_work['rating'] else 0.0,
-                    genres=film_work['genre_names'],
-                    directors=directors,
-                    actors=actors,
-                    writers=writers,
-                    directors_names=[director.name for director in directors],
-                    actors_names=[actor.name for actor in actors],
-                    writers_names=[writer.name for writer in writers],
-                ),
+            pydantic_film_work = Filmwork(
+                id=film_work['id'],
+                title=film_work['title'],
+                description=film_work['description'],
+                rating=film_work['rating'] if film_work['rating'] is not None else 0.0,
+                genres=film_work['genre_names'],
+                directors=directors,
+                actors=actors,
+                writers=writers,
+                directors_names=[director.name for director in directors],
+                actors_names=[actor.name for actor in actors],
+                writers_names=[writer.name for writer in writers],
             )
+            pydantic_film_works.append(pydantic_film_work)
         return pydantic_film_works

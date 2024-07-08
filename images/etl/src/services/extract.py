@@ -44,24 +44,24 @@ class PostgresExtractor(object):
     def get_film_work_ids(self, table: str, data: list[DictRow]) -> list[str]:
         """Извлекает id фильмов, в которых произошли изменения."""
         if table in {'person', 'genre'}:
-            with self.postgres.cursor() as cursor:
-                film_work_ids = [f"'{row['id']}'" for row in data]
-                cursor.execute(
+            with self.postgres.cursor() as curs:
+                film_work_ids = ', '.join([f"'{row['id']}'" for row in data])
+                curs.execute(
                     f"""
                         SELECT film_work.id
                         FROM film_work
                         LEFT JOIN {table}_film_work gpfw ON gpfw.film_work_id = film_work.id
-                        WHERE gpfw.{table}_id IN ({', '.join(film_work_ids)})
+                        WHERE gpfw.{table}_id IN ({film_work_ids})
                         ORDER BY film_work.updated_at;
                     """,
                 )
-                return [id for id in cursor.fetchall()]
+                return [row['id'] for row in curs.fetchall()]
         else:
             return [row['id'] for row in data]
 
-    def get_film_works_data(self, film_ids: list[str]) -> Iterator[DictRow]:
+    def get_film_works_data(self, film_work_ids: list[str]) -> Iterator[DictRow]:
         with self.postgres.cursor() as cursor:
-            film_ids = [f"'{film_id}'" for film_id in film_ids]
+            film_work_ids = ', '.join([f"'{film_work_id}'" for film_work_id in film_work_ids])
             cursor.execute(
                 f"""
                     SELECT
@@ -78,7 +78,7 @@ class PostgresExtractor(object):
                     LEFT JOIN person ON person.id = person_film_work.person_id
                     LEFT JOIN genre_film_work ON genre_film_work.film_work_id = film_work.id
                     LEFT JOIN genre ON genre.id = genre_film_work.genre_id
-                    WHERE filmwork.id IN ({', '.join(film_ids)})
+                    WHERE film_work.id IN ({film_work_ids})
                 """,
             )
             return cursor.fetchall()

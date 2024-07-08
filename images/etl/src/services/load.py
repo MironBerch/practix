@@ -135,7 +135,7 @@ class ElasticLoader(object):
             {
                 '_index': document._index,
                 '_id': document.id,
-                '_source': document.model_dump(),
+                '_source': document.model_dump(by_alias=True),
             } for document in data
         )
         helpers.bulk(self.elastic, actions)

@@ -18,4 +18,4 @@ class State(object):
         value = self.redis.get(key)
         if not value:
             return default
-        return self.redis.get(key)
+        return value.decode('utf-8')
