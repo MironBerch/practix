@@ -24,7 +24,7 @@ def etl_process(
     """Запускает внутренние компоненты процесса Extract-Transform-Load."""
     timestamp = state.get('last_updated', datetime.min)
     for table, rows in postgres.get_updates(timestamp):
-        if table == 'genres':
+        if table == 'genre':
             elastic.bulk_insert(data=[Genre(**row) for row in rows])
         if table == 'person':
             elastic.bulk_insert(data=[Person(**row) for row in rows])
