@@ -5,12 +5,6 @@ from pydantic import RootModel
 from models.base import UUIDMixin
 
 
-class BaseGenre(UUIDMixin):
-    """Базовая модель жанра."""
-
-    name: str
-
-
 class Genre(UUIDMixin):
     """Модель жанра."""
 
