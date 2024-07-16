@@ -12,7 +12,7 @@ class BasePerson(UUIDMixin):
     full_name: str = Field(alias='name')
 
 
-class Person(UUIDMixin):
+class Person(BasePerson):
     """Модель персоны."""
 
     roles: list[str]
