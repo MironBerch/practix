@@ -51,7 +51,7 @@ class PersonService:
             },
             'sort': {
                 'rating': {
-                    'order': 'asc',
+                    'order': 'desc',
                 },
             },
         }
