@@ -1,7 +1,6 @@
-from typing import ClassVar
 from uuid import UUID
 
-from pydantic import Field, RootModel
+from pydantic import Field
 
 from models.base import UUIDMixin
 
@@ -17,10 +16,3 @@ class Person(BasePerson):
 
     roles: list[str]
     filmwork_ids: list[UUID]
-
-
-class PersonList(RootModel):
-    """Список персон."""
-
-    root: list[Person]
-    item: ClassVar[type] = Person

@@ -3,18 +3,18 @@ from elasticsearch import AsyncElasticsearch, NotFoundError
 from fastapi import APIRouter, Depends, HTTPException
 
 from db.elastic import get_elastic
-from models.genre import Genre, GenreList
+from models.genre import Genre
 
 router = APIRouter(tags=['genres'])
 
 
 @router.get(
     '/genres',
-    response_model=GenreList,
+    response_model=list[Genre],
     summary='Genres',
     description='Genres list',
 )
-async def genres(elastic: AsyncElasticsearch = Depends(get_elastic)) -> list[Genre]:
+async def get_genres(elastic: AsyncElasticsearch = Depends(get_elastic)) -> list[Genre]:
     result = await elastic.search(
         index='genres',
         body={
@@ -22,21 +22,21 @@ async def genres(elastic: AsyncElasticsearch = Depends(get_elastic)) -> list[Gen
             'size': 10000,
         },
     )
-    return GenreList(root=[genre['_source'] for genre in result['hits']['hits']])
+    return [Genre(**genre['_source']) for genre in result['hits']['hits']]
 
 
 @router.get(
-    '/genres/{genre_id}',
+    '/genres/{genre_pk}',
     response_model=Genre,
     summary='Genre page',
-    description='Genre information by id',
+    description='Genre information by pk',
 )
-async def genre_by_id(
+async def get_genre_by_pk(
     elastic: AsyncElasticsearch = Depends(get_elastic),
-    genre_id: str = None,
+    genre_pk: str = None,
 ) -> Genre:
     try:
-        result = await elastic.get(index='genres', id=genre_id)
+        result = await elastic.get(index='genres', id=genre_pk)
         return Genre(**result['_source'])
     except NotFoundError:
         raise HTTPException(status_code=404, detail='Genre not found')

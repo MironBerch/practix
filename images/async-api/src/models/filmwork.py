@@ -1,7 +1,3 @@
-from typing import ClassVar, Type
-
-from pydantic import RootModel
-
 from models.base import UUIDMixin
 from models.person import BasePerson
 
@@ -21,10 +17,3 @@ class Filmwork(BaseFilmwork):
     actors: list[BasePerson]
     writers: list[BasePerson]
     directors: list[BasePerson]
-
-
-class FilmworkList(RootModel):
-    """Список фильмов с краткой информацией."""
-
-    root: list[BaseFilmwork]
-    item: ClassVar[Type] = BaseFilmwork
