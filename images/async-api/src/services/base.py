@@ -67,7 +67,7 @@ class RetrieveService:
         self.model = model
         self.index = index
 
-    async def get_by_id(self, object_pk: UUID):
+    async def get_by_pk(self, object_pk: UUID):
         object = await self.cache_adapter.get_objects_from_cache(str(object_pk))
         if object:
             object = self.model.model_validate_json(object)
