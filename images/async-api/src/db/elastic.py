@@ -154,3 +154,7 @@ class ElasticAdapter:
     async def get_object_from_db(self, index: str, model: Any, object_pk: str):
         doc = await self.elastic.get(index, object_pk)
         return model(**doc['_source'])
+
+
+def get_elastic_adapter() -> ElasticAdapter:
+    return ElasticAdapter(elastic=elastic)
