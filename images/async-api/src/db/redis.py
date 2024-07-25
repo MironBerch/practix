@@ -1,3 +1,5 @@
+from typing import Any
+
 from redis import Redis
 
 redis: Redis | None = None
@@ -7,7 +9,7 @@ class RedisAdapter:
     def __init__(self, redis_instance: Redis):
         self.redis = redis_instance
 
-    async def get_objects_from_cache(self, redis_key: str) -> list | dict | None:
+    async def get_objects_from_cache(self, redis_key: str) -> Any:
         data = await self.redis.get(redis_key)
         if not data:
             return None
