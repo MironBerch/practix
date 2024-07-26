@@ -29,7 +29,7 @@ class BaseListService:
     async def get_objects(
         self,
         page_size: int = 100,
-        page_number: int = 0,
+        page_number: int = 1,
         **kwargs,
     ) -> list:
         query = self.get_elastic_query(**kwargs)
