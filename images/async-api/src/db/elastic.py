@@ -145,14 +145,16 @@ class ElasticAdapter:
     ) -> list:
         data = await self.elastic.search(
             index=index,
-            body=query,
-            size=page_size,
-            from_=(page_number - 1) * page_size,
+            body={
+                **query,
+                'size': page_size,
+                'from': (page_number - 1) * page_size,
+            },
         )
         return [model(**document['_source']) for document in data['hits']['hits']]
 
     async def get_object_from_db(self, index: str, model: Any, object_pk: str):
-        doc = await self.elastic.get(index, object_pk)
+        doc = await self.elastic.get(index=index, id=object_pk)
         return model(**doc['_source'])
 
 
