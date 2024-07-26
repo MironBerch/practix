@@ -1,6 +1,6 @@
 from typing import Any
 
-from redis import Redis
+from redis.asyncio import Redis
 
 redis: Redis | None = None
 

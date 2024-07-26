@@ -3,7 +3,7 @@ from logging import DEBUG
 
 import uvicorn
 from elasticsearch import AsyncElasticsearch
-from redis import Redis
+from redis.asyncio import Redis
 
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
