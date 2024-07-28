@@ -24,5 +24,5 @@ class RedisAdapter:
         await self.redis.set(redis_key, objects, ex=expire)
 
 
-async def get_redis() -> RedisAdapter:
+async def get_redis_adapter() -> RedisAdapter:
     return RedisAdapter(redis_instance=redis)

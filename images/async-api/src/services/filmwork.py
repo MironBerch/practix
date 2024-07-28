@@ -1,7 +1,7 @@
 from fastapi import Depends
 
 from db.elastic import ElasticAdapter, get_elastic_adapter
-from db.redis import RedisAdapter, get_redis
+from db.redis import RedisAdapter, get_redis_adapter
 from models.filmwork import BaseFilmwork, Filmwork
 from services.base import BaseListService, RetrieveService
 
@@ -46,7 +46,7 @@ class FilmworksSearchService(BaseListService):
 
 
 def get_filmworks_list_service(
-        redis: RedisAdapter = Depends(get_redis),
+        redis: RedisAdapter = Depends(get_redis_adapter),
         elastic: ElasticAdapter = Depends(get_elastic_adapter),
 ) -> FilmworksListService:
     return FilmworksListService(
@@ -58,7 +58,7 @@ def get_filmworks_list_service(
 
 
 def get_filmworks_search_service(
-        redis: RedisAdapter = Depends(get_redis),
+        redis: RedisAdapter = Depends(get_redis_adapter),
         elastic: ElasticAdapter = Depends(get_elastic_adapter),
 ) -> FilmworksSearchService:
     return FilmworksSearchService(
@@ -70,7 +70,7 @@ def get_filmworks_search_service(
 
 
 def get_retrieve_filmwork_service(
-        redis: RedisAdapter = Depends(get_redis),
+        redis: RedisAdapter = Depends(get_redis_adapter),
         elastic: ElasticAdapter = Depends(get_elastic_adapter),
 ) -> RetrieveService:
     return RetrieveService(

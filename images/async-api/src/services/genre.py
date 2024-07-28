@@ -1,7 +1,7 @@
 from fastapi import Depends
 
 from db.elastic import ElasticAdapter, get_elastic_adapter
-from db.redis import RedisAdapter, get_redis
+from db.redis import RedisAdapter, get_redis_adapter
 from models.genre import Genre
 from services.base import BaseListService, RetrieveService
 
@@ -20,7 +20,7 @@ class GenresListService(BaseListService):
 
 
 def get_genres_list_service(
-        redis: RedisAdapter = Depends(get_redis),
+        redis: RedisAdapter = Depends(get_redis_adapter),
         elastic: ElasticAdapter = Depends(get_elastic_adapter),
 ) -> GenresListService:
     return GenresListService(
@@ -32,7 +32,7 @@ def get_genres_list_service(
 
 
 def get_retrieve_genre_service(
-        redis: RedisAdapter = Depends(get_redis),
+        redis: RedisAdapter = Depends(get_redis_adapter),
         elastic: ElasticAdapter = Depends(get_elastic_adapter),
 ) -> RetrieveService:
     return RetrieveService(
