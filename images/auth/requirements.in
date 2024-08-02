@@ -1,2 +1,6 @@
 # Flask
 Flask==3.0.3
+
+# Pydantic
+pydantic==2.7.4
+pydantic-settings==2.3.3
