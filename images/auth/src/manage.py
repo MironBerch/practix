@@ -1,5 +1,6 @@
 from flask import Flask
 
+from core.config import settings
 from core.logger import logger
 
 
@@ -11,4 +12,8 @@ def create_app() -> Flask:
 
 if __name__ == '__main__':
     app = create_app()
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(
+        host=settings.flask.host,
+        port=settings.flask.port,
+        debug=settings.flask.debug,
+    )
