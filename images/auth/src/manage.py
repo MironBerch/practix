@@ -1,12 +1,11 @@
-import logging
-
 from flask import Flask
+
+from core.logger import logger
 
 
 def create_app() -> Flask:
     app = Flask(__name__)
-    app.logger = logging.getLogger(__name__)
-    app.logger.setLevel(logging.INFO)
+    app.logger = logger
     return app
 
 
