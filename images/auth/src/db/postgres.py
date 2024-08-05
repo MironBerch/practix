@@ -10,7 +10,7 @@ migrate = Migrate()
 
 
 def init(app: Flask):
-    app.settings['SQLALCHEMY_DATABASE_URI'] = (
+    app.config['SQLALCHEMY_DATABASE_URI'] = (
         'postgresql://{user}:{password}@{host}:{port}/{db}'.format(
             user=settings.postgres.user,
             password=settings.postgres.password,

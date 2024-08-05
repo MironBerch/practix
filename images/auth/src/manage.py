@@ -2,11 +2,13 @@ from flask import Flask
 
 from core.config import settings
 from core.logger import logger
+from db import postgres
 
 
 def create_app() -> Flask:
     app = Flask(__name__)
     app.logger = logger
+    postgres.init(app)
     return app
 
 
