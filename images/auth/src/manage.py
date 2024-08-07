@@ -2,13 +2,14 @@ from flask import Flask
 
 from core.config import settings
 from core.logger import logger
-from db import postgres
+from db import postgres, redis
 
 
 def create_app() -> Flask:
     app = Flask(__name__)
     app.logger = logger
     postgres.init(app)
+    redis.redis = redis.init()
     return app
 
 
