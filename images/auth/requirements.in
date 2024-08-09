@@ -1,6 +1,16 @@
 # Flask
 Flask==3.0.3
+Flask-Migrate==4.0.7
 
 # Pydantic
 pydantic==2.7.4
 pydantic-settings==2.3.3
+
+# Database
+redis==5.0.3
+psycopg2-binary==2.9.9
+
+# Linters
+flake8==7.0.0
+isort==5.13.2
+pep8-naming==0.13.3
