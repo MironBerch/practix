@@ -7,6 +7,7 @@ services:
     build: ../..
     command: >
       sh -c "cd /app/src/
+      && flask --app manage.py migrate
       && python manage.py"
     volumes:
       - ../..:/app
