@@ -41,7 +41,7 @@ target_db = current_app.extensions['migrate'].db
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
-# my_important_option = config.get_main_option("my_important_option")
+# my_important_option = config.get_main_option('my_important_option')
 # ... etc.
 
 
@@ -63,9 +63,9 @@ def run_migrations_offline():
     script output.
 
     """
-    url = config.get_main_option("sqlalchemy.url")
+    url = config.get_main_option('sqlalchemy.url')
     context.configure(
-        url=url, target_metadata=get_metadata(), literal_binds=True
+        url=url, target_metadata=get_metadata(), literal_binds=True,
     )
 
     with context.begin_transaction():
@@ -91,8 +91,8 @@ def run_migrations_online():
                 logger.info('No changes in schema detected.')
 
     conf_args = current_app.extensions['migrate'].configure_args
-    if conf_args.get("process_revision_directives") is None:
-        conf_args["process_revision_directives"] = process_revision_directives
+    if conf_args.get('process_revision_directives') is None:
+        conf_args['process_revision_directives'] = process_revision_directives
 
     connectable = get_engine()
 
@@ -100,7 +100,7 @@ def run_migrations_online():
         context.configure(
             connection=connection,
             target_metadata=get_metadata(),
-            **conf_args
+            **conf_args,
         )
 
         with context.begin_transaction():

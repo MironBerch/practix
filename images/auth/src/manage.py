@@ -1,7 +1,7 @@
 import click
 import flask_migrate
 
-from flask import Flask
+from flask import Flask, current_app
 from flask.cli import with_appcontext
 
 from core.config import settings
@@ -12,12 +12,16 @@ from db import postgres, redis
 @click.command()
 @with_appcontext
 def makemigrations():
+    create_app()
+    # Ensure Flask-Migrate is initialized properly
+    flask_migrate.Migrate(current_app, postgres.db)
     flask_migrate.migrate()
 
 
 @click.command()
 @with_appcontext
 def migrate():
+    create_app()
     flask_migrate.upgrade()
 
 
@@ -43,5 +47,5 @@ if __name__ == '__main__':
     app.run(
         host=settings.flask.host,
         port=settings.flask.port,
-        debug=settings.flask.debug
+        debug=settings.flask.debug,
     )

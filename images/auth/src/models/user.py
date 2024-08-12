@@ -1,5 +1,7 @@
 import uuid
 
+from sqlalchemy.dialects.postgresql import UUID
+
 from db.postgres import db
 
 
@@ -7,7 +9,7 @@ class User(db.Model):
     __tablename__ = 'users'
 
     id = db.Column(
-        uuid.UUID,
+        UUID(as_uuid=True),
         primary_key=True,
         default=uuid.uuid4,
     )
