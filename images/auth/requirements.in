@@ -1,6 +1,9 @@
 # Flask
 Flask==3.0.3
 Flask-Migrate==4.0.7
+Flask-Security==5.5.2
+flask-marshmallow==1.2.1
+flasgger==0.9.7.1
 
 # Pydantic
 pydantic==2.7.4

@@ -4,42 +4,92 @@ annotated-types==0.7.0
     # via pydantic
 async-timeout==4.0.3
     # via redis
+attrs==24.2.0
+    # via
+    #   jsonschema
+    #   referencing
 blinker==1.8.2
-    # via flask
+    # via
+    #   flask
+    #   flask-principal
 click==8.1.7
     # via
     #   -r requirements.in
     #   flask
+dnspython==2.6.1
+    # via email-validator
+email-validator==2.2.0
+    # via flask-security
 flake8==7.0.0
     # via
     #   -r requirements.in
     #   pep8-naming
+flasgger==0.9.7.1
+    # via -r requirements.in
 flask==3.0.3
     # via
     #   -r requirements.in
+    #   flasgger
+    #   flask-login
+    #   flask-marshmallow
     #   flask-migrate
+    #   flask-principal
+    #   flask-security
     #   flask-sqlalchemy
+    #   flask-wtf
+flask-login==0.6.3
+    # via flask-security
+flask-marshmallow==1.2.1
+    # via -r requirements.in
 flask-migrate==4.0.7
+    # via -r requirements.in
+flask-principal==0.4.0
+    # via flask-security
+flask-security==5.5.2
     # via -r requirements.in
 flask-sqlalchemy==3.1.1
     # via flask-migrate
+flask-wtf==1.2.1
+    # via flask-security
 greenlet==3.0.3
     # via sqlalchemy
+idna==3.7
+    # via email-validator
+importlib-resources==6.4.0
+    # via flask-security
 isort==5.13.2
     # via -r requirements.in
 itsdangerous==2.2.0
-    # via flask
+    # via
+    #   flask
+    #   flask-wtf
 jinja2==3.1.4
     # via flask
+jsonschema==4.23.0
+    # via flasgger
+jsonschema-specifications==2023.12.1
+    # via jsonschema
 mako==1.3.5
     # via alembic
 markupsafe==2.1.5
     # via
+    #   flask-security
     #   jinja2
     #   mako
     #   werkzeug
+    #   wtforms
+marshmallow==3.21.3
+    # via flask-marshmallow
 mccabe==0.7.0
     # via flake8
+mistune==3.0.2
+    # via flasgger
+packaging==24.1
+    # via
+    #   flasgger
+    #   marshmallow
+passlib==1.7.4
+    # via flask-security
 pep8-naming==0.13.3
     # via -r requirements.in
 psycopg2-binary==2.9.9
@@ -58,8 +108,20 @@ pyflakes==3.2.0
     # via flake8
 python-dotenv==1.0.1
     # via pydantic-settings
+pyyaml==6.0.2
+    # via flasgger
 redis==5.0.3
     # via -r requirements.in
+referencing==0.35.1
+    # via
+    #   jsonschema
+    #   jsonschema-specifications
+rpds-py==0.20.0
+    # via
+    #   jsonschema
+    #   referencing
+six==1.16.0
+    # via flasgger
 sqlalchemy==2.0.32
     # via
     #   alembic
@@ -71,4 +133,10 @@ typing-extensions==4.12.2
     #   pydantic-core
     #   sqlalchemy
 werkzeug==3.0.3
-    # via flask
+    # via
+    #   flask
+    #   flask-login
+wtforms==3.1.2
+    # via
+    #   flask-security
+    #   flask-wtf
