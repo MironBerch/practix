@@ -12,8 +12,6 @@ from db import postgres, redis
 @click.command()
 @with_appcontext
 def makemigrations():
-    create_app()
-    # Ensure Flask-Migrate is initialized properly
     flask_migrate.Migrate(current_app, postgres.db)
     flask_migrate.migrate()
 
@@ -21,7 +19,6 @@ def makemigrations():
 @click.command()
 @with_appcontext
 def migrate():
-    create_app()
     flask_migrate.upgrade()
 
 
