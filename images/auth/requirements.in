@@ -20,3 +20,4 @@ pep8-naming==0.13.3
 
 # Tools
 click==8.1.7
+user-agents==2.2.0

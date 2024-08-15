@@ -132,6 +132,10 @@ typing-extensions==4.12.2
     #   pydantic
     #   pydantic-core
     #   sqlalchemy
+ua-parser==0.18.0
+    # via user-agents
+user-agents==2.2.0
+    # via -r requirements.in
 werkzeug==3.0.3
     # via
     #   flask
