@@ -1,6 +1,19 @@
 # practix
 
-### Запустить проект:
+### **Описание**
+
+[PRACTIX](https://github.com/MironBerch/practix) — это микросервисы для онлайн-кинотеатра:
+- [Панель администратора](https://github.com/MironBerch/practix/tree/main/images/admin-panel) на фреймворке Django
+- [Загрузка данных](https://github.com/MironBerch/practix/tree/main/images/admin-panel/scripts/load_db) в базу данных PostgreSQL
+- [ETL](https://github.com/MironBerch/practix/tree/main/images/etl) для переноса данных из PostgreSQL в Elasticsearch
+- [Асинхронный API](https://github.com/MironBerch/practix/tree/main/images/async-api) на фреймворке FastAPI
+- [Авторизация пользователей](https://github.com/MironBerch/practix/tree/main/images/auth) на фреймворке Flask
+
+### **Технологии**
+
+```Python``` ```FastAPI``` ```Django``` ```Flask``` ```PostgreSQL``` ```Elasticsearch``` ```Redis``` ```SQLite``` ```Docker```
+
+### **Как запустить проект:**
 
 В локальной среде:
 ```shell
