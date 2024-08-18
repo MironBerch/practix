@@ -6,6 +6,8 @@ from db.postgres import db
 
 
 class User(db.Model):
+    """Модель пользователя."""
+
     __tablename__ = 'users'
 
     id = db.Column(
@@ -19,3 +21,15 @@ class User(db.Model):
         index=True,
     )
     password_hash = db.Column(db.String(255))
+
+    is_email_confirmed = db.Column(db.Boolean())
+    is_active = db.Column(db.Boolean())
+    is_superuser = db.Column(db.Boolean())
+
+    sessions = db.relationship(
+        'Session',
+        backref=db.backref('user', lazy='joined'),
+        lazy='dynamic',
+        order_by='Session.event_date.desc()',
+        passive_deletes=True,
+    )
