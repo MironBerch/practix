@@ -4,6 +4,7 @@ import flask_migrate
 from flask import Flask, current_app
 from flask.cli import with_appcontext
 
+from api.urls import init_routers
 from core.config import settings
 from core.logger import logger
 from db import postgres, redis
@@ -36,6 +37,7 @@ def create_app() -> Flask:
     app.cli.add_command(makemigrations)
     app.cli.add_command(migrate)
     app.cli.add_command(createsuperuser)
+    init_routers(app)
     return app
 
 
