@@ -7,7 +7,7 @@ services:
     build: ../..
     command: >
       sh -c "cd /app/src/
-      && flask --app manage.py migrate
+      && flask --app manage:create_app migrate
       && python manage.py"
     volumes:
       - ../..:/app
@@ -26,6 +26,8 @@ services:
       - "REDIS_HOST=redis"
       - "REDIS_PORT=6379"
       - "REDIS_DB=1"
+      - "CELERY_BROKER_URL=redis://redis:6379/0"
+      - "CELERY_RESULT_BACKEND=redis://redis:6379/0"
 
   auth_db:
     image: postgres:16
@@ -44,6 +46,32 @@ services:
     restart: always
     ports:
       - "6379:6379"
+
+  celery:
+    restart: always
+    build: ../..
+    command: >
+      sh -c "cd /app/src/
+      && celery -A run_celery worker -l info"
+    volumes:
+      - ../..:/app
+    environment:
+      - "SECRET_KEY=secretkey"
+      - "DEBUG=True"
+      - "DB_NAME=postgres"
+      - "DB_USER=postgres"
+      - "DB_PASSWORD=postgres"
+      - "DB_HOST=auth_db"
+      - "DB_PORT=5432"
+      - "REDIS_HOST=redis"
+      - "REDIS_PORT=6379"
+      - "REDIS_DB=1"
+      - "CELERY_BROKER_URL=redis://redis:6379/0"
+      - "CELERY_RESULT_BACKEND=redis://redis:6379/0"
+    depends_on:
+      - auth
+      - auth_db
+      - redis
 
 volumes:
   auth_db_volume:

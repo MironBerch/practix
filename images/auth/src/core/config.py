@@ -25,10 +25,16 @@ class FlaskConfig(BaseSettings):
     debug: bool = environ.get('DEBUG') == 'True'
 
 
+class CeleryConfig(BaseSettings):
+    broker_url: str = environ.get('CELERY_BROKER_URL')
+    result_backend: str = environ.get('CELERY_RESULT_BACKEND')
+
+
 class Settings(BaseSettings):
     flask: FlaskConfig = Field(default_factory=FlaskConfig)
     redis: RedisConfig = Field(default_factory=RedisConfig)
     postgres: PostgresConfig = Field(default_factory=PostgresConfig)
+    celery: CeleryConfig = Field(default_factory=CeleryConfig)
 
 
 settings = Settings()
