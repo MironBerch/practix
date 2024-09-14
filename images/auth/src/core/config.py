@@ -25,6 +25,12 @@ class FlaskConfig(BaseSettings):
     debug: bool = environ.get('DEBUG') == 'True'
 
 
+class SecurityConfig(BaseSettings):
+    secret_key: str = environ.get('SECRET_KEY')
+    password_hash: str = 'sha256_crypt'
+    jwt_access_token_expires: int = 60 * 10
+
+
 class CeleryConfig(BaseSettings):
     broker_url: str = environ.get('CELERY_BROKER_URL')
     result_backend: str = environ.get('CELERY_RESULT_BACKEND')
@@ -35,6 +41,7 @@ class Settings(BaseSettings):
     redis: RedisConfig = Field(default_factory=RedisConfig)
     postgres: PostgresConfig = Field(default_factory=PostgresConfig)
     celery: CeleryConfig = Field(default_factory=CeleryConfig)
+    security: SecurityConfig = Field(default_factory=SecurityConfig)
 
 
 settings = Settings()

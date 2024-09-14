@@ -20,11 +20,10 @@ class User(db.Model):
         unique=True,
         index=True,
     )
+
     password_hash = db.Column(db.String(255))
 
-    is_email_confirmed = db.Column(db.Boolean())
     is_active = db.Column(db.Boolean())
-    is_superuser = db.Column(db.Boolean())
 
     sessions = db.relationship(
         'Session',

@@ -56,6 +56,8 @@ def create_app() -> Flask:
         )
     )
 
+    app.config['JWT_ACCESS_TOKEN_EXPIRES'] = settings.security.jwt_access_token_expires
+
     postgres.init(app)
     redis.redis = redis.init()
 
