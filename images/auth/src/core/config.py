@@ -28,7 +28,8 @@ class FlaskConfig(BaseSettings):
 class SecurityConfig(BaseSettings):
     secret_key: str = environ.get('SECRET_KEY')
     password_hash: str = 'sha256_crypt'
-    jwt_access_token_expires: int = 60 * 10
+    jwt_access_token_expires: int = 24 * 60 * 60
+    jwt_refresh_token_expires: int = 30 * 24 * 60 * 60
 
 
 class CeleryConfig(BaseSettings):

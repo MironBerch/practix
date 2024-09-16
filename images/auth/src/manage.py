@@ -1,6 +1,8 @@
 import click
 import flask_migrate
 from celery import Celery, Task
+from flasgger import Swagger
+from flask_jwt_extended import JWTManager
 
 from flask import Flask, current_app
 from flask.cli import with_appcontext
@@ -57,6 +59,7 @@ def create_app() -> Flask:
     )
 
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = settings.security.jwt_access_token_expires
+    app.config['JWT_REFRESH_TOKEN_EXPIRES'] = settings.security.jwt_refresh_token_expires
 
     postgres.init(app)
     redis.redis = redis.init()
@@ -68,6 +71,16 @@ def create_app() -> Flask:
     app.cli.add_command(createsuperuser)
 
     init_routers(app)
+
+    Swagger(app)
+
+    jwt = JWTManager(app)
+
+    @jwt.token_in_blocklist_loader
+    def check_if_token_is_revoked(jwt_header, jwt_payload):
+        jti = jwt_payload['jti']
+        token_in_redis = redis.redis.get(jti)
+        return token_in_redis is not None
 
     return app
 
