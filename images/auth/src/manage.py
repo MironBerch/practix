@@ -72,6 +72,11 @@ def create_app() -> Flask:
 
     init_routers(app)
 
+    app.config['SWAGGER'] = {
+        'title': 'Movies auth API v3',
+        'uiversion': 3
+    }
+
     Swagger(app)
 
     jwt = JWTManager(app)

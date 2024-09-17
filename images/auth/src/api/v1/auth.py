@@ -1,6 +1,12 @@
 from http import HTTPStatus
 
-from flask_jwt_extended import create_access_token, create_refresh_token, get_jwt, jwt_required
+from flask_jwt_extended import (
+    create_access_token,
+    create_refresh_token,
+    get_jwt,
+    get_jwt_identity,
+    jwt_required,
+)
 from marshmallow import Schema, ValidationError, fields
 
 from flask import Blueprint, current_app, jsonify, request
@@ -28,30 +34,34 @@ class SignInSchema(SignUpSchema):
 
 @bp.route('/signup', methods=['POST'])
 def signup():
-    """signup
+    """
+    User sign up
 
     ---
     post:
-        description: register_user
-        summary: Register user
-        parameters:
-        - name: email
-            in: path
-            description: email
-            schema:
-            type: string
-        - name: password
-            in: path
-            description: password
-            schema:
-            type: string
+      description: register_user
+      summary: Register user
+      parameters:
+      - name: user
+        in: body
+        description: User registration data
+        required: true
+        schema:
+          type: object
+          properties:
+            email:
+              type: string
+              description: email
+            password:
+              type: string
+              description: password
     responses:
-        '201':
-            description: Ok
-        '401':
-            description: Conflict
-        '403':
-            description: Conflict
+      '201':
+        description: Created successfully
+      '403':
+        description: Conflict
+    tags:
+      - auth
     """
     try:
         data = SignUpSchema().load(request.get_json())
@@ -64,40 +74,38 @@ def signup():
         db.session.add(user)
         db.session.commit()
         if user is None:
-            return jsonify({'message': 'User created'}), 201
+            return HTTPStatus.CREATED
         if user is not None:
-            return jsonify({'message': 'User with this email exist'}), 400
+            return HTTPStatus.FORBIDDEN
     except ValidationError as err:
-        return jsonify({'error': err.messages}), 400
+        return jsonify({'message': err.messages}), HTTPStatus.BAD_REQUEST
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        return jsonify({'message': str(e)}), HTTPStatus.INTERNAL_SERVER_ERROR
 
 
 @bp.route('/signin', methods=['POST'])
 def signin():
     """
-    signin
+    User sign in
 
     ---
     post:
       description: register_user
       summary: Register user
       parameters:
-      - name: email
-        in: path
-        description: email
+      - name: user
+        in: body
+        description: User registration data
+        required: true
         schema:
-          type: string
-      - name: password
-        in: path
-        description: password
-        schema:
-          type: string
-
-      requestBody:
-        content:
-          application/json:
-            schema: UserIn
+          type: object
+          properties:
+            email:
+              type: string
+              description: email
+            password:
+              type: string
+              description: password
     responses:
       '201':
         description: Ok
@@ -106,26 +114,26 @@ def signin():
       '403':
         description: Incorrect password or email
         schema:
-         $ref: "#/definitions/ApiResponse"
+          $ref: "#/definitions/ApiResponse"
+      '500':
+        description: Server error
+        schema:
+          $ref: "#/definitions/ApiResponse"
+    tags:
+      - auth
     definitions:
       ApiResponse:
         type: "object"
         properties:
           message:
             type: "string"
-          status:
-            type: "string"
       TokensMsg:
-       type: "object"
-       properties:
-         message:
-           type: "string"
-         status:
-           type: "string"
-         access_token:
-           type: "string"
-         refresh_token:
-           type: "string"
+        type: "object"
+        properties:
+          access_token:
+            type: "string"
+          refresh_token:
+            type: "string"
     """
     try:
         data = SignInSchema().load(request.get_json())
@@ -133,54 +141,78 @@ def signin():
         if user is None:
             return jsonify(
                 {'message': 'User with this email does not exist'},
-            ), HTTPStatus.BAD_REQUEST
+            ), HTTPStatus.FORBIDDEN
         if not check_password(user.password, data['password']):
             return jsonify({'message': 'Password is not correct'}), HTTPStatus.FORBIDDEN
         access_token = create_access_token(identity=user.id)
         refresh_token = create_refresh_token(identity=user.id)
         return jsonify(
             {
-                'message': 'User authorized',
                 'access_token': access_token,
                 'refresh_token': refresh_token,
             }
         ), HTTPStatus.OK
     except ValidationError as err:
-        return jsonify({'error': err.messages}), HTTPStatus.BAD_REQUEST
+        return jsonify({'message': err.messages}), HTTPStatus.BAD_REQUEST
     except Exception as e:
-        return jsonify({'error': str(e)}), HTTPStatus.INTERNAL_SERVER_ERROR
+        return jsonify({'message': str(e)}), HTTPStatus.INTERNAL_SERVER_ERROR
 
 
 @bp.route('/logout', methods=['POST'])
 @jwt_required()
 def logout():
     """
-    Logout
+    User log out
 
     ---
     post:
       description: user_logout
-      summary: User logaut
+      summary: User log out
       security:
         - jwt_access: []
     responses:
       '200':
-        description: Logout complete
-        schema:
-          $ref: "#/definitions/ApiResponse"
+        description: Logout completed
+      '401':
+        description: Missed authorization header
     tags:
-      - account
+      - auth
     produces:
       - "application/json"
-    definitions:
-      ApiResponse:
-        type: "object"
-        properties:
-          message:
-           type: "string"
-          status:
-           type: "string"
     """
     jti = get_jwt()['jti']
     redis.redis.set(jti, '', ex=current_app.config['JWT_ACCESS_TOKEN_EXPIRES'])
-    return jsonify({'message': 'Session completed'}), HTTPStatus.OK
+    return HTTPStatus.OK
+
+
+@bp.route('/refresh', methods=['POST'])
+@jwt_required(refresh=True)
+def refresh():
+    """
+    Refresh token
+
+    ---
+    post:
+      description: refresh_token
+      summary: Refresh token
+      security:
+        - jwt_access: []
+    responses:
+      '200':
+        description: Return refresh token
+        schema:
+          $ref: "#/definitions/AccessTokenMsg"
+    tags:
+      - auth
+    definitions:
+      AccessTokenMsg:
+        type: "object"
+        properties:
+          access_token:
+            type: "string"
+    """
+    identity = get_jwt_identity()
+    jti = get_jwt()['jti']
+    redis.redis.set(jti, '', ex=current_app.config['JWT_ACCESS_TOKEN_EXPIRES'])
+    access_token = create_access_token(identity=identity)
+    return jsonify({'access_token': access_token}), HTTPStatus.OK
