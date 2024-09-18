@@ -74,9 +74,9 @@ def signup():
         db.session.add(user)
         db.session.commit()
         if user is None:
-            return HTTPStatus.CREATED
+            return jsonify({'message': 'user created'}), HTTPStatus.CREATED
         if user is not None:
-            return HTTPStatus.FORBIDDEN
+            return jsonify({'message': 'user with this email exist'}), HTTPStatus.FORBIDDEN
     except ValidationError as err:
         return jsonify({'message': err.messages}), HTTPStatus.BAD_REQUEST
     except Exception as e:
@@ -182,7 +182,7 @@ def logout():
     """
     jti = get_jwt()['jti']
     redis.redis.set(jti, '', ex=current_app.config['JWT_ACCESS_TOKEN_EXPIRES'])
-    return HTTPStatus.OK
+    return jsonify({'message': 'logout completed'}), HTTPStatus.OK
 
 
 @bp.route('/refresh', methods=['POST'])
