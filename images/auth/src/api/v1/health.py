@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 from flask import Blueprint, jsonify
 
 bp = Blueprint(
@@ -9,16 +11,19 @@ bp = Blueprint(
 
 @bp.route('/health', methods=['GET'])
 def healthcheck():
-    """Проверка работоспособности сервиса."""
-    return jsonify({'status': 'ok'}), 200
+    """
+    Проверка работоспособности сервиса
 
-    #  responses={
-    #      200: {
-    #          'description': 'Success',
-    #          'content': {
-    #              'application/json': {
-    #                  'example': {'status': 'ok'},
-    #              },
-    #          },
-    #      },
-    #  },
+    ---
+    post:
+      description: health_check
+      summary: Health check
+    responses:
+      '200':
+        description: Server working correctly
+    tags:
+      - health
+    produces:
+      - "application/json"
+    """
+    return jsonify({'status': 'ok'}), HTTPStatus.OK
