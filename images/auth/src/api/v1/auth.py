@@ -70,13 +70,11 @@ def signup():
             password_hash=hash_password(data['password']),
             is_active=True,
         )
-        user = User.query.filter_by(email=data['email']).first()
+        if User.query.filter_by(email=data['email']).first():
+            raise ValidationError('user with this email exist')
         db.session.add(user)
         db.session.commit()
-        if user is None:
-            return jsonify({'message': 'user created'}), HTTPStatus.CREATED
-        if user is not None:
-            return jsonify({'message': 'user with this email exist'}), HTTPStatus.FORBIDDEN
+        return jsonify({'message': 'user created'}), HTTPStatus.CREATED
     except ValidationError as err:
         return jsonify({'message': err.messages}), HTTPStatus.BAD_REQUEST
     except Exception as e:
@@ -140,10 +138,10 @@ def signin():
         user = User.query.filter_by(email=data['email']).first()
         if user is None:
             return jsonify(
-                {'message': 'User with this email does not exist'},
+                {'message': 'user with this email does not exist'},
             ), HTTPStatus.FORBIDDEN
         if not check_password(user.password, data['password']):
-            return jsonify({'message': 'Password is not correct'}), HTTPStatus.FORBIDDEN
+            return jsonify({'message': 'password is not correct'}), HTTPStatus.FORBIDDEN
         access_token = create_access_token(identity=user.id)
         refresh_token = create_refresh_token(identity=user.id)
         return jsonify(
