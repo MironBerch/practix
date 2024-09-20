@@ -10,6 +10,7 @@ from flask.cli import with_appcontext
 from api.urls import init_routers
 from core.config import settings
 from core.logger import logger
+from core.mail import mail
 from db import postgres, redis
 
 
@@ -57,6 +58,15 @@ def create_app() -> Flask:
             task_ignore_result=True,
         )
     )
+
+    app.config['MAIL_SERVER'] = settings.mail.server
+    app.config['MAIL_PORT'] = settings.mail.port
+    app.config['MAIL_USERNAME'] = settings.mail.username
+    app.config['MAIL_PASSWORD'] = settings.mail.password
+    app.config['MAIL_USE_TLS'] = settings.mail.use_tls
+    app.config['MAIL_USE_SSL'] = settings.mail.use_ssl
+
+    mail.init_app(app)
 
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = settings.security.jwt_access_token_expires
     app.config['JWT_REFRESH_TOKEN_EXPIRES'] = settings.security.jwt_refresh_token_expires

@@ -24,6 +24,7 @@ class User(db.Model):
     password_hash = db.Column(db.String(255))
 
     is_active = db.Column(db.Boolean())
+    is_email_confirmed = db.Column(db.Boolean())
 
     sessions = db.relationship(
         'Session',

@@ -1,5 +1,6 @@
 from http import HTTPStatus
 
+from celery import shared_task
 from flask_jwt_extended import (
     create_access_token,
     create_refresh_token,
@@ -21,6 +22,14 @@ bp = Blueprint(
     __name__,
     url_prefix='/auth'
 )
+
+
+@shared_task
+def delete_user_with_not_confirmed_email(user_id):
+    user = User.query.get(user_id)
+    if user and not user.is_email_confirmed:
+        db.session.delete(user)
+        db.session.commit()
 
 
 class SignUpSchema(Schema):
@@ -69,6 +78,7 @@ def signup():
             email=data['email'],
             password_hash=hash_password(data['password']),
             is_active=True,
+            is_email_confirmed=False,
         )
         if User.query.filter_by(email=data['email']).first():
             raise ValidationError('user with this email exist')
@@ -79,6 +89,15 @@ def signup():
         return jsonify({'message': err.messages}), HTTPStatus.BAD_REQUEST
     except Exception as e:
         return jsonify({'message': str(e)}), HTTPStatus.INTERNAL_SERVER_ERROR
+
+
+@bp.route('/email_confirm', methods=['POST'])
+@jwt_required()
+def email_confirm():
+    delete_user_with_not_confirmed_email.apply_async(
+        (get_jwt_identity(),),
+        countdown=60*60,
+      )
 
 
 @bp.route('/signin', methods=['POST'])

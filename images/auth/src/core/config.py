@@ -32,6 +32,15 @@ class SecurityConfig(BaseSettings):
     jwt_refresh_token_expires: int = 30 * 24 * 60 * 60
 
 
+class MailConfig(BaseSettings):
+    server: str = environ.get('MAIL_SERVER')
+    port: int = environ.get('MAIL_PORT')
+    username: str = environ.get('MAIL_USERNAME')
+    password: str = environ.get('MAIL_PASSWORD')
+    use_tls: bool = True
+    use_ssl: bool = False
+
+
 class CeleryConfig(BaseSettings):
     broker_url: str = environ.get('CELERY_BROKER_URL')
     result_backend: str = environ.get('CELERY_RESULT_BACKEND')
@@ -43,6 +52,7 @@ class Settings(BaseSettings):
     postgres: PostgresConfig = Field(default_factory=PostgresConfig)
     celery: CeleryConfig = Field(default_factory=CeleryConfig)
     security: SecurityConfig = Field(default_factory=SecurityConfig)
+    mail: MailConfig = Field(default_factory=MailConfig)
 
 
 settings = Settings()

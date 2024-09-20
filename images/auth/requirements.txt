@@ -11,7 +11,9 @@ attrs==24.2.0
 billiard==4.2.0
     # via celery
 blinker==1.8.2
-    # via flask
+    # via
+    #   flask
+    #   flask-mail
 celery==5.4.0
     # via -r requirements.in
 click==8.1.7
@@ -39,10 +41,13 @@ flask==3.0.3
     #   -r requirements.in
     #   flasgger
     #   flask-jwt-extended
+    #   flask-mail
     #   flask-marshmallow
     #   flask-migrate
     #   flask-sqlalchemy
 flask-jwt-extended==4.6.0
+    # via -r requirements.in
+flask-mail==0.10.0
     # via -r requirements.in
 flask-marshmallow==1.2.1
     # via -r requirements.in
