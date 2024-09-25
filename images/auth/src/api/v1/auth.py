@@ -8,10 +8,11 @@ from flask_jwt_extended import (
     get_jwt_identity,
     jwt_required,
 )
-from marshmallow import Schema, ValidationError, fields
+from marshmallow import ValidationError
 
 from flask import Blueprint, current_app, jsonify, request
 
+from api.schemas import SignInSchema, SignUpSchema
 from db import redis
 from db.postgres import db
 from models.user import User
@@ -30,15 +31,6 @@ def delete_user_with_not_confirmed_email(user_id):
     if user and not user.is_email_confirmed:
         db.session.delete(user)
         db.session.commit()
-
-
-class SignUpSchema(Schema):
-    email = fields.Email(required=True)
-    password = fields.String(required=True, min_length=6)
-
-
-class SignInSchema(SignUpSchema):
-    ...
 
 
 @bp.route('/signup', methods=['POST'])
@@ -84,7 +76,20 @@ def signup():
             raise ValidationError('user with this email exist')
         db.session.add(user)
         db.session.commit()
-        return jsonify({'message': 'user created'}), HTTPStatus.CREATED
+        created_user = User.query.filter_by(email=data['email']).first()
+        delete_user_with_not_confirmed_email.apply_async(
+          (created_user.id,),
+          countdown=60*60,
+        )
+        access_token = create_access_token(identity=created_user.id)
+        refresh_token = create_refresh_token(identity=created_user.id)
+        return jsonify(
+            {
+                'message': 'user created',
+                'access_token': access_token,
+                'refresh_token': refresh_token,
+            }
+        ), HTTPStatus.CREATED
     except ValidationError as err:
         return jsonify({'message': err.messages}), HTTPStatus.BAD_REQUEST
     except Exception as e:
