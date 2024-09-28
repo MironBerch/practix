@@ -1,6 +1,6 @@
+from datetime import timedelta
 from http import HTTPStatus
 
-from celery import shared_task
 from flask_jwt_extended import (
     create_access_token,
     create_refresh_token,
@@ -12,25 +12,16 @@ from marshmallow import ValidationError
 
 from flask import Blueprint, current_app, jsonify, request
 
-from api.schemas import SignInSchema, SignUpSchema
-from db import redis
-from db.postgres import db
+from api.schemas import ConfirmCodeSchema, SignInSchema, SignUpSchema
+from db import postgres, redis
 from models.user import User
-from utils.hash_password import check_password, hash_password
+from utils import code, hash_password, tasks
 
 bp = Blueprint(
     'auth',
     __name__,
     url_prefix='/auth'
 )
-
-
-@shared_task
-def delete_user_with_not_confirmed_email(user_id):
-    user = User.query.get(user_id)
-    if user and not user.is_email_confirmed:
-        db.session.delete(user)
-        db.session.commit()
 
 
 @bp.route('/signup', methods=['POST'])
@@ -40,7 +31,6 @@ def signup():
 
     ---
     post:
-      description: register_user
       summary: Register user
       parameters:
       - name: user
@@ -68,16 +58,16 @@ def signup():
         data = SignUpSchema().load(request.get_json())
         user = User(
             email=data['email'],
-            password_hash=hash_password(data['password']),
+            password_hash=hash_password.hash_password(data['password']),
             is_active=True,
             is_email_confirmed=False,
         )
         if User.query.filter_by(email=data['email']).first():
             raise ValidationError('user with this email exist')
-        db.session.add(user)
-        db.session.commit()
+        postgres.db.session.add(user)
+        postgres.db.session.commit()
         created_user = User.query.filter_by(email=data['email']).first()
-        delete_user_with_not_confirmed_email.apply_async(
+        tasks.delete_user_with_not_confirmed_email.apply_async(
           (created_user.id,),
           countdown=60*60,
         )
@@ -96,66 +86,142 @@ def signup():
         return jsonify({'message': str(e)}), HTTPStatus.INTERNAL_SERVER_ERROR
 
 
-@bp.route('/email_confirm', methods=['POST'])
+@bp.route('/resend_confirm_registration_email', methods=['POST'])
 @jwt_required()
-def email_confirm():
-    delete_user_with_not_confirmed_email.apply_async(
-        (get_jwt_identity(),),
-        countdown=60*60,
-      )
+def resend_confirm_registration_email():
+    """
+    Resend confirmation registration email
+
+    ---
+    post:
+      summary: Resend confirmation email
+      security:
+        - jwt_access: []
+      responses:
+        '200':
+          description: Code sent successfully to the email
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Confirmation message
+        '401':
+          description: Unauthorized
+    tags:
+      - auth
+    """
+    identity = get_jwt_identity()
+    user = User.query.get(id=identity)
+    tasks.send_registration_email_verification_code.delay(
+        user.email,
+        code.create_registration_email_verification_code(user.email),
+    )
+    return jsonify({'message': 'code sended on email'}), HTTPStatus.OK
+
+
+@bp.route('/confirm_registration', methods=['POST'])
+@jwt_required()
+def confirm_registration():
+    """
+    Confirm registration with verification code
+
+    ---
+    post:
+      summary: Confirm user registration
+      security:
+        - jwt_access: []
+      parameters:
+      - name: code
+        in: body
+        required: true
+        schema:
+          type: object
+          properties:
+            code:
+              type: string
+              description: Verification code sent to email
+      responses:
+        '200':
+          description: Email confirmed successfully
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Confirmation message
+        '400':
+          description: Invalid code
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message
+    tags:
+      - auth
+    """
+    data = ConfirmCodeSchema().load(request.get_json())
+    identity = get_jwt_identity()
+    user = User.query.get(id=identity)
+    code = redis.redis.get(f'email_registration:{user.email}')
+    if code is not None and code == data['code']:
+        user.is_email_confirmed = True
+        postgres.db.session.commit()
+        return jsonify({'message': 'email confirmed'}), HTTPStatus.OK
+    return jsonify({'message': 'code is not correct'}), HTTPStatus.BAD_REQUEST
 
 
 @bp.route('/signin', methods=['POST'])
 def signin():
     """
     User sign in
-
     ---
     post:
-      description: register_user
-      summary: Register user
+      summary: User Sign In
       parameters:
       - name: user
         in: body
-        description: User registration data
         required: true
         schema:
           type: object
           properties:
             email:
               type: string
-              description: email
+              description: User email
             password:
               type: string
-              description: password
+              description: User password
     responses:
-      '201':
-        description: Ok
+      '200':
+        description: Successful sign in with temporary token
         schema:
-          $ref: "#/definitions/TokensMsg"
+          type: object
+          properties:
+            temp_token:
+              type: string
+              description: Temporary JWT token for 2FA
+            message:
+              type: string
+              description: Message confirming code sent for verification
       '403':
-        description: Incorrect password or email
+        description: Incorrect email or password
         schema:
-          $ref: "#/definitions/ApiResponse"
+          type: object
+          properties:
+            message:
+              type: string
+              description: Error message
       '500':
         description: Server error
         schema:
-          $ref: "#/definitions/ApiResponse"
+          type: object
+          properties:
+            message:
+              type: string
+              description: Error message
     tags:
       - auth
-    definitions:
-      ApiResponse:
-        type: "object"
-        properties:
-          message:
-            type: "string"
-      TokensMsg:
-        type: "object"
-        properties:
-          access_token:
-            type: "string"
-          refresh_token:
-            type: "string"
     """
     try:
         data = SignInSchema().load(request.get_json())
@@ -164,20 +230,118 @@ def signin():
             return jsonify(
                 {'message': 'user with this email does not exist'},
             ), HTTPStatus.FORBIDDEN
-        if not check_password(user.password, data['password']):
+        if not hash_password.check_password(user.password, data['password']):
             return jsonify({'message': 'password is not correct'}), HTTPStatus.FORBIDDEN
-        access_token = create_access_token(identity=user.id)
-        refresh_token = create_refresh_token(identity=user.id)
+        temp_token = create_access_token(
+            identity=user.id,
+            expires_delta=timedelta(minutes=15),
+        )
+        tasks.send_2_step_verification_code.delay(
+            user.email,
+            code.create_2_step_verification_code(user.email),
+        )
         return jsonify(
             {
-                'access_token': access_token,
-                'refresh_token': refresh_token,
-            }
+                'temp_token': temp_token,
+                'message': '2-step verification code sent to email.',
+            },
         ), HTTPStatus.OK
+
     except ValidationError as err:
         return jsonify({'message': err.messages}), HTTPStatus.BAD_REQUEST
     except Exception as e:
         return jsonify({'message': str(e)}), HTTPStatus.INTERNAL_SERVER_ERROR
+
+
+@bp.route('/resend_2_step_verification_email', methods=['POST'])
+@jwt_required()
+def resend_2_step_verification_email():
+    """
+    Resend two-step verification email
+
+    ---
+    post:
+      summary: Resend two-step verification email
+      security:
+        - jwt_access: []
+      responses:
+        '200':
+          description: New verification code sent successfully
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Confirmation message
+        '401':
+          description: Unauthorized
+    tags:
+      - auth
+    """
+    identity = get_jwt_identity()
+    user = User.query.get(id=identity)
+    verification_code = code.create_2_step_verification_code(user.email)
+    tasks.send_2_step_verification_code.delay(user.email, verification_code)
+    return jsonify({'message': 'new verification code sent to email'}), HTTPStatus.OK
+
+
+@bp.route('/confirm_2_step_verification', methods=['POST'])
+def confirm_2_step_verification():
+    """
+    Confirm two-step verification with verification code
+
+    ---
+    post:
+      summary: Confirm two-step verification
+      parameters:
+      - name: code
+        in: body
+        required: true
+        schema:
+          type: object
+          properties:
+            code:
+              type: string
+              description: Verification code sent to email
+      responses:
+        '200':
+          description: Two-step verification succeeded
+          schema:
+            type: object
+            properties:
+              access_token:
+                type: string
+                description: New access token
+              refresh_token:
+                type: string
+                description: New refresh token
+        '400':
+          description: Invalid or expired code
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+                description: Error message
+    tags:
+      - auth
+    """
+    data = ConfirmCodeSchema().load(request.get_json())
+    identity = get_jwt_identity()
+    user = User.query.get(id=identity)
+    code_from_redis = redis.redis.get(f'2_step_verification_code:{user.email}')
+    if code_from_redis is not None and code_from_redis == data['code']:
+        access_token = create_access_token(identity=user.id)
+        refresh_token = create_access_token(identity=user.id)
+        return jsonify(
+            {
+              'access_token': access_token,
+              'refresh_token': refresh_token,
+            }
+        ), HTTPStatus.OK
+    return jsonify(
+        {'message': 'сode is not correct or has expired'}
+      ), HTTPStatus.BAD_REQUEST
 
 
 @bp.route('/logout', methods=['POST'])
@@ -188,7 +352,6 @@ def logout():
 
     ---
     post:
-      description: user_logout
       summary: User log out
       security:
         - jwt_access: []
@@ -215,7 +378,6 @@ def refresh():
 
     ---
     post:
-      description: refresh_token
       summary: Refresh token
       security:
         - jwt_access: []
