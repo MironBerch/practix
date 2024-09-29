@@ -12,11 +12,9 @@ bp = Blueprint(
 @bp.route('/health', methods=['GET'])
 def healthcheck():
     """
-    Проверка работоспособности сервиса
-
+    Checking the service's health
     ---
     post:
-      description: health_check
       summary: Health check
     responses:
       '200':

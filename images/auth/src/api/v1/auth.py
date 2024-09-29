@@ -28,7 +28,6 @@ bp = Blueprint(
 def signup():
     """
     User sign up
-
     ---
     post:
       summary: Register user
@@ -91,7 +90,6 @@ def signup():
 def resend_confirm_registration_email():
     """
     Resend confirmation registration email
-
     ---
     post:
       summary: Resend confirmation email
@@ -125,7 +123,6 @@ def resend_confirm_registration_email():
 def confirm_registration():
     """
     Confirm registration with verification code
-
     ---
     post:
       summary: Confirm user registration
@@ -258,7 +255,6 @@ def signin():
 def resend_2_step_verification_email():
     """
     Resend two-step verification email
-
     ---
     post:
       summary: Resend two-step verification email
@@ -289,7 +285,6 @@ def resend_2_step_verification_email():
 def confirm_2_step_verification():
     """
     Confirm two-step verification with verification code
-
     ---
     post:
       summary: Confirm two-step verification
@@ -349,7 +344,6 @@ def confirm_2_step_verification():
 def logout():
     """
     User log out
-
     ---
     post:
       summary: User log out
@@ -375,7 +369,6 @@ def logout():
 def refresh():
     """
     Refresh token
-
     ---
     post:
       summary: Refresh token

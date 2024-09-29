@@ -21,10 +21,8 @@ bp = Blueprint(
 def password_change():
     """
     Change user password
-
     ---
     post:
-      description: password_change
       summary: Password change
       parameters:
       - name: user
@@ -65,10 +63,8 @@ def password_change():
 def change_email():
     """
     Change user email
-
     ---
     post:
-      description: change_user_email
       summary: Change user email
       parameters:
       - name: user
