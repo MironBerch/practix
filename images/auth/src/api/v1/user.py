@@ -128,9 +128,16 @@ def resend_change_email():
     """
     identity = get_jwt_identity()
     user = User.query.get(id=identity)
+    verification_code = redis.redis.get(f'email_change:{user.email}')
+    if verification_code is None:
+        return jsonify({'message': 'no code for your email'}), HTTPStatus.BAD_REQUEST
+    verification_code = verification_code.split(':')
     tasks.send_registration_email_verification_code.delay(
         user.email,
-        code.create_change_email_verification_code(user.email),
+        code.create_change_email_verification_code(
+            user.email,
+            verification_code[0],
+        ),
     )
     return jsonify({'message': 'code sended on email'}), HTTPStatus.OK
 
@@ -178,11 +185,11 @@ def confirm_change_email():
     data = ConfirmCodeSchema().load(request.get_json())
     identity = get_jwt_identity()
     user = User.query.get(id=identity)
-    code = redis.redis.get(f'email_change:{user.email}')
-    if code is not None:
-        code = code.split(':')
-        if code[-1] == data['code']:
-            user.email = code[0]
+    verification_code = redis.redis.get(f'email_change:{user.email}')
+    if verification_code is not None:
+        verification_code = verification_code.split(':')
+        if verification_code[-1] == data['code']:
+            user.email = verification_code[0]
             user.is_email_confirmed = True
             postgres.db.session.commit()
             return jsonify({'message': 'email confirmed'}), HTTPStatus.OK
