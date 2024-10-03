@@ -1,7 +1,12 @@
 import uuid
 from datetime import datetime, timezone
 
+from sqlalchemy import Table, text
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.engine import Connection
+from sqlalchemy.orm import validates
+from user_agents import parse as parse_user_agent
+from werkzeug.user_agent import UserAgent
 
 from db.postgres import db
 
@@ -27,3 +32,36 @@ class Session(db.Model):
     )
     user_agent = db.Column(db.String)
     user_device_type = db.Column(db.String, primary_key=True)
+
+    @validates('user_device_type')
+    def validate_user_device_type(self, key: str, value: UserAgent) -> str:
+        """
+        Парсит данные `User-agent` и определяет с какого устройства вошёл пользователь.
+        """
+
+        device = None
+        user_agent = parse_user_agent(value.string)
+        if user_agent.is_pc:
+            device = 'pc'
+        elif user_agent.is_tablet:
+            device = 'tablet'
+        elif user_agent.is_mobile:
+            device = 'mobile'
+        return device or 'other'
+
+
+def create_partition(target: Table, connection: Connection, **kwargs) -> None:
+    """
+    Функция для партицирования таблицы `sessions` по типам устройств.
+    """
+
+    device_types = ('pc', 'tablet', 'mobile', 'other')
+    for device_type in device_types:
+        connection.execute(
+            statement=text(
+                text=f"""
+                    CREATE TABLE IF NOT EXISTS "sessions_{device_type}"
+                    PARTITION OF "sessions" FOR VALUES IN ('{device_type}')
+                """
+            )
+        )
