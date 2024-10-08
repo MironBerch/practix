@@ -11,10 +11,33 @@ from werkzeug.user_agent import UserAgent
 from db.postgres import db
 
 
+def create_partition(target: Table, connection: Connection, **kwargs) -> None:
+    """
+    Функция для партицирования таблицы `sessions` по типам устройств.
+    """
+
+    device_types = ('pc', 'tablet', 'mobile', 'other')
+    for device_type in device_types:
+        connection.execute(
+            statement=text(
+                text=f"""
+                    CREATE TABLE IF NOT EXISTS "sessions_{device_type}"
+                    PARTITION OF "sessions" FOR VALUES IN ('{device_type}')
+                """
+            )
+        )
+
+
 class Session(db.Model):
     """Модель сессии пользователя."""
 
     __tablename__ = 'sessions'
+    __table_args__ = (
+        {
+            'postgresql_partition_by': 'LIST (user_device_type);',
+            'listeners': [('after_create', create_partition)],
+        }
+    )
 
     id = db.Column(
         UUID(as_uuid=True),
@@ -48,20 +71,3 @@ class Session(db.Model):
         elif user_agent.is_mobile:
             device = 'mobile'
         return device or 'other'
-
-
-def create_partition(target: Table, connection: Connection, **kwargs) -> None:
-    """
-    Функция для партицирования таблицы `sessions` по типам устройств.
-    """
-
-    device_types = ('pc', 'tablet', 'mobile', 'other')
-    for device_type in device_types:
-        connection.execute(
-            statement=text(
-                text=f"""
-                    CREATE TABLE IF NOT EXISTS "sessions_{device_type}"
-                    PARTITION OF "sessions" FOR VALUES IN ('{device_type}')
-                """
-            )
-        )
