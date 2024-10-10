@@ -1,0 +1,18 @@
+# FastAPI
+fastapi==0.111.0
+
+# Pydantic
+pydantic==2.7.4
+pydantic-settings==2.3.3
+
+# Database
+pymongo==4.10.1
+
+# Linters
+flake8==7.0.0
+isort==5.13.2
+pep8-naming==0.13.3
+
+# Tools
+uvicorn[standard]==0.28.0
+orjson==3.10.0
