@@ -15,7 +15,7 @@ from flask import Blueprint, current_app, jsonify, request
 from api.schemas import ConfirmCodeSchema, SignInSchema, SignUpSchema
 from db import postgres, redis
 from models.user import User
-from utils import code, hash_password, tasks
+from utils import code, hash_password, sessions, tasks
 
 bp = Blueprint(
     'auth',
@@ -70,13 +70,14 @@ def signup():
           (created_user.id,),
           countdown=60*60,
         )
-        access_token = create_access_token(identity=created_user.id)
-        refresh_token = create_refresh_token(identity=created_user.id)
+        temp_token = create_access_token(
+            identity=user.id,
+            expires_delta=timedelta(minutes=15),
+        )
         return jsonify(
             {
                 'message': 'user created',
-                'access_token': access_token,
-                'refresh_token': refresh_token,
+                'temp_token': temp_token,
             }
         ), HTTPStatus.CREATED
     except ValidationError as err:
@@ -165,7 +166,19 @@ def confirm_registration():
     if code is not None and code == data['code']:
         user.is_email_confirmed = True
         postgres.db.session.commit()
-        return jsonify({'message': 'email confirmed'}), HTTPStatus.OK
+        access_token = create_access_token(identity=user.id)
+        refresh_token = create_refresh_token(identity=user.id)
+        sessions.create_session(
+            user_id=user.id,
+            user_agent=request.headers.get('User-Agent'),
+        )
+        return jsonify(
+            {
+                'message': 'email confirmed',
+                'access_token': access_token,
+                'refresh_token': refresh_token,
+            }
+        ), HTTPStatus.OK
     return jsonify({'message': 'code is not correct'}), HTTPStatus.BAD_REQUEST
 
 
@@ -243,7 +256,6 @@ def signin():
                 'message': '2-step verification code sent to email.',
             },
         ), HTTPStatus.OK
-
     except ValidationError as err:
         return jsonify({'message': err.messages}), HTTPStatus.BAD_REQUEST
     except Exception as e:
@@ -327,7 +339,11 @@ def confirm_2_step_verification():
     code_from_redis = redis.redis.get(f'2_step_verification_code:{user.email}')
     if code_from_redis is not None and code_from_redis == data['code']:
         access_token = create_access_token(identity=user.id)
-        refresh_token = create_access_token(identity=user.id)
+        refresh_token = create_refresh_token(identity=user.id)
+        sessions.create_session(
+            user_id=user.id,
+            user_agent=request.headers.get('User-Agent'),
+        )
         return jsonify(
             {
               'access_token': access_token,
