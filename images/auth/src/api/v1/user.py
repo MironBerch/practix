@@ -5,8 +5,9 @@ from marshmallow import ValidationError
 
 from flask import Blueprint, jsonify, request
 
-from api.schemas import ConfirmCodeSchema, EmailSchema, PasswordChangeSchema
+from api.schemas import ConfirmCodeSchema, EmailSchema, PasswordChangeSchema, UserSessionSchema
 from db import postgres, redis
+from models.session import Session
 from models.user import User
 from utils import code, hash_password, tasks
 
@@ -194,3 +195,69 @@ def confirm_change_email():
             postgres.db.session.commit()
             return jsonify({'message': 'email confirmed'}), HTTPStatus.OK
     return jsonify({'message': 'code is not correct'}), HTTPStatus.BAD_REQUEST
+
+
+@bp.route('/user_sessions', methods=['GET'])
+@jwt_required()
+def get_user_sessions():
+    """
+    Get user sessions
+    ---
+    get:
+      summary: Get user sessions
+      security:
+        - jwt_access: []
+    responses:
+      200:
+        description: Return sessions
+        schema:
+          $ref: "#/definitions/UserHistory"
+      403:
+        description: Forbidden error
+        schema:
+          $ref: "#/definitions/ApiResponse"
+    definitions:
+      ApiResponse:
+        type: "object"
+        properties:
+          message:
+            type: "string"
+          status:
+            type: "string"
+      UserSession:
+        type: "object"
+        properties:
+          data:
+            type: "object"
+            properties:
+              user_id:
+                type: "string"
+                format: "uuid"
+              user_agent:
+                type: "string"
+              user_device_type:
+                type: "string"
+              date:
+                type: "string"
+                format: "date"
+    tags:
+      - user
+    """
+    identity = get_jwt_identity()
+    user = User.query.get(id=identity)
+    paginated_user_sessions = Session.query.filter_by(user_id=user.id).paginate(
+        page=request.args.get('page'),
+        per_page=request.args.get('count'),
+    )
+    return (
+        jsonify(
+            {
+                'status': 'success',
+                'data': UserSessionSchema().dump(
+                    paginated_user_sessions.items,
+                    many=True,
+                ),
+            }
+        ),
+        HTTPStatus.OK,
+    )

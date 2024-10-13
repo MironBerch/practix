@@ -1,4 +1,6 @@
-from marshmallow import Schema, fields
+from marshmallow import Schema, fields, post_load
+
+from models.session import Session
 
 
 class SignUpSchema(Schema):
@@ -21,3 +23,15 @@ class PasswordChangeSchema(Schema):
 
 class EmailSchema(Schema):
     email = fields.Email(required=True)
+
+
+class UserSessionSchema(Schema):
+    user_id = fields.String(load_only=True)
+    user_agent = fields.String()
+    event_date = fields.DateTime(dump_only=True)
+    user_device_type = fields.String()
+
+    @post_load
+    def create_user_history(self, data, **kwargs):
+        session = Session(**data)
+        return session
