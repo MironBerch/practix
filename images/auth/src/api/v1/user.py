@@ -211,7 +211,7 @@ def get_user_sessions():
       200:
         description: Return sessions
         schema:
-          $ref: "#/definitions/UserHistory"
+          $ref: "#/definitions/UserSession"
       403:
         description: Forbidden error
         schema:
@@ -221,8 +221,6 @@ def get_user_sessions():
         type: "object"
         properties:
           message:
-            type: "string"
-          status:
             type: "string"
       UserSession:
         type: "object"
@@ -246,14 +244,13 @@ def get_user_sessions():
     identity = get_jwt_identity()
     user = User.query.get(id=identity)
     paginated_user_sessions = Session.query.filter_by(user_id=user.id).paginate(
-        page=request.args.get('page'),
-        per_page=request.args.get('count'),
+        page=request.args.get('page', default=1, type=int),
+        per_page=request.args.get('count', default=10, type=int),
     )
     return (
         jsonify(
             {
-                'status': 'success',
-                'data': UserSessionSchema().dump(
+                'sessions': UserSessionSchema().dump(
                     paginated_user_sessions.items,
                     many=True,
                 ),
