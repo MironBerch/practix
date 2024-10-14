@@ -5,5 +5,5 @@ class MongoCollections(Enum):
     """Коллекций в MongoDB."""
 
     users = 'users'
-    films = 'films'
+    filmworks = 'filmworks'
     reviews = 'reviews'
