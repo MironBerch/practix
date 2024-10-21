@@ -1,6 +1,6 @@
 from typing import ClassVar
 
-from pydantic import validator
+from pydantic import field_validator
 
 from models.base import UUIDMixin
 from models.person import Person
@@ -21,8 +21,8 @@ class Filmwork(UUIDMixin):
     writers_names: list[str]
     _index: ClassVar[str] = 'movies'
 
-    @validator('actors', 'writers', 'directors', each_item=True)
+    @field_validator('actors', 'writers', 'directors', mode='before')
     @classmethod
-    def change_person_field(cls, person: Person) -> dict:
+    def change_persons_field(cls, persons: list[Person]) -> list[dict]:
         """Валидатор для смены названия поля полного имени персоны."""
-        return {'id': person.id, 'name': person.name}
+        return [{'id': person.id, 'name': person.name} for person in persons]
