@@ -2,7 +2,7 @@ from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
 from pymongo.errors import CollectionInvalid
 
 from core.config import settings
-from images.ugc.src.core.enums import MongoCollections
+from core.enums import MongoCollections
 
 mongo: AsyncIOMotorDatabase | None = None
 
