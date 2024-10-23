@@ -12,6 +12,14 @@ class BaseService(ABC):
         pass
 
     @abstractmethod
+    def filter(self):
+        pass
+
+    @abstractmethod
+    def all(self):
+        pass
+
+    @abstractmethod
     def update(self):
         pass
 
