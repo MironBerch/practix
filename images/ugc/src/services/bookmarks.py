@@ -1,5 +1,9 @@
 from uuid import UUID
 
+from fastapi import Depends
+from motor.motor_asyncio import AsyncIOMotorDatabase
+
+from db.mongo import get_mongo
 from services.base import BaseService
 
 
@@ -31,3 +35,9 @@ class BookmarksService(BaseService):
                 }
             },
         )
+
+
+def get_bookmarks_service(
+        mongo: AsyncIOMotorDatabase = Depends(get_mongo),
+) -> BookmarksService:
+    return BookmarksService(mongo=mongo)
