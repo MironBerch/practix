@@ -16,9 +16,15 @@ class MongoConfig(BaseSettings):
     db: str = 'default'
 
 
+class AuthConfig(BaseSettings):
+    secret_key: str = environ.get('SECRET_KEY')
+    algorithm: str = 'HS256'
+
+
 class Settings(BaseSettings):
     fastapi: FastAPIConfig = Field(default_factory=FastAPIConfig)
     mongo: MongoConfig = Field(default_factory=MongoConfig)
+    auth: AuthConfig = Field(default_factory=AuthConfig)
 
 
 settings = Settings()
