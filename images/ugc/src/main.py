@@ -5,6 +5,7 @@ import uvicorn
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
 
+from api.urls import api_router
 from core.config import settings
 from db import mongo
 
@@ -27,6 +28,8 @@ app = FastAPI(
     default_response_class=ORJSONResponse,
     lifespan=lifespan,
 )
+
+app.include_router(api_router)
 
 
 if __name__ == '__main__':
