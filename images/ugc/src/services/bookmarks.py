@@ -18,8 +18,8 @@ class BookmarksService(BaseService):
             .to_list(length=None)
         )
 
-    def update(self, user_id: UUID | str, filmwork_id: UUID | str):
-        self.mongo['users'].update_one(
+    async def update(self, user_id: UUID | str, filmwork_id: UUID | str):
+        return self.mongo['users'].update_one(
             {'_id': user_id},
             {
                 '$addToSet': {
@@ -31,8 +31,8 @@ class BookmarksService(BaseService):
             upsert=True,
         )
 
-    def remove(self, user_id: UUID | str, filmwork_id: UUID | str):
-        self.mongo['users'].update_one(
+    async def remove(self, user_id: UUID | str, filmwork_id: UUID | str):
+        return self.mongo['users'].update_one(
             {'_id': user_id},
             {
                 '$pull': {
