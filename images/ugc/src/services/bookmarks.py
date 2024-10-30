@@ -3,13 +3,20 @@ from uuid import UUID
 from fastapi import Depends
 from motor.motor_asyncio import AsyncIOMotorDatabase
 
+from api.paginator import Paginator
 from db.mongo import get_mongo
 from services.base import BaseService
 
 
 class BookmarksService(BaseService):
-    async def filter(self, user_id: UUID | str):
-        return self.mongo['users'].find({'_id': user_id}).to_list(length=None)
+    async def filter(self, user_id: UUID | str, paginator: Paginator):
+        return (
+            self.mongo['users']
+            .find({'_id': user_id})
+            .skip((paginator.page - 1) * paginator.size)
+            .limit(paginator.size)
+            .to_list(length=None)
+        )
 
     def update(self, user_id: UUID | str, filmwork_id: UUID | str):
         self.mongo['users'].update_one(
