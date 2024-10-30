@@ -17,3 +17,4 @@ pep8-naming==0.13.3
 uvicorn[standard]==0.28.0
 orjson==3.10.0
 motor==3.6.0
+PyJWT==2.9.0
