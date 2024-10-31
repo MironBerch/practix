@@ -10,6 +10,11 @@ from services.base import BaseService
 
 
 class ReviewsService(BaseService):
+    async def get(self, user_id: UUID | str, filmwork_id: UUID | str):
+        return self.mongo['reviews'].find_one(
+            {'filmwork_id': filmwork_id, 'author': user_id},
+        )
+
     async def filter(self, filmwork_id: UUID | str, paginator: Paginator):
         return (
             self.mongo['reviews']
