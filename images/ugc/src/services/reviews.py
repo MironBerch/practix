@@ -52,6 +52,31 @@ class ReviewsService(BaseService):
         )
         return result
 
+    async def get_rating(self, review_id):
+        review = await self.mongo['reviews'].find_one({'_id': review_id})
+        return review['rating']
+
+    async def rate(self, review_id, user_id, score):
+        review_filter = {'_id': review_id}
+        review: dict = await self.mongo['reviews'].find_one(review_filter)
+        votes: list = review.get('rating', {}).get('votes', [])
+        for vote in votes:
+            if vote['user_id'] == user_id:
+                vote['score'] = score
+                break
+        else:
+            votes.append({'user_id': user_id, 'score': score})
+        return self.mongo['reviews'].update_one(
+            {'_id': review_id},
+            {'$set': {'rating.votes': votes}},
+        )
+
+    async def unrate(self, review_id, user_id):
+        await self.mongo['reviews'].update_one(
+            {'_id': review_id},
+            {'$pull': {'rating.votes': {'user_id': user_id}}},
+        )
+
 
 def get_reviews_service(
         mongo: AsyncIOMotorDatabase = Depends(get_mongo),
