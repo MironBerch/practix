@@ -10,6 +10,10 @@ class FilmworkBookmark(BaseModel):
     filmwork_id: UUID
 
 
+class Text(BaseModel):
+    text: str
+
+
 class Review(BaseModel):
     """Модель ответа для представления рецензии на фильм."""
 
