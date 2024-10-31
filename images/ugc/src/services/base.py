@@ -16,13 +16,21 @@ class BaseService(ABC):
         pass
 
     @abstractmethod
-    def all(self):
-        pass
-
-    @abstractmethod
     def update(self):
         pass
 
     @abstractmethod
     def remove(self):
+        pass
+
+    @abstractmethod
+    def get_rating(self):
+        pass
+
+    @abstractmethod
+    def rate(self):
+        pass
+
+    @abstractmethod
+    def unrate(self):
         pass
