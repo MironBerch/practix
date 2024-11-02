@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, Path
 
 from api.dependencies import check_filmwork_exist, check_review_exists
 from api.paginator import Paginator
-from models.models import Review, Text
+from models.models import Review, ReviewRating, ReviewScore, Text
 from services.auth import AuthService
 from services.reviews import ReviewsService, get_reviews_service
 
@@ -55,3 +55,47 @@ async def delete_filmwork_review(
     filmwork_id: UUID | str = Path(title='UUID фильма'),
 ):
     return service.remove(user_id=auth.user_id, filmwork_id=filmwork_id)
+
+
+@router.get(
+    path='/filmworks/{filmwork_id}/reviews/{review_id}/ratings',
+    summary='Просмотр рейтинга рецензии',
+    response_description='Рейтинг рецензии (лайки, дизлайки и сумма)',
+    response_model=ReviewRating,
+    dependencies=[Depends(check_filmwork_exist)],
+)
+async def get_review_rating(
+    service: ReviewsService = Depends(get_reviews_service),
+    review_id: UUID | str = Path(title='UUID отзыва'),
+):
+    return service.get_rating(review_id=review_id)
+
+
+@router.post(
+    path='/filmworks/{filmwork_id}/reviews/{review_id}/ratings',
+    summary='Добавление оценки рецензии',
+    response_description='Рейтинг рецензии (лайки, дизлайки и сумма)',
+    response_model=ReviewRating,
+    dependencies=[Depends(check_filmwork_exist)],
+)
+async def rate_review(
+    score: ReviewScore,
+    auth: AuthService = Depends(),
+    service: ReviewsService = Depends(get_reviews_service),
+    review_id: UUID | str = Path(title='UUID отзыва'),
+):
+    return service.rate(review_id=review_id, user_id=auth.user_id, score=score.score)
+
+
+@router.delete(
+    path='/filmworks/{filmwork_id}/reviews/{review_id}/ratings',
+    summary='Удаление оценки у рецензии',
+    response_description='Результат удаления рейтинга рецензии',
+    dependencies=[Depends(check_filmwork_exist)],
+)
+async def unrate_review(
+    auth: AuthService = Depends(),
+    service: ReviewsService = Depends(get_reviews_service),
+    review_id: UUID | str = Path(title='UUID отзыва'),
+):
+    return service.unrate(review_id=review_id, user_id=auth.user_id)
