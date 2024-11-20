@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+
+  admin_panel:
+    restart: always
+    build: ../../admin-panel/
+    command: >
+      sh -c "cd /app/src/
+      && poetry run python manage.py migrate --noinput
+      && poetry run python manage.py createsuperuser --noinput || true
+      && poetry run python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - ../../admin-panel/:/app
+    expose:
+      - "8000"
+    ports:
+      - "8000:8000"
+    environment:
+      - "DJANGO_SUPERUSER_USERNAME=admin"
+      - "DJANGO_SUPERUSER_EMAIL=admin@gmail.com"
+      - "DJANGO_SUPERUSER_PASSWORD=root"
+      - "SECRET_KEY=secretkey"
+      - "DEBUG=True"
+      - "DB_NAME=postgres"
+      - "DB_USER=postgres"
+      - "DB_PASSWORD=postgres"
+      - "DB_HOST=notifications_db"
+      - "DB_PORT=5432"
+    depends_on:
+      - notifications_db
+
+  notifications_db:
+    image: postgres:16-alpine
+    restart: always
+    ports:
+      - "5432:5432"
+    environment:
+      - "POSTGRES_USER=postgres"
+      - "POSTGRES_PASSWORD=postgres"
+      - "POSTGRES_DB=postgres"
+    volumes:
+        - notifications_db_volume:/var/lib/postgresql/data/
+
+volumes:
+  notifications_db_volume:
