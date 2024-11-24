@@ -4,7 +4,7 @@ from psycopg2.extras import DictRow
 from redis import Redis
 
 from models.filmwork import Filmwork
-from models.person import Person
+from models.person import FilmworkPerson
 
 
 @dataclass
@@ -40,14 +40,14 @@ class DataTransform(object):
             film_work['genre_names'] = [
                 genre_name.strip() for genre_name in film_work['genre_names'].split(',')
             ]
-            directors: list[Person] = []
-            actors: list[Person] = []
-            writers: list[Person] = []
+            directors: list[FilmworkPerson] = []
+            actors: list[FilmworkPerson] = []
+            writers: list[FilmworkPerson] = []
             if film_work['person_ids']:
                 for i in range(len(film_work['person_ids'])):
-                    person = Person(
+                    person = FilmworkPerson(
                         id=film_work['person_ids'][i],
-                        full_name=film_work['person_names'][i],
+                        name=film_work['person_names'][i],
                     )
                     if film_work['person_roles'][i] == 'director':
                         directors.append(person)
