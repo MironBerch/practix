@@ -68,6 +68,7 @@ def create_app() -> Flask:
 
     mail.init_app(app)
 
+    app.config['JWT_SECRET_KEY'] = settings.security.jwt_secret_key
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = settings.security.jwt_access_token_expires
     app.config['JWT_REFRESH_TOKEN_EXPIRES'] = settings.security.jwt_refresh_token_expires
 

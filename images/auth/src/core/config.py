@@ -26,8 +26,7 @@ class FlaskConfig(BaseSettings):
 
 
 class SecurityConfig(BaseSettings):
-    secret_key: str = environ.get('SECRET_KEY')
-    password_hash: str = 'sha256_crypt'
+    jwt_secret_key: str = environ.get('JWT_SECRET_KEY')
     jwt_access_token_expires: int = 24 * 60 * 60
     jwt_refresh_token_expires: int = 30 * 24 * 60 * 60
 

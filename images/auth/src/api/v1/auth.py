@@ -66,6 +66,8 @@ def signup():
         postgres.db.session.add(user)
         postgres.db.session.commit()
         created_user = User.query.filter_by(email=data['email']).first()
+        verification_code = code.create_registration_email_verification_code(user.email)
+        tasks.send_2_step_verification_code.delay(user.email, verification_code)
         tasks.delete_user_with_not_confirmed_email.apply_async(
           (created_user.id,),
           countdown=60*60,
@@ -96,17 +98,17 @@ def resend_confirm_registration_email():
       summary: Resend confirmation email
       security:
         - jwt_access: []
-      responses:
-        '200':
-          description: Code sent successfully to the email
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Confirmation message
-        '401':
-          description: Unauthorized
+    responses:
+      '200':
+        description: Code sent successfully to the email
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              description: Confirmation message
+      '401':
+        description: Unauthorized
     tags:
       - auth
     """
@@ -139,23 +141,23 @@ def confirm_registration():
             code:
               type: string
               description: Verification code sent to email
-      responses:
-        '200':
-          description: Email confirmed successfully
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Confirmation message
-        '400':
-          description: Invalid code
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error message
+    responses:
+      '200':
+        description: Email confirmed successfully
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              description: Confirmation message
+      '400':
+        description: Invalid code
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              description: Error message
     tags:
       - auth
     """
@@ -272,17 +274,17 @@ def resend_2_step_verification_email():
       summary: Resend two-step verification email
       security:
         - jwt_access: []
-      responses:
-        '200':
-          description: New verification code sent successfully
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Confirmation message
-        '401':
-          description: Unauthorized
+    responses:
+      '200':
+        description: New verification code sent successfully
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              description: Confirmation message
+      '401':
+        description: Unauthorized
     tags:
       - auth
     """
@@ -310,26 +312,23 @@ def confirm_2_step_verification():
             code:
               type: string
               description: Verification code sent to email
-      responses:
-        '200':
-          description: Two-step verification succeeded
-          schema:
-            type: object
-            properties:
-              access_token:
-                type: string
-                description: New access token
-              refresh_token:
-                type: string
-                description: New refresh token
-        '400':
-          description: Invalid or expired code
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error message
+    responses:
+      '200':
+        description: Two-step verification succeeded
+        schema:
+          type: object
+          properties:
+            access_token:
+              type: string
+            refresh_token:
+              type: string
+      '400':
+        description: Invalid or expired code
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
     tags:
       - auth
     """

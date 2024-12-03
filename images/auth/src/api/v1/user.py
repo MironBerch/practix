@@ -113,17 +113,17 @@ def resend_change_email():
       summary: Resend change email
       security:
         - jwt_access: []
-      responses:
-        '200':
-          description: Code sent successfully to the email
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Confirmation message
-        '401':
-          description: Unauthorized
+    responses:
+      '200':
+        description: Code sent successfully to the email
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              description: Confirmation message
+      '401':
+        description: Unauthorized
     tags:
       - user
     """
@@ -163,23 +163,23 @@ def confirm_change_email():
             code:
               type: string
               description: Verification code sent to email
-      responses:
-        '200':
-          description: Email confirmed successfully
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Confirmation message
-        '400':
-          description: Invalid code
-          schema:
-            type: object
-            properties:
-              message:
-                type: string
-                description: Error message
+    responses:
+      '200':
+        description: Email confirmed successfully
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              description: Confirmation message
+      '400':
+        description: Invalid code
+        schema:
+          type: object
+          properties:
+            message:
+              type: string
+              description: Error message
     tags:
       - user
     """

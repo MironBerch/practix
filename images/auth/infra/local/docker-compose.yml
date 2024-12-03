@@ -14,6 +14,7 @@ services:
     ports:
       - "5000:5000"
     environment:
+      - "JWT_SECRET_KEY=jwtsecretkey"
       - "SECRET_KEY=secretkey"
       - "DEBUG=True"
       - "DB_NAME=postgres"
@@ -58,6 +59,7 @@ services:
     volumes:
       - ../..:/app
     environment:
+      - "JWT_SECRET_KEY=jwtsecretkey"
       - "SECRET_KEY=secretkey"
       - "DEBUG=True"
       - "DB_NAME=postgres"
