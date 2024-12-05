@@ -13,6 +13,7 @@ from marshmallow import ValidationError
 from flask import Blueprint, current_app, jsonify, request
 
 from api.schemas import ConfirmCodeSchema, SignInSchema, SignUpSchema
+from core.config import settings
 from db import postgres, redis
 from models.user import User
 from utils import code, hash_password, sessions, tasks
@@ -74,7 +75,9 @@ def signup():
         )
         temp_token = create_access_token(
             identity=user.id,
-            expires_delta=timedelta(minutes=15),
+            expires_delta=timedelta(
+                minutes=settings.security.jwt_temp_token_expires,
+            ),
         )
         return jsonify(
             {
@@ -246,7 +249,9 @@ def signin():
             return jsonify({'message': 'password is not correct'}), HTTPStatus.FORBIDDEN
         temp_token = create_access_token(
             identity=user.id,
-            expires_delta=timedelta(minutes=15),
+            expires_delta=timedelta(
+                minutes=settings.security.jwt_temp_token_expires,
+            ),
         )
         tasks.send_2_step_verification_code.delay(
             user.email,

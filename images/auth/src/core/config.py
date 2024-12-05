@@ -27,6 +27,7 @@ class FlaskConfig(BaseSettings):
 
 class SecurityConfig(BaseSettings):
     jwt_secret_key: str = environ.get('JWT_SECRET_KEY')
+    jwt_temp_token_expires: int = 60 * 60
     jwt_access_token_expires: int = 24 * 60 * 60
     jwt_refresh_token_expires: int = 30 * 24 * 60 * 60
 
