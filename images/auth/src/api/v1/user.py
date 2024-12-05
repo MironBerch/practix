@@ -49,7 +49,7 @@ def password_change():
     try:
         identity = get_jwt_identity()
         data = PasswordChangeSchema().load(request.get_json())
-        user = User.query.get(id=identity)
+        user = User.query.get(identity)
         if not hash_password.check_password(user.password_hash, data['old_password']):
             raise ValidationError('old password is not correct')
         user.password_hash = hash_password.hash_password(data['new_password'])
@@ -89,7 +89,7 @@ def change_email():
     try:
         identity = get_jwt_identity()
         data = EmailSchema().load(request.get_json())
-        user = User.query.get(id=identity)
+        user = User.query.get(identity)
         if User.query.filter_by(email=data['email']).first():
             raise ValidationError('user with this email exist')
         tasks.send_change_email_verification_code.delay(
@@ -112,7 +112,7 @@ def resend_change_email():
     post:
       summary: Resend change email
       security:
-        - jwt_access: []
+        - Bearer: []
     responses:
       '200':
         description: Code sent successfully to the email
@@ -128,7 +128,7 @@ def resend_change_email():
       - user
     """
     identity = get_jwt_identity()
-    user = User.query.get(id=identity)
+    user = User.query.get(identity)
     verification_code = redis.redis.get(f'email_change:{user.email}')
     if verification_code is None:
         return jsonify({'message': 'no code for your email'}), HTTPStatus.BAD_REQUEST
@@ -152,7 +152,7 @@ def confirm_change_email():
     post:
       summary: Confirm change email
       security:
-        - jwt_access: []
+        - Bearer: []
       parameters:
       - name: code
         in: body
@@ -185,7 +185,7 @@ def confirm_change_email():
     """
     data = ConfirmCodeSchema().load(request.get_json())
     identity = get_jwt_identity()
-    user = User.query.get(id=identity)
+    user = User.query.get(identity)
     verification_code = redis.redis.get(f'email_change:{user.email}')
     if verification_code is not None:
         verification_code = verification_code.split(':')
@@ -206,7 +206,7 @@ def get_user_sessions():
     get:
       summary: Get user sessions
       security:
-        - jwt_access: []
+        - Bearer: []
     responses:
       200:
         description: Return sessions
@@ -242,7 +242,7 @@ def get_user_sessions():
       - user
     """
     identity = get_jwt_identity()
-    user = User.query.get(id=identity)
+    user = User.query.get(identity)
     paginated_user_sessions = Session.query.filter_by(user_id=user.id).paginate(
         page=request.args.get('page', default=1, type=int),
         per_page=request.args.get('count', default=10, type=int),

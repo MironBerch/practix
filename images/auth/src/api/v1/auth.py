@@ -55,14 +55,14 @@ def signup():
     """
     try:
         data = SignUpSchema().load(request.get_json())
+        if User.query.filter_by(email=data['email']).first():
+            return jsonify({'message': 'User with this email exists'}), HTTPStatus.FORBIDDEN
         user = User(
             email=data['email'],
             password_hash=hash_password.hash_password(data['password']),
             is_active=True,
             is_email_confirmed=False,
         )
-        if User.query.filter_by(email=data['email']).first():
-            raise ValidationError('user with this email exist')
         postgres.db.session.add(user)
         postgres.db.session.commit()
         created_user = User.query.filter_by(email=data['email']).first()
@@ -97,7 +97,7 @@ def resend_confirm_registration_email():
     post:
       summary: Resend confirmation email
       security:
-        - jwt_access: []
+        - Bearer: []
     responses:
       '200':
         description: Code sent successfully to the email
@@ -113,7 +113,7 @@ def resend_confirm_registration_email():
       - auth
     """
     identity = get_jwt_identity()
-    user = User.query.get(id=identity)
+    user = User.query.get(identity)
     tasks.send_registration_email_verification_code.delay(
         user.email,
         code.create_registration_email_verification_code(user.email),
@@ -130,7 +130,7 @@ def confirm_registration():
     post:
       summary: Confirm user registration
       security:
-        - jwt_access: []
+        - Bearer: []
       parameters:
       - name: code
         in: body
@@ -163,7 +163,7 @@ def confirm_registration():
     """
     data = ConfirmCodeSchema().load(request.get_json())
     identity = get_jwt_identity()
-    user = User.query.get(id=identity)
+    user = User.query.get(identity)
     code = redis.redis.get(f'email_registration:{user.email}')
     if code is not None and code == data['code']:
         user.is_email_confirmed = True
@@ -237,12 +237,12 @@ def signin():
     """
     try:
         data = SignInSchema().load(request.get_json())
-        user = User.query.filter_by(email=data['email']).first()
+        user: User = User.query.filter_by(email=data['email']).first()
         if user is None:
             return jsonify(
                 {'message': 'user with this email does not exist'},
             ), HTTPStatus.FORBIDDEN
-        if not hash_password.check_password(user.password, data['password']):
+        if not hash_password.check_password(user.password_hash, data['password']):
             return jsonify({'message': 'password is not correct'}), HTTPStatus.FORBIDDEN
         temp_token = create_access_token(
             identity=user.id,
@@ -273,7 +273,7 @@ def resend_2_step_verification_email():
     post:
       summary: Resend two-step verification email
       security:
-        - jwt_access: []
+        - Bearer: []
     responses:
       '200':
         description: New verification code sent successfully
@@ -289,19 +289,22 @@ def resend_2_step_verification_email():
       - auth
     """
     identity = get_jwt_identity()
-    user = User.query.get(id=identity)
+    user = User.query.get(identity)
     verification_code = code.create_2_step_verification_code(user.email)
     tasks.send_2_step_verification_code.delay(user.email, verification_code)
     return jsonify({'message': 'new verification code sent to email'}), HTTPStatus.OK
 
 
 @bp.route('/confirm_2_step_verification', methods=['POST'])
+@jwt_required()
 def confirm_2_step_verification():
     """
     Confirm two-step verification with verification code
     ---
     post:
       summary: Confirm two-step verification
+      security:
+        - Bearer: []
       parameters:
       - name: code
         in: body
@@ -334,7 +337,7 @@ def confirm_2_step_verification():
     """
     data = ConfirmCodeSchema().load(request.get_json())
     identity = get_jwt_identity()
-    user = User.query.get(id=identity)
+    user = User.query.get(identity)
     code_from_redis = redis.redis.get(f'2_step_verification_code:{user.email}')
     if code_from_redis is not None and code_from_redis == data['code']:
         access_token = create_access_token(identity=user.id)
@@ -363,7 +366,7 @@ def logout():
     post:
       summary: User log out
       security:
-        - jwt_access: []
+        - Bearer: []
     responses:
       '200':
         description: Logout completed
@@ -388,7 +391,7 @@ def refresh():
     post:
       summary: Refresh token
       security:
-        - jwt_access: []
+        - Bearer: []
     responses:
       '200':
         description: Return refresh token
