@@ -11,6 +11,7 @@ def create_session(
     new_session = Session(
         user_id=user_id,
         user_agent=user_agent,
+        user_device_type=user_agent,
     )
     try:
         db.session.add(new_session)

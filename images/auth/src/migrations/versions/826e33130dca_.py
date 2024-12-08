@@ -8,6 +8,8 @@ Create Date: 2024-10-08 21:16:02.356043
 import sqlalchemy as sa
 from alembic import op
 
+from models.session import create_partition
+
 # revision identifiers, used by Alembic.
 revision = '826e33130dca'
 down_revision = None
@@ -36,7 +38,8 @@ def upgrade():
         sa.Column('user_device_type', sa.String(), nullable=False),
         sa.ForeignKeyConstraint(['user_id'], ['users.id'], ondelete='CASCADE'),
         sa.PrimaryKeyConstraint('id', 'user_device_type'),
-        postgresql_partition_by='LIST (user_device_type);'
+        postgresql_partition_by='LIST (user_device_type);',
+        listeners=[('after_create', create_partition)],
     )
     # ### end Alembic commands ###
 

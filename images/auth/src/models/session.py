@@ -63,7 +63,7 @@ class Session(db.Model):
         """
 
         device = None
-        user_agent = parse_user_agent(value.string)
+        user_agent = parse_user_agent(value)
         if user_agent.is_pc:
             device = 'pc'
         elif user_agent.is_tablet:
