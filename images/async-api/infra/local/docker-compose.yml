@@ -54,7 +54,7 @@ services:
     restart: always
     build: ../../../etl/
     command: >
-      sh -c "ls -a && cd /app/src/
+      sh -c "cd /app/src/
       && python main.py"
     volumes:
       - ../../../etl/:/app
