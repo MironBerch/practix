@@ -48,6 +48,15 @@ class FilmworksService(BaseService):
             },
         )
 
+    def filter(self):
+        raise NotImplementedError()
+
+    def update(self):
+        raise NotImplementedError()
+
+    def remove(self):
+        raise NotImplementedError()
+
 
 def get_filmworks_service(
         mongo: AsyncIOMotorDatabase = Depends(get_mongo),

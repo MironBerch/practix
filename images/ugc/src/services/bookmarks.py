@@ -43,6 +43,18 @@ class BookmarksService(BaseService):
             },
         )
 
+    def get(self):
+        raise NotImplementedError()
+
+    def get_rating(self):
+        raise NotImplementedError()
+
+    def rate(self):
+        raise NotImplementedError()
+
+    def unrate(self):
+        raise NotImplementedError()
+
 
 def get_bookmarks_service(
         mongo: AsyncIOMotorDatabase = Depends(get_mongo),
