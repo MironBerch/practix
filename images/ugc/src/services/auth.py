@@ -1,6 +1,6 @@
 import logging
 from http import HTTPStatus
-from uuid import UUID, uuid4
+from uuid import UUID
 
 import jwt
 from fastapi import Depends, HTTPException
@@ -18,18 +18,14 @@ class AuthService:
         if credentials:
             self.token = credentials.credentials
         else:
-            self.token = jwt.encode(
-                {'user_id': str(uuid4())},
-                key=settings.auth.secret_key,
-                algorithm=settings.auth.algorithm,
-            )
+            raise HTTPException(status_code=HTTPStatus.UNAUTHORIZED)
 
     def decode_token(self) -> dict:
         """Декодирование JWT-токена."""
         try:
             payload = jwt.decode(
                 self.token,
-                key=settings.auth.secret_key,
+                key=settings.auth.jwt_secret_key,
                 algorithms=[settings.auth.algorithm],
             )
         except ExpiredSignatureError:
@@ -43,7 +39,7 @@ class AuthService:
     def user_id(self) -> UUID:
         """Получение с user ID пользователя из claims токена."""
         claims = self.decode_token()
-        if not (user_id := claims.get('user_id')):
+        if not (user_id := claims.get('sub')):
             logging.error('Проблема с получением user_id: В токене нет ID пользователя!')
             raise HTTPException(status_code=HTTPStatus.BAD_REQUEST)
         return user_id
