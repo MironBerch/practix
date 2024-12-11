@@ -17,7 +17,7 @@ class MongoConfig(BaseSettings):
 
 
 class AuthConfig(BaseSettings):
-    secret_key: str = environ.get('SECRET_KEY')
+    jwt_secret_key: str = environ.get('JWT_SECRET_KEY')
     algorithm: str = 'HS256'
 
 

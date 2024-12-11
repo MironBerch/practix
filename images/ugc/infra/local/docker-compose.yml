@@ -12,7 +12,7 @@ services:
       - "FASTAPI_PORT=8080"
       - "MONGO_PORT=27017"
       - "DEBUG=True"
-      - "SECRET_KEY=secretkey"
+      - "JWT_SECRET_KEY=secretkey"
     ports:
       - "8080:8080"
     depends_on:
