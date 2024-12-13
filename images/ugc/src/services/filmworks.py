@@ -9,11 +9,12 @@ from services.base import BaseService
 
 class FilmworksService(BaseService):
     async def get(self, filmwork_id: UUID | str):
-        return self.mongo['filmworks'].find_one({'_id': filmwork_id})
+        result = await self.mongo['filmworks'].find_one({'_id': filmwork_id})
+        return result
 
     async def get_rating(self, filmwork_id: UUID | str):
-        filmwork = await self.mongo['filmworks'].find_one({'_id': filmwork_id})
-        return filmwork['rating']
+        result = await self.mongo['filmworks'].find_one({'_id': filmwork_id})
+        return result['rating']
 
     async def rate(
             self,
@@ -31,13 +32,14 @@ class FilmworksService(BaseService):
                 break
         else:
             votes.append({'user_id': user_id, 'score': score})
-        return self.mongo['filmworks'].update_one(
+        result = await self.mongo['filmworks'].update_one(
             {'_id': filmwork_id},
             {'$set': {'rating.votes': votes}}
         )
+        return result
 
     async def unrate(self, filmwork_id: UUID | str, user_id: UUID | str):
-        await self.mongo['filmworks'].update_one(
+        result = await self.mongo['filmworks'].update_one(
             {'_id': filmwork_id},
             {
                 '$pull': {
@@ -47,6 +49,7 @@ class FilmworksService(BaseService):
                 },
             },
         )
+        return result
 
     def filter(self):
         raise NotImplementedError()

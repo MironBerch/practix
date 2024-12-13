@@ -23,7 +23,8 @@ async def get_filmwork_reviews(
     filmwork_id: UUID | str = Path(title='UUID фильма'),
     paginator: Paginator = Depends(),
 ) -> list[Review]:
-    return service.filter(filmwork_id=filmwork_id, paginator=paginator)
+    result = await service.filter(filmwork_id=filmwork_id, paginator=paginator)
+    return result
 
 
 @router.post(
@@ -40,7 +41,8 @@ async def create_filmwork_review(
     service: ReviewsService = Depends(get_reviews_service),
     filmwork_id: UUID | str = Path(title='UUID фильма'),
 ):
-    return service.update(user_id=auth.user_id, filmwork_id=filmwork_id, text=text)
+    result = await service.update(user_id=auth.user_id, filmwork_id=filmwork_id, text=text)
+    return result
 
 
 @router.delete(
@@ -54,7 +56,8 @@ async def delete_filmwork_review(
     service: ReviewsService = Depends(get_reviews_service),
     filmwork_id: UUID | str = Path(title='UUID фильма'),
 ):
-    return service.remove(user_id=auth.user_id, filmwork_id=filmwork_id)
+    result = await service.remove(user_id=auth.user_id, filmwork_id=filmwork_id)
+    return result
 
 
 @router.get(
@@ -68,7 +71,8 @@ async def get_review_rating(
     service: ReviewsService = Depends(get_reviews_service),
     review_id: UUID | str = Path(title='UUID отзыва'),
 ):
-    return service.get_rating(review_id=review_id)
+    result = await service.get_rating(review_id=review_id)
+    return result
 
 
 @router.post(
@@ -84,7 +88,8 @@ async def rate_review(
     service: ReviewsService = Depends(get_reviews_service),
     review_id: UUID | str = Path(title='UUID отзыва'),
 ):
-    return service.rate(review_id=review_id, user_id=auth.user_id, score=score.score)
+    result = await service.rate(review_id=review_id, user_id=auth.user_id, score=score.score)
+    return result
 
 
 @router.delete(
@@ -98,4 +103,5 @@ async def unrate_review(
     service: ReviewsService = Depends(get_reviews_service),
     review_id: UUID | str = Path(title='UUID отзыва'),
 ):
-    return service.unrate(review_id=review_id, user_id=auth.user_id)
+    result = await service.unrate(review_id=review_id, user_id=auth.user_id)
+    return result

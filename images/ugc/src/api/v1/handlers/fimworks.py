@@ -21,7 +21,8 @@ async def get_filmwork_rating(
     service: FilmworksService = Depends(get_filmworks_service),
     filmwork_id: UUID | str = Path(title='UUID фильма'),
 ) -> Rating:
-    return service.get_rating(filmwork_id=filmwork_id)
+    result = await service.get_rating(filmwork_id=filmwork_id)
+    return result
 
 
 @router.post(
@@ -37,7 +38,8 @@ async def rate_filmwork(
     service: FilmworksService = Depends(get_filmworks_service),
     filmwork_id: UUID | str = Path(title='UUID фильма'),
 ):
-    return service.rate(filmwork_id=filmwork_id, user_id=auth.user_id, score=score.score)
+    result = await service.rate(filmwork_id=filmwork_id, user_id=auth.user_id, score=score.score)
+    return result
 
 
 @router.delete(
@@ -51,4 +53,5 @@ async def unrate_filmwork(
     service: FilmworksService = Depends(get_filmworks_service),
     filmwork_id: UUID | str = Path(title='UUID фильма'),
 ):
-    return service.unrate(filmwork_id=filmwork_id, user_id=auth.user_id)
+    result = await service.unrate(filmwork_id=filmwork_id, user_id=auth.user_id)
+    return result

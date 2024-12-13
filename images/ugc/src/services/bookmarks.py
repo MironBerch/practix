@@ -10,16 +10,17 @@ from services.base import BaseService
 
 class BookmarksService(BaseService):
     async def filter(self, user_id: UUID | str, paginator: Paginator):
-        return (
-            self.mongo['users']
+        result = (
+            await self.mongo['users']
             .find({'_id': user_id})
             .skip((paginator.page - 1) * paginator.size)
             .limit(paginator.size)
             .to_list(length=None)
         )
+        return result
 
     async def update(self, user_id: UUID | str, filmwork_id: UUID | str):
-        return self.mongo['users'].update_one(
+        result = await self.mongo['users'].update_one(
             {'_id': user_id},
             {
                 '$addToSet': {
@@ -30,9 +31,10 @@ class BookmarksService(BaseService):
             },
             upsert=True,
         )
+        return result
 
     async def remove(self, user_id: UUID | str, filmwork_id: UUID | str):
-        return self.mongo['users'].update_one(
+        result = await self.mongo['users'].update_one(
             {'_id': user_id},
             {
                 '$pull': {
@@ -42,6 +44,7 @@ class BookmarksService(BaseService):
                 }
             },
         )
+        return result
 
     def get(self):
         raise NotImplementedError()

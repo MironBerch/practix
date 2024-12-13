@@ -11,18 +11,20 @@ from services.base import BaseService
 
 class ReviewsService(BaseService):
     async def get(self, user_id: UUID | str, filmwork_id: UUID | str):
-        return self.mongo['reviews'].find_one(
+        result = await self.mongo['reviews'].find_one(
             {'filmwork_id': filmwork_id, 'author': user_id},
         )
+        return result
 
     async def filter(self, filmwork_id: UUID | str, paginator: Paginator):
-        return (
-            self.mongo['reviews']
+        result = (
+            await self.mongo['reviews']
             .find({'filmwork_id': filmwork_id})
             .skip((paginator.page - 1) * paginator.size)
             .limit(paginator.size)
             .to_list(length=None)
         )
+        return result
 
     async def update(self, user_id: UUID | str, filmwork_id: UUID | str, text: str):
         result = await self.mongo['reviews'].update_one(
@@ -53,8 +55,8 @@ class ReviewsService(BaseService):
         return result
 
     async def get_rating(self, review_id):
-        review = await self.mongo['reviews'].find_one({'_id': review_id})
-        return review['rating']
+        result = await self.mongo['reviews'].find_one({'_id': review_id})
+        return result['rating']
 
     async def rate(self, review_id, user_id, score):
         review_filter = {'_id': review_id}
@@ -66,16 +68,18 @@ class ReviewsService(BaseService):
                 break
         else:
             votes.append({'user_id': user_id, 'score': score})
-        return self.mongo['reviews'].update_one(
+        result = await self.mongo['reviews'].update_one(
             {'_id': review_id},
             {'$set': {'rating.votes': votes}},
         )
+        return result
 
     async def unrate(self, review_id, user_id):
-        await self.mongo['reviews'].update_one(
+        result = await self.mongo['reviews'].update_one(
             {'_id': review_id},
             {'$pull': {'rating.votes': {'user_id': user_id}}},
         )
+        return result
 
 
 def get_reviews_service(

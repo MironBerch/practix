@@ -22,7 +22,8 @@ async def get_bookmarks(
     service: BookmarksService = Depends(get_bookmarks_service),
     paginator: Paginator = Depends(),
 ) -> list[FilmworkBookmark]:
-    return service.filter(user_id=auth.user_id, paginator=paginator)
+    result = await service.filter(user_id=auth.user_id, paginator=paginator)
+    return result
 
 
 @router.post(
@@ -36,7 +37,8 @@ async def bookmark_filmwork(
     service: BookmarksService = Depends(get_bookmarks_service),
     filmwork_id: UUID | str = Path(title='UUID фильма'),
 ) -> dict:
-    return service.update(user_id=auth.user_id, filmwork_id=filmwork_id)
+    result = await service.update(user_id=auth.user_id, filmwork_id=filmwork_id)
+    return result
 
 
 @router.delete(
@@ -50,4 +52,5 @@ async def unbookmark_film(
     service: BookmarksService = Depends(get_bookmarks_service),
     filmwork_id: UUID | str = Path(title='UUID фильма'),
 ) -> dict:
-    return service.remove(user_id=auth.user_id, filmwork_id=filmwork_id)
+    result = await service.remove(user_id=auth.user_id, filmwork_id=filmwork_id)
+    return result
