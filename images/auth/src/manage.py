@@ -84,11 +84,25 @@ def create_app() -> Flask:
     init_routers(app)
 
     app.config['SWAGGER'] = {
-        'title': 'Movies auth API v3',
-        'uiversion': 3
+        'title': 'Movies auth API v1',
+        'uiversion': 3,
+        'openapi': '3.0.2',
     }
 
-    Swagger(app)
+    swagger_template = {
+        'securityDefinitions': {
+            'Bearer': {
+                'type': 'apiKey',
+                'name': 'Authorization',
+                'in': 'header',
+                'description': 'JWT Authorization header using the Bearer scheme.\
+                    Example: "Authorization: Bearer {token}"',
+            }
+        },
+        'security': [{'Bearer': []}],
+    }
+
+    Swagger(app, template=swagger_template)
 
     jwt = JWTManager(app)
 
