@@ -35,7 +35,7 @@ async def get_bookmarks(
 async def bookmark_filmwork(
     auth: AuthService = Depends(),
     service: BookmarksService = Depends(get_bookmarks_service),
-    filmwork_id: UUID | str = Path(title='UUID фильма'),
+    filmwork_id: UUID = Path(title='UUID фильма'),
 ) -> dict:
     result = await service.update(user_id=auth.user_id, filmwork_id=filmwork_id)
     return result
@@ -50,7 +50,7 @@ async def bookmark_filmwork(
 async def unbookmark_film(
     auth: AuthService = Depends(),
     service: BookmarksService = Depends(get_bookmarks_service),
-    filmwork_id: UUID | str = Path(title='UUID фильма'),
+    filmwork_id: UUID = Path(title='UUID фильма'),
 ) -> dict:
     result = await service.remove(user_id=auth.user_id, filmwork_id=filmwork_id)
     return result

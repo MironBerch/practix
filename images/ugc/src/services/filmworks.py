@@ -8,19 +8,19 @@ from services.base import BaseService
 
 
 class FilmworksService(BaseService):
-    async def get(self, filmwork_id: UUID | str):
+    async def get(self, filmwork_id: UUID):
         result = await self.mongo['filmworks'].find_one({'_id': filmwork_id})
         return result
 
-    async def get_rating(self, filmwork_id: UUID | str):
+    async def get_rating(self, filmwork_id: UUID):
         result = await self.mongo['filmworks'].find_one({'_id': filmwork_id})
         return result['rating']
 
     async def rate(
             self,
-            filmwork_id: UUID | str,
-            user_id: UUID | str,
-            score: int | float,
+            filmwork_id: UUID,
+            user_id: UUID,
+            score: int,
     ):
         filmwork: dict = await self.mongo['filmworks'].find_one(
             {'_id': filmwork_id},
@@ -38,7 +38,7 @@ class FilmworksService(BaseService):
         )
         return result
 
-    async def unrate(self, filmwork_id: UUID | str, user_id: UUID | str):
+    async def unrate(self, filmwork_id: UUID, user_id: UUID):
         result = await self.mongo['filmworks'].update_one(
             {'_id': filmwork_id},
             {

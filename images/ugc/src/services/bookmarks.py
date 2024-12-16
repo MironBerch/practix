@@ -9,7 +9,7 @@ from services.base import BaseService
 
 
 class BookmarksService(BaseService):
-    async def filter(self, user_id: UUID | str, paginator: Paginator):
+    async def filter(self, user_id: UUID, paginator: Paginator):
         result = (
             await self.mongo['users']
             .find({'_id': user_id})
@@ -19,7 +19,7 @@ class BookmarksService(BaseService):
         )
         return result
 
-    async def update(self, user_id: UUID | str, filmwork_id: UUID | str):
+    async def update(self, user_id: UUID, filmwork_id: UUID):
         result = await self.mongo['users'].update_one(
             {'_id': user_id},
             {
@@ -33,7 +33,7 @@ class BookmarksService(BaseService):
         )
         return result
 
-    async def remove(self, user_id: UUID | str, filmwork_id: UUID | str):
+    async def remove(self, user_id: UUID, filmwork_id: UUID):
         result = await self.mongo['users'].update_one(
             {'_id': user_id},
             {

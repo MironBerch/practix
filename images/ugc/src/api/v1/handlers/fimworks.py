@@ -19,7 +19,7 @@ router = APIRouter(tags=['filmworks'])
 )
 async def get_filmwork_rating(
     service: FilmworksService = Depends(get_filmworks_service),
-    filmwork_id: UUID | str = Path(title='UUID фильма'),
+    filmwork_id: UUID = Path(title='UUID фильма'),
 ) -> Rating:
     result = await service.get_rating(filmwork_id=filmwork_id)
     return result
@@ -36,8 +36,8 @@ async def rate_filmwork(
     score: Score,
     auth: AuthService = Depends(),
     service: FilmworksService = Depends(get_filmworks_service),
-    filmwork_id: UUID | str = Path(title='UUID фильма'),
-):
+    filmwork_id: UUID = Path(title='UUID фильма'),
+) -> dict:
     result = await service.rate(filmwork_id=filmwork_id, user_id=auth.user_id, score=score.score)
     return result
 
@@ -51,7 +51,7 @@ async def rate_filmwork(
 async def unrate_filmwork(
     auth: AuthService = Depends(),
     service: FilmworksService = Depends(get_filmworks_service),
-    filmwork_id: UUID | str = Path(title='UUID фильма'),
-):
+    filmwork_id: UUID = Path(title='UUID фильма'),
+) -> dict:
     result = await service.unrate(filmwork_id=filmwork_id, user_id=auth.user_id)
     return result

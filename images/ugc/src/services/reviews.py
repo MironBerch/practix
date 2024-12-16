@@ -10,13 +10,13 @@ from services.base import BaseService
 
 
 class ReviewsService(BaseService):
-    async def get(self, user_id: UUID | str, filmwork_id: UUID | str):
+    async def get(self, user_id: UUID, filmwork_id: UUID):
         result = await self.mongo['reviews'].find_one(
             {'filmwork_id': filmwork_id, 'author': user_id},
         )
         return result
 
-    async def filter(self, filmwork_id: UUID | str, paginator: Paginator):
+    async def filter(self, filmwork_id: UUID, paginator: Paginator):
         result = (
             await self.mongo['reviews']
             .find({'filmwork_id': filmwork_id})
@@ -26,7 +26,7 @@ class ReviewsService(BaseService):
         )
         return result
 
-    async def update(self, user_id: UUID | str, filmwork_id: UUID | str, text: str):
+    async def update(self, user_id: UUID, filmwork_id: UUID, text: str):
         result = await self.mongo['reviews'].update_one(
             {
                 'author': user_id,
@@ -45,7 +45,7 @@ class ReviewsService(BaseService):
         )
         return result
 
-    async def remove(self, user_id: UUID | str, filmwork_id: UUID | str):
+    async def remove(self, user_id: UUID, filmwork_id: UUID):
         result = await self.mongo['reviews'].delete_one(
             {
                 'author': user_id,
@@ -54,11 +54,11 @@ class ReviewsService(BaseService):
         )
         return result
 
-    async def get_rating(self, review_id):
+    async def get_rating(self, review_id: UUID):
         result = await self.mongo['reviews'].find_one({'_id': review_id})
         return result['rating']
 
-    async def rate(self, review_id, user_id, score):
+    async def rate(self, review_id: UUID, user_id: UUID, score: int):
         review_filter = {'_id': review_id}
         review: dict = await self.mongo['reviews'].find_one(review_filter)
         votes: list = review.get('rating', {}).get('votes', [])
@@ -74,7 +74,7 @@ class ReviewsService(BaseService):
         )
         return result
 
-    async def unrate(self, review_id, user_id):
+    async def unrate(self, review_id: UUID, user_id: UUID):
         result = await self.mongo['reviews'].update_one(
             {'_id': review_id},
             {'$pull': {'rating.votes': {'user_id': user_id}}},

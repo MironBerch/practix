@@ -20,7 +20,7 @@ router = APIRouter(tags=['reviews'])
 )
 async def get_filmwork_reviews(
     service: ReviewsService = Depends(get_reviews_service),
-    filmwork_id: UUID | str = Path(title='UUID фильма'),
+    filmwork_id: UUID = Path(title='UUID фильма'),
     paginator: Paginator = Depends(),
 ) -> list[Review]:
     result = await service.filter(filmwork_id=filmwork_id, paginator=paginator)
@@ -39,8 +39,8 @@ async def create_filmwork_review(
     text: Text,
     auth: AuthService = Depends(),
     service: ReviewsService = Depends(get_reviews_service),
-    filmwork_id: UUID | str = Path(title='UUID фильма'),
-):
+    filmwork_id: UUID = Path(title='UUID фильма'),
+) -> dict:
     result = await service.update(user_id=auth.user_id, filmwork_id=filmwork_id, text=text)
     return result
 
@@ -54,8 +54,8 @@ async def create_filmwork_review(
 async def delete_filmwork_review(
     auth: AuthService = Depends(),
     service: ReviewsService = Depends(get_reviews_service),
-    filmwork_id: UUID | str = Path(title='UUID фильма'),
-):
+    filmwork_id: UUID = Path(title='UUID фильма'),
+) -> dict:
     result = await service.remove(user_id=auth.user_id, filmwork_id=filmwork_id)
     return result
 
@@ -69,8 +69,8 @@ async def delete_filmwork_review(
 )
 async def get_review_rating(
     service: ReviewsService = Depends(get_reviews_service),
-    review_id: UUID | str = Path(title='UUID отзыва'),
-):
+    review_id: UUID = Path(title='UUID отзыва'),
+) -> dict:
     result = await service.get_rating(review_id=review_id)
     return result
 
@@ -86,8 +86,8 @@ async def rate_review(
     score: ReviewScore,
     auth: AuthService = Depends(),
     service: ReviewsService = Depends(get_reviews_service),
-    review_id: UUID | str = Path(title='UUID отзыва'),
-):
+    review_id: UUID = Path(title='UUID отзыва'),
+) -> dict:
     result = await service.rate(review_id=review_id, user_id=auth.user_id, score=score.score)
     return result
 
@@ -101,7 +101,7 @@ async def rate_review(
 async def unrate_review(
     auth: AuthService = Depends(),
     service: ReviewsService = Depends(get_reviews_service),
-    review_id: UUID | str = Path(title='UUID отзыва'),
-):
+    review_id: UUID = Path(title='UUID отзыва'),
+) -> dict:
     result = await service.unrate(review_id=review_id, user_id=auth.user_id)
     return result
