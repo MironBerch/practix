@@ -7,12 +7,13 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 from api.paginator import Paginator
 from db.mongo import get_mongo
 from services.base import BaseService
+from services.utils import to_binary
 
 
 class ReviewsService(BaseService):
     async def get(self, user_id: UUID, filmwork_id: UUID):
         result = await self.mongo['reviews'].find_one(
-            {'filmwork_id': filmwork_id, 'author': user_id},
+            {'filmwork_id': to_binary(filmwork_id), 'author': to_binary(user_id)},
         )
         return result
 
@@ -29,8 +30,8 @@ class ReviewsService(BaseService):
     async def update(self, user_id: UUID, filmwork_id: UUID, text: str):
         result = await self.mongo['reviews'].update_one(
             {
-                'author': user_id,
-                'filmwork_id': filmwork_id,
+                'author': to_binary(user_id),
+                'filmwork_id': to_binary(filmwork_id),
             },
             {
                 '$set': {
@@ -48,18 +49,18 @@ class ReviewsService(BaseService):
     async def remove(self, user_id: UUID, filmwork_id: UUID):
         result = await self.mongo['reviews'].delete_one(
             {
-                'author': user_id,
-                'filmwork_id': filmwork_id,
+                'author': to_binary(user_id),
+                'filmwork_id': to_binary(filmwork_id),
             }
         )
         return result
 
     async def get_rating(self, review_id: UUID):
-        result = await self.mongo['reviews'].find_one({'_id': review_id})
+        result = await self.mongo['reviews'].find_one({'_id': to_binary(review_id)})
         return result['rating']
 
     async def rate(self, review_id: UUID, user_id: UUID, score: int):
-        review_filter = {'_id': review_id}
+        review_filter = {'_id': to_binary(review_id)}
         review: dict = await self.mongo['reviews'].find_one(review_filter)
         votes: list = review.get('rating', {}).get('votes', [])
         for vote in votes:
@@ -69,14 +70,14 @@ class ReviewsService(BaseService):
         else:
             votes.append({'user_id': user_id, 'score': score})
         result = await self.mongo['reviews'].update_one(
-            {'_id': review_id},
+            {'_id': to_binary(review_id)},
             {'$set': {'rating.votes': votes}},
         )
         return result
 
     async def unrate(self, review_id: UUID, user_id: UUID):
         result = await self.mongo['reviews'].update_one(
-            {'_id': review_id},
+            {'_id': to_binary(review_id)},
             {'$pull': {'rating.votes': {'user_id': user_id}}},
         )
         return result

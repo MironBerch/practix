@@ -6,13 +6,14 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 from api.paginator import Paginator
 from db.mongo import get_mongo
 from services.base import BaseService
+from services.utils import to_binary
 
 
 class BookmarksService(BaseService):
     async def filter(self, user_id: UUID, paginator: Paginator):
         result = (
             await self.mongo['users']
-            .find({'_id': user_id})
+            .find({'_id': to_binary(user_id)})
             .skip((paginator.page - 1) * paginator.size)
             .limit(paginator.size)
             .to_list(length=None)
@@ -21,11 +22,11 @@ class BookmarksService(BaseService):
 
     async def update(self, user_id: UUID, filmwork_id: UUID):
         result = await self.mongo['users'].update_one(
-            {'_id': user_id},
+            {'_id': to_binary(user_id)},
             {
                 '$addToSet': {
                     'bookmarks': {
-                        'filmwork_id': filmwork_id,
+                        'filmwork_id': to_binary(filmwork_id),
                     }
                 }
             },
@@ -35,11 +36,11 @@ class BookmarksService(BaseService):
 
     async def remove(self, user_id: UUID, filmwork_id: UUID):
         result = await self.mongo['users'].update_one(
-            {'_id': user_id},
+            {'_id': to_binary(user_id)},
             {
                 '$pull': {
                     'bookmarks': {
-                        'filmwork_id': filmwork_id,
+                        'filmwork_id': to_binary(filmwork_id),
                     }
                 }
             },
