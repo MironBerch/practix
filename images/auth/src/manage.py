@@ -86,7 +86,6 @@ def create_app() -> Flask:
     app.config['SWAGGER'] = {
         'title': 'Movies auth API v1',
         'uiversion': 3,
-        'openapi': '3.0.2',
     }
 
     swagger_template = {
