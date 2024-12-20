@@ -42,4 +42,4 @@ class AuthService:
         if not (user_id := claims.get('sub')):
             logging.error('Проблема с получением user_id: В токене нет ID пользователя!')
             raise HTTPException(status_code=HTTPStatus.BAD_REQUEST)
-        return user_id
+        return UUID(user_id)
