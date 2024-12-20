@@ -208,36 +208,23 @@ def get_user_sessions():
       security:
         - Bearer: []
     responses:
-      200:
+      '200':
         description: Return sessions
         schema:
-          $ref: "#/definitions/UserSession"
-      403:
+          type: object
+          properties:
+            user_id:
+              type: string
+              format: uuid
+            user_agent:
+              type: string
+            user_device_type:
+              type: string
+            date:
+              type: string
+              format: date
+      '403':
         description: Forbidden error
-        schema:
-          $ref: "#/definitions/ApiResponse"
-    definitions:
-      ApiResponse:
-        type: "object"
-        properties:
-          message:
-            type: "string"
-      UserSession:
-        type: "object"
-        properties:
-          data:
-            type: "object"
-            properties:
-              user_id:
-                type: "string"
-                format: "uuid"
-              user_agent:
-                type: "string"
-              user_device_type:
-                type: "string"
-              date:
-                type: "string"
-                format: "date"
     tags:
       - user
     """

@@ -401,15 +401,12 @@ def refresh():
       '200':
         description: Return refresh token
         schema:
-          $ref: "#/definitions/AccessTokenMsg"
+          type: object
+          properties:
+            access_token:
+              type: string
     tags:
       - auth
-    definitions:
-      AccessTokenMsg:
-        type: "object"
-        properties:
-          access_token:
-            type: "string"
     """
     identity = get_jwt_identity()
     jti = get_jwt()['jti']
