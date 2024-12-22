@@ -53,7 +53,7 @@ collection_schemas = {
         'required': ['_id', 'rating'],
         'properties': {
             '_id': {'bsonType': 'binData'},
-            'author': {'bsonType': 'binData'},
+            'author_id': {'bsonType': 'binData'},
             'filmwork_id': {'bsonType': 'binData'},
             'pub_date': {'bsonType': 'date'},
             'rating': {
@@ -113,7 +113,7 @@ async def create_reviews_collection():
     except CollectionInvalid:
         pass
     await mongo[MongoCollections.reviews.name].create_index(
-        [('author', 1), ('filmwork_id', 1)],
+        [('author_id', 1), ('filmwork_id', 1)],
         unique=True,
     )
 
