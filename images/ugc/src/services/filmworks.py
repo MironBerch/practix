@@ -23,24 +23,28 @@ class FilmworksService(BaseService):
             user_id: UUID,
             score: int,
     ):
+        filmwork_id = to_binary(filmwork_id)
+        user_id_bytes = user_id.bytes
         filmwork: dict = await self.mongo['filmworks'].find_one(
-            {'_id': to_binary(filmwork_id)},
+            {'_id': filmwork_id},
         )
         votes: list = filmwork.get('rating', {}).get('votes', [])
         for vote in votes:
-            if vote['user_id'] == user_id:
+            if vote['user_id'] == user_id_bytes:
                 vote['score'] = score
                 break
         else:
             votes.append({'user_id': to_binary(user_id), 'score': score})
-        result = await self.mongo['filmworks'].update_one(
-            {'_id': to_binary(filmwork_id)},
-            {'$set': {'rating.votes': votes}}
+        await self.mongo['filmworks'].update_one(
+            {'_id': filmwork_id},
+            {'$set': {'rating.votes': votes}},
+            upsert=True,
         )
-        return result
+        result = await self.mongo['filmworks'].find_one({'_id': filmwork_id})
+        return result['rating']
 
     async def unrate(self, filmwork_id: UUID, user_id: UUID):
-        result = await self.mongo['filmworks'].update_one(
+        await self.mongo['filmworks'].update_one(
             {'_id': to_binary(filmwork_id)},
             {
                 '$pull': {
@@ -50,7 +54,8 @@ class FilmworksService(BaseService):
                 },
             },
         )
-        return result
+        result = await self.mongo['filmworks'].find_one({'_id': to_binary(filmwork_id)})
+        return result['rating']
 
     def filter(self):
         raise NotImplementedError()
