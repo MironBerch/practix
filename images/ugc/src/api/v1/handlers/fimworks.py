@@ -37,7 +37,7 @@ async def rate_filmwork(
     auth: AuthService = Depends(),
     service: FilmworksService = Depends(get_filmworks_service),
     filmwork_id: UUID = Path(title='UUID фильма'),
-) -> dict:
+) -> Rating:
     result = await service.rate(filmwork_id=filmwork_id, user_id=auth.user_id, score=score.score)
     return result
 
@@ -46,12 +46,13 @@ async def rate_filmwork(
     path='/filmworks/{filmwork_id}/ratings',
     summary='Удаление оценки у фильма',
     response_description='Результат удаление оценки у фильма',
+    response_model=Rating,
     dependencies=[Depends(check_filmwork_exist)],
 )
 async def unrate_filmwork(
     auth: AuthService = Depends(),
     service: FilmworksService = Depends(get_filmworks_service),
     filmwork_id: UUID = Path(title='UUID фильма'),
-) -> dict:
+) -> Rating:
     result = await service.unrate(filmwork_id=filmwork_id, user_id=auth.user_id)
     return result
