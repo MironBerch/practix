@@ -39,7 +39,7 @@ class Vote(BaseModel):
 
 
 class Rating(BaseModel):
-    average_rating: int | None
+    average_rating: float | None = None
     votes: list[Vote] | None = Field(exclude=True)
 
     @model_validator(mode='before')
@@ -50,7 +50,7 @@ class Rating(BaseModel):
         """
         votes: list[Vote] = data.get('votes')
         if votes:
-            data['average_rating'] = sum([vote.score for vote in votes]) // (len(votes))
+            data['average_rating'] = sum([Vote(**vote).score for vote in votes]) / (len(votes))
         return data
 
 
