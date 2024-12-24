@@ -48,13 +48,13 @@ class Rating(BaseModel):
         """
         Валидатор для подсчета средней пользовательской оценки.
         """
-        votes: list[Vote] = data.get('votes')
+        votes: list[dict] = data.get('votes', [])
         if votes:
             data['average_rating'] = sum([Vote(**vote).score for vote in votes]) / (len(votes))
         return data
 
 
-class ReviewRating(Rating):
+class ReviewRating(BaseModel):
     votes: list[Vote] | None = Field(exclude=True)
     likes: int = Field(default=0)
     dislikes: int = Field(default=0)
@@ -66,9 +66,13 @@ class ReviewRating(Rating):
         """
         Валидатор для подсчета лайков и дизлайков.
         """
-        votes: list[Vote] = data.get('votes')
+        votes: list[dict] = data.get('votes', [])
+        data['likes'] = data.get('likes', 0)
+        data['dislikes'] = data.get('dislikes', 0)
+        data['likes_sum'] = data.get('likes_sum', 0)
         if votes:
             for vote in votes:
+                vote = Vote(**vote)
                 if vote.score == 10:
                     data['likes'] += 1
                 if vote.score == 1:
