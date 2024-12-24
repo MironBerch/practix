@@ -1,6 +1,7 @@
+from http import HTTPStatus
 from uuid import UUID
 
-from fastapi import APIRouter, Depends, Path
+from fastapi import APIRouter, Depends, Path, Response
 
 from api.dependencies import check_filmwork_exist, check_review_exists
 from api.paginator import Paginator
@@ -40,8 +41,8 @@ async def create_filmwork_review(
     auth: AuthService = Depends(),
     service: ReviewsService = Depends(get_reviews_service),
     filmwork_id: UUID = Path(title='UUID фильма'),
-) -> dict:
-    result = await service.update(user_id=auth.user_id, filmwork_id=filmwork_id, text=text)
+) -> Review:
+    result = await service.update(user_id=auth.user_id, filmwork_id=filmwork_id, text=text.text)
     return result
 
 
@@ -50,14 +51,16 @@ async def create_filmwork_review(
     summary='Удаление рецензии у фильма',
     response_description='Результат удаления рецензии на фильму',
     dependencies=[Depends(check_filmwork_exist), Depends(check_review_exists)],
+    status_code=HTTPStatus.NO_CONTENT,
 )
 async def delete_filmwork_review(
     auth: AuthService = Depends(),
     service: ReviewsService = Depends(get_reviews_service),
     filmwork_id: UUID = Path(title='UUID фильма'),
-) -> dict:
-    result = await service.remove(user_id=auth.user_id, filmwork_id=filmwork_id)
-    return result
+    review_id: UUID = Path(title='UUID рецензии'),
+) -> Response:
+    await service.remove(review_id=review_id, user_id=auth.user_id, filmwork_id=filmwork_id)
+    return Response(status_code=HTTPStatus.NO_CONTENT)
 
 
 @router.get(
@@ -70,8 +73,9 @@ async def delete_filmwork_review(
 async def get_review_rating(
     service: ReviewsService = Depends(get_reviews_service),
     review_id: UUID = Path(title='UUID отзыва'),
-) -> dict:
-    result = await service.get_rating(review_id=review_id)
+    filmwork_id: UUID = Path(title='UUID фильма'),
+) -> ReviewRating:
+    result = await service.get_rating(filmwork_id=filmwork_id, review_id=review_id)
     return result
 
 
@@ -87,14 +91,21 @@ async def rate_review(
     auth: AuthService = Depends(),
     service: ReviewsService = Depends(get_reviews_service),
     review_id: UUID = Path(title='UUID отзыва'),
-) -> dict:
-    result = await service.rate(review_id=review_id, user_id=auth.user_id, score=score.score)
+    filmwork_id: UUID = Path(title='UUID фильма'),
+) -> ReviewRating:
+    result = await service.rate(
+        filmwork_id=filmwork_id,
+        review_id=review_id,
+        user_id=auth.user_id,
+        score=score.score,
+    )
     return result
 
 
 @router.delete(
     path='/filmworks/{filmwork_id}/reviews/{review_id}/ratings',
     summary='Удаление оценки у рецензии',
+    response_model=ReviewRating,
     response_description='Результат удаления рейтинга рецензии',
     dependencies=[Depends(check_filmwork_exist)],
 )
@@ -102,6 +113,11 @@ async def unrate_review(
     auth: AuthService = Depends(),
     service: ReviewsService = Depends(get_reviews_service),
     review_id: UUID = Path(title='UUID отзыва'),
-) -> dict:
-    result = await service.unrate(review_id=review_id, user_id=auth.user_id)
+    filmwork_id: UUID = Path(title='UUID фильма'),
+) -> ReviewRating:
+    result = await service.unrate(
+        filmwork_id=filmwork_id,
+        review_id=review_id,
+        user_id=auth.user_id,
+    )
     return result
