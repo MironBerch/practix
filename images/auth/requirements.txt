@@ -15,7 +15,9 @@ blinker==1.8.2
     #   flask
     #   flask-mail
 celery==5.4.0
-    # via -r requirements.in
+    # via
+    #   -r requirements.in
+    #   flower
 click==8.1.7
     # via
     #   -r requirements.in
@@ -55,8 +57,12 @@ flask-migrate==4.0.7
     # via -r requirements.in
 flask-sqlalchemy==3.1.1
     # via flask-migrate
+flower==2.0.1
+    # via -r requirements.in
 greenlet==3.0.3
     # via sqlalchemy
+humanize==4.11.0
+    # via flower
 isort==5.13.2
     # via -r requirements.in
 itsdangerous==2.2.0
@@ -88,6 +94,8 @@ packaging==24.1
     #   marshmallow
 pep8-naming==0.13.3
     # via -r requirements.in
+prometheus-client==0.21.1
+    # via flower
 prompt-toolkit==3.0.47
     # via click-repl
 psycopg2-binary==2.9.9
@@ -110,6 +118,8 @@ python-dateutil==2.9.0.post0
     # via celery
 python-dotenv==1.0.1
     # via pydantic-settings
+pytz==2024.2
+    # via flower
 pyyaml==6.0.2
     # via flasgger
 redis==5.0.3
@@ -130,6 +140,8 @@ sqlalchemy==2.0.32
     # via
     #   alembic
     #   flask-sqlalchemy
+tornado==6.4.2
+    # via flower
 typing-extensions==4.12.2
     # via
     #   alembic
