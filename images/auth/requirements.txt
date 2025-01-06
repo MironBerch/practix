@@ -61,6 +61,8 @@ flower==2.0.1
     # via -r requirements.in
 greenlet==3.0.3
     # via sqlalchemy
+gunicorn==22.0.0
+    # via -r requirements.in
 humanize==4.11.0
     # via flower
 isort==5.13.2
@@ -91,6 +93,7 @@ mistune==3.0.2
 packaging==24.1
     # via
     #   flasgger
+    #   gunicorn
     #   marshmallow
 pep8-naming==0.13.3
     # via -r requirements.in

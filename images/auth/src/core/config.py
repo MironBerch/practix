@@ -20,7 +20,7 @@ class RedisConfig(BaseSettings):
 
 class FlaskConfig(BaseSettings):
     host: str = '0.0.0.0'
-    port: int = 5000
+    port: int = int(environ.get('FLASK_PORT'))
     secret_key: str = environ.get('SECRET_KEY')
     debug: bool = environ.get('DEBUG') == 'True'
 
