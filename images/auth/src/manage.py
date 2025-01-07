@@ -101,7 +101,22 @@ def create_app() -> Flask:
         'security': [{'Bearer': []}],
     }
 
-    Swagger(app, template=swagger_template)
+    swagger_config = {
+        'headers': [],
+        'specs': [
+            {
+                'endpoint': 'apispec_1',
+                'route': '/api/openapi.json',
+                'rule_filter': lambda rule: True,
+                'model_filter': lambda tag: True,
+            }
+        ],
+        'static_url_path': '/flasgger_static',
+        'swagger_ui': True,
+        'specs_route': '/api/docs'
+    }
+
+    Swagger(app, template=swagger_template, config=swagger_config)
 
     jwt = JWTManager(app)
 

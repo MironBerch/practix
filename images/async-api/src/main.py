@@ -39,8 +39,8 @@ app = FastAPI(
     title='Movies API v1',
     description='Read-only movies API',
     version='1.0',
-    docs_url='/movie/api/v1/docs',
-    openapi_url='/movie/api/openapi.json',
+    docs_url='/api/v1/docs',
+    openapi_url='/api/openapi.json',
     default_response_class=ORJSONResponse,
     lifespan=lifespan,
 )

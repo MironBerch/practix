@@ -23,8 +23,8 @@ app = FastAPI(
     title='Movies UGC v1',
     description='Movies UGC',
     version='1.0',
-    docs_url='/movie/api/v1/docs',
-    openapi_url='/movie/api/openapi.json',
+    docs_url='/api/v1/docs',
+    openapi_url='/api/openapi.json',
     default_response_class=ORJSONResponse,
     lifespan=lifespan,
 )
