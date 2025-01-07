@@ -39,13 +39,13 @@ app = FastAPI(
     title='Movies API v1',
     description='Read-only movies API',
     version='1.0',
-    docs_url='/api/v1/docs',
-    openapi_url='/api/openapi.json',
+    docs_url='/movies/api/docs',
+    openapi_url='/movies/api/openapi.json',
     default_response_class=ORJSONResponse,
     lifespan=lifespan,
 )
 
-app.include_router(api_router)
+app.include_router(api_router, prefix='/movies')
 
 if __name__ == '__main__':
     uvicorn.run(

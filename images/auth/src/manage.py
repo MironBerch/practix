@@ -106,14 +106,14 @@ def create_app() -> Flask:
         'specs': [
             {
                 'endpoint': 'apispec_1',
-                'route': '/api/openapi.json',
+                'route': '/auth/api/openapi.json',
                 'rule_filter': lambda rule: True,
                 'model_filter': lambda tag: True,
             }
         ],
-        'static_url_path': '/flasgger_static',
+        'static_url_path': '/auth/flasgger_static',
         'swagger_ui': True,
-        'specs_route': '/api/docs'
+        'specs_route': '/auth/api/docs'
     }
 
     Swagger(app, template=swagger_template, config=swagger_config)
