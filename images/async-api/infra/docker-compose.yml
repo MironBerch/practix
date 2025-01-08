@@ -48,46 +48,18 @@ services:
       timeout: 5s
       retries: 100
 
-  etl:
-    restart: always
-    build: ../../etl/.
-    command: >
-      sh -c "cd /app/src/
-      && python main.py"
-    environment:
-      - "SECRET_KEY=${ETL_SECRET_KEY}"
-      - "DB_NAME=${DB_NAME}"
-      - "DB_USER=${DB_USER}"
-      - "DB_PASSWORD=${DB_PASSWORD}"
-      - "DB_HOST=movies_db"
-      - "DB_PORT=5432"
-      - "REDIS_HOST=redis"
-      - "REDIS_PORT=6379"
-      - "REDIS_DB=0"
+  elasticdump:
+    image: elasticdump/elasticsearch-dump
     depends_on:
-      movies_db:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
       elastic:
         condition: service_healthy
-
-  movies_db:
-    build: ../../etl/infra/postgres/.
-    restart: always
-    ports:
-      - "5432:5432"
-    environment:
-      - "POSTGRES_USER=${DB_USER}"
-      - "POSTGRES_PASSWORD=${DB_PASSWORD}"
-      - "POSTGRES_DB=${DB_NAME}"
     volumes:
-        - movies_db_volume:/var/lib/postgresql/data/
-    healthcheck:
-      test: pg_isready --dbname=postgres --username=postgres
-      interval: 5s
-      timeout: 5s
-      retries: 100
+      - /data:/tmp
+    entrypoint: >
+      sh -c "sleep 10 && elasticdump \
+      --input=/tmp/dump.json \
+      --output=http://elastic:9200 \
+      --type=data"
 
   nginx:
     image: nginx:1.21-alpine
@@ -98,6 +70,3 @@ services:
       - "80:80"
     depends_on:
       - movies_api
-
-volumes:
-  movies_db_volume:
