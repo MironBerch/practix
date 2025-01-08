@@ -142,6 +142,7 @@ export interface Text {
 export interface FilmworkCollection extends Array<BaseFilmwork> {}
 export interface GenreCollection extends Array<Genre> {}
 export interface PersonCollection extends Array<Person> {}
+export interface FilmworkBookmarkCollection extends Array<FilmworkBookmark> {}
 export interface ReviewCollection extends Array<Review> {}
 export interface UserSessionCollection extends Array<UserSession> {}
 
