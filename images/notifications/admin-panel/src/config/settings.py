@@ -20,6 +20,12 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # drf
+    'rest_framework',
+
+    # django 3rd party
+    'django_celery_beat',
+
     # local
     'notifications.apps.NotificationsConfig',
 ]
@@ -112,3 +118,13 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # Default primary key field type
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Redis
+
+REDIS_HOST = environ.get('REDIS_HOST')
+REDIS_PORT = environ.get('REDIS_PORT')
+
+# Celery
+
+CELERY_BROKER_URL = environ.get('CELERY_BROKER_URL')
+CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
