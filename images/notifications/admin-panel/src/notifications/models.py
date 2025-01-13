@@ -1,8 +1,8 @@
 import uuid
 
-from notifications.validators import validate_jinja_template
-
 from django.db import models
+
+from notifications.validators import validate_jinja_template
 
 
 class User(models.Model):

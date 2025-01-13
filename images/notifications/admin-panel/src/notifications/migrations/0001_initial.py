@@ -2,9 +2,9 @@
 
 import uuid
 
-import notifications.validators
-
 from django.db import migrations, models
+
+import notifications.validators
 
 
 class Migration(migrations.Migration):

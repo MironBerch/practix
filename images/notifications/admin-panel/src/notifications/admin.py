@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from notifications.models import User, Template
+from notifications.models import Template, User
 
 
 @admin.register(User)
