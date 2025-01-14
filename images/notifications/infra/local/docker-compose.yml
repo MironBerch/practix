@@ -28,6 +28,29 @@ services:
     depends_on:
       - notifications_db
 
+  receiver:
+    restart: always
+    build: ../../receiver/
+    command: >
+      sh -c "cd /app/src/
+      && poetry run python main.py"
+    volumes:
+      - ../../receiver/:/app
+    expose:
+      - "5000"
+    ports:
+      - "5000:5000"
+    environment:
+      - "FASTAPI_PORT=5000"
+      - "DEBUG=True"
+      - "RABBITMQ_USER=user"
+      - "RABBITMQ_PASS=password"
+      - "RABBITMQ_HOST=rabbit"
+      - "RABBITMQ_SERVER_PORT=15672"
+      - "RABBITMQ_CLIENT_PORT=5672"
+    depends_on:
+      - rabbit
+
   notifications_db:
     image: postgres:16-alpine
     restart: always
@@ -40,5 +63,21 @@ services:
     volumes:
         - notifications_db_volume:/var/lib/postgresql/data/
 
+  rabbit:
+    image: rabbitmq:4-alpine
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    expose:
+      - "5672"
+      - "15672"
+    volumes:
+      - rabbit_data_volume:/var/lib/rabbitmq
+    environment:
+      - "RABBITMQ_DEFAULT_USER=user"
+      - "RABBITMQ_DEFAULT_PASS=password"
+
 volumes:
   notifications_db_volume:
+  rabbit_data_volume:
