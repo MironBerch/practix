@@ -1,11 +1,31 @@
+from contextlib import asynccontextmanager
 from logging import DEBUG
 
+import aio_pika
 import uvicorn
 from core.config import settings
 from core.logger import LOGGING
+from db import rabbitmq
 
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    user = settings.rabbitmq.user
+    password = settings.rabbitmq.password
+    host = settings.rabbitmq.host
+    port = settings.rabbitmq.client_port
+
+    rabbitmq.rabbitmq = await aio_pika.connect_robust(
+        f'amqp://{user}:{password}@{host}:{port}'
+    )
+
+    yield
+
+    await rabbitmq.rabbitmq.close()
+
 
 app = FastAPI(
     title='Notifications reciver API v1',
@@ -14,6 +34,7 @@ app = FastAPI(
     docs_url='/api/docs',
     openapi_url='/api/openapi.json',
     default_response_class=ORJSONResponse,
+    lifespan=lifespan,
 )
 
 if __name__ == '__main__':
