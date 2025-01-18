@@ -10,3 +10,7 @@ class CustomBaseModel(BaseModel):
 
 class UUIDMixin(CustomBaseModel):
     id: UUID = Field(alias='uuid')
+
+
+class User(UUIDMixin):
+    email: str

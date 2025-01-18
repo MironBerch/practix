@@ -3,6 +3,7 @@ from logging import DEBUG
 
 import aio_pika
 import uvicorn
+from api.urls import api_router
 from core.config import settings
 from core.logger import LOGGING
 from db import rabbitmq
@@ -36,6 +37,9 @@ app = FastAPI(
     default_response_class=ORJSONResponse,
     lifespan=lifespan,
 )
+
+app.include_router(api_router)
+
 
 if __name__ == '__main__':
     uvicorn.run(
