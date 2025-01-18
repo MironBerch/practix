@@ -12,6 +12,8 @@ pydantic = "^2.10.5"
 orjson = "^3.10.14"
 pydantic-settings = "^2.7.1"
 aio-pika = "^9.5.4"
+sqlalchemy = "^2.0.37"
+psycopg2-binary = "^2.9.10"
 
 [build-system]
 requires = ["poetry-core"]

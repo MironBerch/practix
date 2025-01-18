@@ -4,6 +4,14 @@ from pydantic import Field
 from pydantic_settings import BaseSettings
 
 
+class PostgresConfig(BaseSettings):
+    host: str = environ.get('POSTGRES_HOST')
+    port: int = int(environ.get('POSTGRES_PORT'))
+    db: str = environ.get('POSTGRES_NAME')
+    user: str = environ.get('POSTGRES_USER')
+    password: str = environ.get('POSTGRES_PASSWORD')
+
+
 class RabbitMQConfig(BaseSettings):
     host: str = environ.get('RABBITMQ_HOST')
     server_port: int = environ.get('RABBITMQ_SERVER_PORT')
@@ -21,6 +29,7 @@ class FastAPIConfig(BaseSettings):
 class Settings(BaseSettings):
     fastapi: FastAPIConfig = Field(default_factory=FastAPIConfig)
     rabbitmq: RabbitMQConfig = Field(default_factory=RabbitMQConfig)
+    postgres: PostgresConfig = Field(default_factory=PostgresConfig)
 
 
 settings = Settings()
