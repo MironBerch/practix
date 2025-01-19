@@ -1,4 +1,7 @@
+from aio_pika import Connection, DeliveryMode, Message
 from db.postgres import User, get_db
+from db.rabbitmq import get_rabbitmq
+from models.models import Notification
 from models.models import User as UserSchema
 from sqlalchemy.orm import Session
 
@@ -29,3 +32,31 @@ async def set_notifications_recipient(
         db.commit()
         db.refresh(new_user)
         return new_user
+
+
+@router.post(
+    '/notification',
+    response_model=Notification,
+    summary='Publish notification',
+    description='Publish notification for user',
+)
+async def publish_notification(
+    notification: Notification,
+    rabbitmq: Connection = Depends(get_rabbitmq),
+) -> Notification:
+    async with rabbitmq.channel() as channel:
+        await channel.declare_queue(
+            'notification_queue',
+            durable=True,
+        )
+        message_body = notification.model_dump_json()
+        message = Message(
+            body=message_body.encode(),
+            delivery_mode=DeliveryMode.PERSISTENT,
+            priority=notification.priority,
+        )
+        await channel.default_exchange.publish(
+            message,
+            routing_key='notification_queue',
+        )
+    return notification
