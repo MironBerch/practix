@@ -1,3 +1,5 @@
+from http import HTTPStatus
+
 from aio_pika import Connection, DeliveryMode, Message
 from db.postgres import User, get_db
 from db.rabbitmq import get_rabbitmq
@@ -5,7 +7,7 @@ from models.models import Notification
 from models.models import User as UserSchema
 from sqlalchemy.orm import Session
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, HTTPException
 
 router = APIRouter(tags=['notifications'])
 
@@ -42,8 +44,15 @@ async def set_notifications_recipient(
 )
 async def publish_notification(
     notification: Notification,
+    db: Session = Depends(get_db),
     rabbitmq: Connection = Depends(get_rabbitmq),
 ) -> Notification:
+    user_exist = db.query(User).filter(User.id == notification.user_id).first()
+    if not user_exist:
+        raise HTTPException(
+            status_code=HTTPStatus.NOT_FOUND,
+            detail='User with this id not found',
+        )
     async with rabbitmq.channel() as channel:
         await channel.declare_queue(
             'notification_queue',
