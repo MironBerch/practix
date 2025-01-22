@@ -6,10 +6,11 @@ import uvicorn
 from api.urls import api_router
 from core.config import settings
 from core.logger import LOGGING
-from db import rabbitmq
 
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
+
+from db import rabbitmq
 
 
 @asynccontextmanager
