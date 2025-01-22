@@ -11,5 +11,5 @@ class UserAdmin(admin.ModelAdmin):
 
 @admin.register(Template)
 class TemplateAdmin(admin.ModelAdmin):
-    list_display = ('name', 'updated_at')
-    search_fields = ('name', )
+    list_display = ('id', 'name', 'updated_at')
+    search_fields = ('id', 'name', )
