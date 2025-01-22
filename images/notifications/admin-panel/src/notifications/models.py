@@ -40,4 +40,4 @@ class Template(models.Model):
         verbose_name_plural = 'шаблоны'
 
     def __str__(self):
-        return self.name
+        return f'{self.id}'
