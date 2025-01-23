@@ -54,14 +54,15 @@ async def publish_notification(
             status_code=HTTPStatus.NOT_FOUND,
             detail='User not found',
         )
-    template_exist = db.query(Template).filter(
-        Template.id == notification.template_id,
-    ).first()
-    if not template_exist:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND,
-            detail='Template not found',
-        )
+    if notification.template_id:
+        template_exist = db.query(Template).filter(
+            Template.id == notification.template_id,
+        ).first()
+        if not template_exist:
+            raise HTTPException(
+                status_code=HTTPStatus.NOT_FOUND,
+                detail='Template not found',
+            )
     async with rabbitmq.channel() as channel:
         await channel.declare_queue(
             'notification_queue',
