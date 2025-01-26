@@ -19,6 +19,7 @@ class User(UUIDMixin):
 
 class Notification(CustomBaseModel):
     user_id: UUID
+    subject: str
     template_id: UUID | None = None
     context: dict[str, Any] | None = None
     text: str | None = None
@@ -26,19 +27,13 @@ class Notification(CustomBaseModel):
 
     @model_validator(mode='before')
     def check_notification_fields(cls, values: dict):
-        error_message = (
-            "Either 'text' must be provided or both 'template_id' and "
-            "'context' must be provided, but not both options together."
-        )
+        error_message = 'Must specify at least "text" or "template_id" and "context"'
 
         text = values.get('text')
         template_id = values.get('template_id')
         context = values.get('context')
 
-        use_template = text is None and (template_id is not None and context is not None)
-        not_use_template = text is not None and (template_id is None and context is None)
-
-        if use_template or not_use_template:
+        if text is not None or (template_id is not None and context is not None):
             return values
 
         raise ValueError(error_message)
