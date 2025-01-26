@@ -1,13 +1,18 @@
 import asyncio
+from json import loads
 
 import aio_pika
 
 from db.rabbitmq import get_rabbitmq
+from models.models import Notification
+from services.services import send_notification
 
 
 async def process_message(message: aio_pika.Message):
     async with message.process():
-        message.body.decode()
+        notification_data = loads(message.body.decode())
+        notification = Notification(**notification_data)
+        await send_notification(notification)
 
 
 async def main():
