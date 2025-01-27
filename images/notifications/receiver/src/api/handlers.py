@@ -1,14 +1,14 @@
 from http import HTTPStatus
 
 from aio_pika import Connection, DeliveryMode, Message
-from models.models import Notification
-from models.models import User as UserSchema
 from sqlalchemy.orm import Session
 
 from fastapi import APIRouter, Depends, HTTPException
 
 from db.postgres import Template, User, get_db
 from db.rabbitmq import get_rabbitmq
+from models.models import Notification
+from models.models import User as UserSchema
 
 router = APIRouter(tags=['notifications'])
 
