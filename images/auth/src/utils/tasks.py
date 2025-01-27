@@ -12,11 +12,11 @@ from models.user import User
 def send_2_step_verification_code(email, code):
     with current_app.app_context():
         msg = Message(
-            'Code for confirm your identity',
+            f'{code} — ваш код для входа',
             sender=current_app.config['MAIL_USERNAME'],
             recipients=[email],
         )
-        msg.body = f'Code: {code}'
+        msg.body = f'Код {code}. Код действителен в течение 10 минут'
         mail.send(msg)
 
 
@@ -24,11 +24,11 @@ def send_2_step_verification_code(email, code):
 def send_registration_email_verification_code(email, code):
     with current_app.app_context():
         msg = Message(
-            'Code for confirm registration',
+            '{code} — ваш код для подтверждения регистрации',
             sender=current_app.config['MAIL_USERNAME'],
             recipients=[email],
         )
-        msg.body = f'Code: {code}'
+        msg.body = f'Код {code}. Код действителен в течение 10 минут'
         mail.send(msg)
 
 
@@ -36,11 +36,11 @@ def send_registration_email_verification_code(email, code):
 def send_change_email_verification_code(email, code):
     with current_app.app_context():
         msg = Message(
-            'Code for confirm new email',
+            '{code} — ваш код для подтверждения электронной почты',
             sender=current_app.config['MAIL_USERNAME'],
             recipients=[email],
         )
-        msg.body = f'Code: {code}'
+        msg.body = f'Код {code}. Код действителен в течение 10 минут'
         mail.send(msg)
 
 
