@@ -23,10 +23,6 @@ fastapi==0.111.0
     # via -r requirements.in
 fastapi-cli==0.0.5
     # via fastapi
-flake8==7.0.0
-    # via
-    #   -r requirements.in
-    #   pep8-naming
 h11==0.14.0
     # via
     #   httpcore
@@ -42,16 +38,12 @@ idna==3.10
     #   anyio
     #   email-validator
     #   httpx
-isort==5.13.2
-    # via -r requirements.in
 jinja2==3.1.4
     # via fastapi
 markdown-it-py==3.0.0
     # via rich
 markupsafe==3.0.1
     # via jinja2
-mccabe==0.7.0
-    # via flake8
 mdurl==0.1.2
     # via markdown-it-py
 motor==3.6.0
@@ -60,10 +52,6 @@ orjson==3.10.0
     # via
     #   -r requirements.in
     #   fastapi
-pep8-naming==0.13.3
-    # via -r requirements.in
-pycodestyle==2.11.1
-    # via flake8
 pydantic==2.7.4
     # via
     #   -r requirements.in
@@ -73,8 +61,6 @@ pydantic-core==2.18.4
     # via pydantic
 pydantic-settings==2.3.3
     # via -r requirements.in
-pyflakes==3.2.0
-    # via flake8
 pygments==2.18.0
     # via rich
 pyjwt==2.9.0

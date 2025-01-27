@@ -8,11 +8,6 @@ pydantic-settings==2.3.3
 # Database
 pymongo==4.9.2
 
-# Linters
-flake8==7.0.0
-isort==5.13.2
-pep8-naming==0.13.3
-
 # Tools
 uvicorn[standard]==0.28.0
 orjson==3.10.0

@@ -32,10 +32,6 @@ click-plugins==1.1.1
     # via celery
 click-repl==0.3.0
     # via celery
-flake8==7.0.0
-    # via
-    #   -r requirements.in
-    #   pep8-naming
 flasgger==0.9.7.1
     # via -r requirements.in
 flask==3.0.3
@@ -65,8 +61,6 @@ gunicorn==22.0.0
     # via -r requirements.in
 humanize==4.11.0
     # via flower
-isort==5.13.2
-    # via -r requirements.in
 itsdangerous==2.2.0
     # via flask
 jinja2==3.1.4
@@ -86,8 +80,6 @@ markupsafe==2.1.5
     #   werkzeug
 marshmallow==3.21.3
     # via flask-marshmallow
-mccabe==0.7.0
-    # via flake8
 mistune==3.0.2
     # via flasgger
 packaging==24.1
@@ -95,16 +87,12 @@ packaging==24.1
     #   flasgger
     #   gunicorn
     #   marshmallow
-pep8-naming==0.13.3
-    # via -r requirements.in
 prometheus-client==0.21.1
     # via flower
 prompt-toolkit==3.0.47
     # via click-repl
 psycopg2-binary==2.9.9
     # via -r requirements.in
-pycodestyle==2.11.1
-    # via flake8
 pydantic==2.7.4
     # via
     #   -r requirements.in
@@ -113,8 +101,6 @@ pydantic-core==2.18.4
     # via pydantic
 pydantic-settings==2.3.3
     # via -r requirements.in
-pyflakes==3.2.0
-    # via flake8
 pyjwt==2.9.0
     # via flask-jwt-extended
 python-dateutil==2.9.0.post0
@@ -168,4 +154,3 @@ werkzeug==3.0.3
     # via
     #   flask
     #   flask-jwt-extended
-setuptools==74.1.2

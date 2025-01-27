@@ -14,15 +14,9 @@ pydantic-settings==2.3.3
 redis==5.0.3
 psycopg2-binary==2.9.9
 
-# Linters
-flake8==7.0.0
-isort==5.13.2
-pep8-naming==0.13.3
-
 # Tools
 click==8.1.7
 user-agents==2.2.0
 celery==5.4.0
-setuptools==74.1.2
 flower==2.0.1
 gunicorn==22.0.0
