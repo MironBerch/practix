@@ -40,16 +40,16 @@ services:
     volumes:
       - ../../images/async-api:/app/
     environment:
-      - "FASTAPI_PORT=8800"
+      - "FASTAPI_PORT=3000"
       - "ELASTIC_HOST=elastic"
       - "ELASTIC_PORT=9200"
       - "REDIS_HOST=redis"
       - "REDIS_PORT=6379"
       - "REDIS_DB=1"
     expose:
-      - "8800"
+      - "3000"
     ports:
-      - "8800:8800"
+      - "3000:3000"
     depends_on:
       elastic:
         condition: service_healthy
@@ -75,8 +75,8 @@ services:
       - "FLASK_PORT=5000"
       - "DEBUG=True"
       - "DB_NAME=auth"
-      - "DB_USER=auth_user"
-      - "DB_PASSWORD=auth_pass"
+      - "DB_USER=postgres"
+      - "DB_PASSWORD=postgres"
       - "DB_HOST=auth_db"
       - "DB_PORT=5432"
       - "REDIS_HOST=redis"
@@ -84,10 +84,10 @@ services:
       - "REDIS_DB=1"
       - "CELERY_BROKER_URL=redis://redis:6379/0"
       - "CELERY_RESULT_BACKEND=redis://redis:6379/0"
-      - "MAIL_SERVER=${MAIL_SERVER}"
-      - "MAIL_PORT=${MAIL_PORT}"
-      - "MAIL_USERNAME=${MAIL_USERNAME}"
-      - "MAIL_PASSWORD=${MAIL_PASSWORD}"
+      - "MAIL_SERVER=${SMTP_SERVER}"
+      - "MAIL_PORT=${SMTP_PORT}"
+      - "MAIL_USERNAME=${SMTP_USER}"
+      - "MAIL_PASSWORD=${SMTP_PASSWORD}"
 
   celery:
     restart: always
@@ -103,8 +103,8 @@ services:
       - "FLASK_PORT=5000"
       - "DEBUG=True"
       - "DB_NAME=auth"
-      - "DB_USER=auth_user"
-      - "DB_PASSWORD=auth_pass"
+      - "DB_USER=postgres"
+      - "DB_PASSWORD=postgres"
       - "DB_HOST=auth_db"
       - "DB_PORT=5432"
       - "REDIS_HOST=redis"
@@ -112,10 +112,10 @@ services:
       - "REDIS_DB=1"
       - "CELERY_BROKER_URL=redis://redis:6379/0"
       - "CELERY_RESULT_BACKEND=redis://redis:6379/0"
-      - "MAIL_SERVER=${MAIL_SERVER}"
-      - "MAIL_PORT=${MAIL_PORT}"
-      - "MAIL_USERNAME=${MAIL_USERNAME}"
-      - "MAIL_PASSWORD=${MAIL_PASSWORD}"
+      - "MAIL_SERVER=${SMTP_SERVER}"
+      - "MAIL_PORT=${SMTP_PORT}"
+      - "MAIL_USERNAME=${SMTP_USER}"
+      - "MAIL_PASSWORD=${SMTP_PASSWORD}"
     depends_on:
       - auth
       - auth_db
@@ -167,6 +167,91 @@ services:
     depends_on:
       mongo:
         condition: service_healthy
+
+  notifications_admin_panel:
+    restart: always
+    build: ../../images/notifications/admin-panel/
+    command: >
+      sh -c "cd /app/src/
+      && poetry run python manage.py migrate --noinput
+      && poetry run python manage.py createsuperuser --noinput || true
+      && poetry run python manage.py runserver 0.0.0.0:8001"
+    volumes:
+      - ../../images/notifications/admin-panel/:/app
+    expose:
+      - "8001"
+    ports:
+      - "8001:8001"
+    environment:
+      - "DJANGO_SUPERUSER_USERNAME=admin"
+      - "DJANGO_SUPERUSER_EMAIL=admin@gmail.com"
+      - "DJANGO_SUPERUSER_PASSWORD=root"
+      - "SECRET_KEY=secretkey"
+      - "DEBUG=True"
+      - "DB_NAME=notifications"
+      - "DB_USER=postgres"
+      - "DB_PASSWORD=postgres"
+      - "DB_HOST=notifications_db"
+      - "DB_PORT=5432"
+    depends_on:
+      - notifications_db
+
+  receiver:
+    restart: always
+    build: ../../images/notifications/receiver/
+    command: >
+      sh -c "cd /app/src/
+      && poetry run python main.py"
+    volumes:
+      - ../../images/notifications/receiver/:/app
+    expose:
+      - "6000"
+    ports:
+      - "6000:6000"
+    environment:
+      - "FASTAPI_PORT=6000"
+      - "DEBUG=True"
+      - "RABBITMQ_USER=user"
+      - "RABBITMQ_PASS=password"
+      - "RABBITMQ_HOST=rabbit"
+      - "RABBITMQ_SERVER_PORT=15672"
+      - "RABBITMQ_CLIENT_PORT=5672"
+      - "POSTGRES_HOST=notifications_db"
+      - "POSTGRES_PORT=5432"
+      - "POSTGRES_NAME=notifications"
+      - "POSTGRES_USER=postgres"
+      - "POSTGRES_PASSWORD=postgres"
+    depends_on:
+      - rabbit
+      - notifications_db
+
+  worker:
+    restart: always
+    build: ../../images/notifications/worker/
+    command: >
+      sh -c "cd /app/src/
+      && poetry run python main.py"
+    volumes:
+      - ../../images/notifications/worker/:/app
+    environment:
+      - "RABBITMQ_USER=user"
+      - "RABBITMQ_PASS=password"
+      - "RABBITMQ_HOST=rabbit"
+      - "RABBITMQ_SERVER_PORT=15672"
+      - "RABBITMQ_CLIENT_PORT=5672"
+      - "POSTGRES_HOST=notifications_db"
+      - "POSTGRES_PORT=5432"
+      - "POSTGRES_NAME=notifications"
+      - "POSTGRES_USER=postgres"
+      - "POSTGRES_PASSWORD=postgres"
+      - "SMTP_SERVER=${SMTP_SERVER}"
+      - "SMTP_PORT=${SMTP_PORT}"
+      - "SMTP_USER=${SMTP_USER}"
+      - "SMTP_PASSWORD=${SMTP_PASSWORD}"
+    depends_on:
+      - rabbit
+      - notifications_db
+      - receiver
 
   #===============================================================
   #                          DATASTORES
@@ -231,12 +316,41 @@ services:
     ports:
       - "5433:5432"
     environment:
-      - "POSTGRES_USER=auth_user"
-      - "POSTGRES_PASSWORD=auth_pass"
+      - "POSTGRES_USER=postgres"
+      - "POSTGRES_PASSWORD=postgres"
       - "POSTGRES_DB=auth"
     volumes:
         - auth_db_volume:/var/lib/postgresql/data/
 
+  notifications_db:
+    image: postgres:16-alpine
+    restart: always
+    ports:
+      - "5434:5432"
+    environment:
+      - "POSTGRES_USER=postgres"
+      - "POSTGRES_PASSWORD=postgres"
+      - "POSTGRES_DB=notifications"
+    volumes:
+        - notifications_db_volume:/var/lib/postgresql/data/
+
+  rabbit:
+    image: rabbitmq:4-alpine
+    restart: always
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    expose:
+      - "5672"
+      - "15672"
+    volumes:
+      - rabbit_data_volume:/var/lib/rabbitmq
+    environment:
+      - "RABBITMQ_DEFAULT_USER=user"
+      - "RABBITMQ_DEFAULT_PASS=password"
+
 volumes:
   movies_db_volume:
   auth_db_volume:
+  notifications_db_volume:
+  rabbit_data_volume:
