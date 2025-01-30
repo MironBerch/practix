@@ -24,6 +24,12 @@ async def lifespan(app: FastAPI):
         f'amqp://{user}:{password}@{host}:{port}'
     )
 
+    async with rabbitmq.rabbitmq.channel() as channel:
+        await channel.declare_queue(
+            'notification_queue',
+            durable=True,
+        )
+
     yield
 
     await rabbitmq.rabbitmq.close()

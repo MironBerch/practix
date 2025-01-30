@@ -20,6 +20,10 @@ async def main():
 
     async with rabbitmq_connection:
         channel = await rabbitmq_connection.channel()
+        await channel.declare_queue(
+            'notification_queue',
+            durable=True,
+        )
         queue = await channel.get_queue('notification_queue')
 
         await queue.consume(process_message)

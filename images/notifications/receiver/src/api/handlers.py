@@ -64,10 +64,6 @@ async def publish_notification(
                 detail='Template not found',
             )
     async with rabbitmq.channel() as channel:
-        await channel.declare_queue(
-            'notification_queue',
-            durable=True,
-        )
         message_body = notification.model_dump_json()
         message = Message(
             body=message_body.encode(),
