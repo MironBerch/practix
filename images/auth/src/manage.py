@@ -136,3 +136,5 @@ if __name__ == '__main__':
         port=settings.flask.port,
         debug=settings.flask.debug,
     )
+else:
+    app = create_app()
