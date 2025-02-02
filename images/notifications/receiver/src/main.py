@@ -39,13 +39,13 @@ app = FastAPI(
     title='Notifications reciver API v1',
     description='Notifications reciver API',
     version='1.0',
-    docs_url='/api/docs',
-    openapi_url='/api/openapi.json',
+    docs_url='/notifications/api/docs',
+    openapi_url='/notifications/api/openapi.json',
     default_response_class=ORJSONResponse,
     lifespan=lifespan,
 )
 
-app.include_router(api_router)
+app.include_router(api_router, prefix='/notifications')
 
 
 if __name__ == '__main__':
