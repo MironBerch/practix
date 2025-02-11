@@ -125,6 +125,8 @@ async def start():
         client=AsyncIOMotorClient(
             host=settings.mongo.host,
             port=settings.mongo.port,
+            username=settings.mongo.username,
+            password=settings.mongo.password,
             uuidRepresentation='standard',
         ),
     )
