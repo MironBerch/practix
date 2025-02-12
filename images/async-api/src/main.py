@@ -20,6 +20,7 @@ async def lifespan(app: FastAPI):
         hosts=[
             f'http://{settings.elastic_host}:{settings.elastic_port}',
         ],
+        http_auth=(settings.elastic_user, settings.elastic_password),
     )
     redis.redis = Redis(
         host=settings.redis_host,
