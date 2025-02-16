@@ -11,7 +11,7 @@ class FastAPIConfig(BaseSettings):
 
 
 class MongoConfig(BaseSettings):
-    host: str = 'mongo'
+    host: str = environ.get('MONGO_HOST', 'mongo')
     port: int = environ.get('MONGO_PORT')
     username: str | None = environ.get('MONGO_USERNAME')
     password: str | None = environ.get('MONGO_PASSWORD')
