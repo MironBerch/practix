@@ -1,8 +1,8 @@
 services:
 
-  etl:
+  postgres_to_elastic:
     restart: always
-    build: ../
+    build: ../postgres-to-elastic/
     command: >
       sh -c "cd /app/src/
       && python main.py"

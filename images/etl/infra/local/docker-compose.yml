@@ -1,13 +1,13 @@
 services:
 
-  etl:
+  postgres_to_elastic:
     restart: always
-    build: ../..
+    build: ../../postgres-to-elastic/
     command: >
       sh -c "cd /app/src/
       && python main.py"
     volumes:
-      - ../..:/app
+      - ../../postgres-to-elastic/:/app
     environment:
       - "SECRET_KEY=secretkey"
       - "DB_NAME=postgres"
@@ -70,15 +70,15 @@ services:
       timeout: 5s
       retries: 100
 
-  kibana:
-    image: kibana:8.13.0
-    ports:
-      - "5601:5601"
-    environment:
-      ELASTICSEARCH_HOSTS: http://elastic:9200
-    depends_on:
-      elastic:
-        condition: service_healthy
+  #kibana:
+  #  image: kibana:8.13.0
+  #  ports:
+  #    - "5601:5601"
+  #  environment:
+  #    ELASTICSEARCH_HOSTS: http://elastic:9200
+  #  depends_on:
+  #    elastic:
+  #      condition: service_healthy
 
 volumes:
   movies_db_volume:

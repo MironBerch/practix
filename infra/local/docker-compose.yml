@@ -121,14 +121,14 @@ services:
       - auth_db
       - redis
 
-  etl:
+  postgres_to_elastic:
     restart: always
-    build: ../../images/etl/
+    build: ../../images/etl/postgres-to-elastic/
     command: >
       sh -c "cd /app/src/
       && python main.py"
     volumes:
-      - ../../images/etl/:/app/
+      - ../../images/etl/postgres-to-elastic/:/app/
     environment:
       - "SECRET_KEY=secretkey"
       - "DB_NAME=movies"
