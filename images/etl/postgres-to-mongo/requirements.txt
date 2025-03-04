@@ -1,0 +1,8 @@
+dnspython==2.7.0
+    # via pymongo
+psycopg2-binary==2.9.9
+    # via -r requirements.in
+pymongo==4.9.2
+    # via -r requirements.in
+redis==5.0.4
+    # via -r requirements.in
