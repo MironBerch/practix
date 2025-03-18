@@ -2,7 +2,6 @@ from datetime import datetime
 
 from psycopg2.extensions import connection, cursor
 
-from core.logger import logger
 from services.errors import UpdatesNotFoundError
 
 
@@ -36,5 +35,4 @@ class PostgresExtractor(object):
         curs.close()
         if not data:
             raise UpdatesNotFoundError
-        logger.info(data)
         return [obj[0] for obj in data]
