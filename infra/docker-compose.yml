@@ -172,6 +172,38 @@ services:
       elastic:
         condition: service_healthy
 
+  postgres_to_mongo:
+    restart: always
+    build: ../images/etl/postgres-to-mongo/
+    command: >
+      sh -c "cd /app/src/
+      && python main.py"
+    volumes:
+      - ../images/etl/postgres-to-mongo/:/app
+    environment:
+      - "MOVIES_DB_NAME=${MOVIES_DB_NAME}"
+      - "MOVIES_DB_USER=${MOVIES_DB_USER}"
+      - "MOVIES_DB_PASSWORD=${MOVIES_DB_PASSWORD}"
+      - "MOVIES_DB_HOST=movies_db"
+      - "MOVIES_DB_PORT=5432"
+      - "AUTH_DB_NAME=${AUTH_DB_NAME}"
+      - "AUTH_DB_USER=${AUTH_DB_USER}"
+      - "AUTH_DB_PASSWORD=${AUTH_DB_PASSWORD}"
+      - "AUTH_DB_HOST=auth_db"
+      - "AUTH_DB_PORT=5432"
+      - "REDIS_HOST=redis"
+      - "REDIS_PORT=6379"
+      - "REDIS_DB=0"
+    depends_on:
+      mongo:
+        condition: service_healthy
+      movies_db:
+        condition: service_healthy
+      auth_db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+
   movies_ugc:
     restart: always
     build: ../images/ugc/
@@ -297,16 +329,43 @@ services:
     ports:
       - "5432:5432"
     environment:
+      - "POSTGRES_DB=${MOVIES_DB_NAME}"
       - "POSTGRES_USER=${MOVIES_DB_USER}"
       - "POSTGRES_PASSWORD=${MOVIES_DB_PASSWORD}"
-      - "POSTGRES_DB=${MOVIES_DB_NAME}"
     volumes:
         - movies_db_volume:/var/lib/postgresql/data/
     healthcheck:
-      test: pg_isready --dbname=postgres --username=postgres
+      test: pg_isready --dbname=${MOVIES_DB_NAME} --username=${MOVIES_DB_USER}
       interval: 5s
       timeout: 5s
       retries: 100
+
+  auth_db:
+    image: postgres:16
+    restart: always
+    ports:
+      - "5433:5432"
+    environment:
+      - "POSTGRES_DB=${AUTH_DB_NAME}"
+      - "POSTGRES_USER=${AUTH_DB_USER}"
+      - "POSTGRES_PASSWORD=${AUTH_DB_PASSWORD}"
+    volumes:
+        - auth_db_volume:/var/lib/postgresql/data/
+    healthcheck:
+      test: pg_isready --dbname=${AUTH_DB_NAME} --username=${AUTH_DB_USER}
+      interval: 5s
+      timeout: 5s
+      retries: 100
+
+  notifications_db:
+    image: postgres:16-alpine
+    restart: always
+    ports:
+      - "5434:5432"
+    environment:
+      - "POSTGRES_DB=${NOTIFICATIONS_DB_NAME}"
+      - "POSTGRES_USER=${NOTIFICATIONS_DB_USER}"
+      - "POSTGRES_PASSWORD=${NOTIFICATIONS_DB_PASSWORD}"
 
   mongo:
     image: mongo:8.0.1
@@ -328,28 +387,6 @@ services:
       interval: 5s
       timeout: 5s
       retries: 100
-
-  auth_db:
-    image: postgres:16
-    restart: always
-    ports:
-      - "5433:5432"
-    environment:
-      - "POSTGRES_USER=${AUTH_DB_USER}"
-      - "POSTGRES_PASSWORD=${AUTH_DB_PASSWORD}"
-      - "POSTGRES_DB=${AUTH_DB_NAME}"
-    volumes:
-        - auth_db_volume:/var/lib/postgresql/data/
-
-  notifications_db:
-    image: postgres:16-alpine
-    restart: always
-    ports:
-      - "5434:5432"
-    environment:
-      - "POSTGRES_USER=${NOTIFICATIONS_DB_USER}"
-      - "POSTGRES_PASSWORD=${NOTIFICATIONS_DB_PASSWORD}"
-      - "POSTGRES_DB=${NOTIFICATIONS_DB_NAME}"
 
   rabbit:
     image: rabbitmq:4-alpine
