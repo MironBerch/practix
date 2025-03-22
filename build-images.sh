@@ -1,6 +1,13 @@
-output=$(yc container registry create --name practix 2>&1)
+#!/bin/sh
 
-registry_id=$(echo "$output" | grep -oP '^\s*id:\s*\K[^ ]+')
+registry_id=$(yc container registry list --format json | jq -r '.[] | select(.name == "practix") | .id')
+
+if [ -z "$registry_id" ]; then
+  output=$(yc container registry create --name practix --secure 2>&1)
+  registry_id=$(echo "$output" | grep -oP '^\s*id:\s*\K[^ ]+')
+fi
+
+yc container registry configure-docker
 
 cd images/
 
@@ -10,7 +17,8 @@ images=(
   "admin-panel" 
   "async-api" 
   "auth" 
-  "etl" 
+  "etl/postgres-to-elastic"
+  "etl/postgres-to-mongo" 
   "notifications/admin-panel" 
   "notifications/receiver" 
   "notifications/worker"
