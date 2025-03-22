@@ -12,7 +12,7 @@ terraform {
     }
     bucket = "practix-bucket"
     region = "ru-central1-d"
-    key    = "terraform/state/terraform.tfstate"
+    key    = "terraform/terraform.tfstate"
 
     skip_region_validation      = true
     skip_credentials_validation = true
