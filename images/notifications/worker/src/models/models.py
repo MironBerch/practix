@@ -5,7 +5,8 @@ from pydantic import BaseModel
 
 
 class Notification(BaseModel):
-    user_id: UUID
+    user_id: UUID | None = None
+    user_email: str | None = None
     subject: str
     template_id: UUID | None = None
     context: dict[str, Any] | None = None

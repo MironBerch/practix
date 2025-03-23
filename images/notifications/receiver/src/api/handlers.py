@@ -48,12 +48,13 @@ async def publish_notification(
     db: Session = Depends(get_db),
     rabbitmq: Connection = Depends(get_rabbitmq),
 ) -> Notification:
-    user_exist = db.query(User).filter(User.id == notification.user_id).first()
-    if not user_exist:
-        raise HTTPException(
-            status_code=HTTPStatus.NOT_FOUND,
-            detail='User not found',
-        )
+    if notification.user_id is not None and notification.user_email is None:
+        user_exist = db.query(User).filter(User.id == notification.user_id).first()
+        if not user_exist:
+            raise HTTPException(
+                status_code=HTTPStatus.NOT_FOUND,
+                detail='User not found',
+            )
     if notification.template_id:
         template_exist = db.query(Template).filter(
             Template.id == notification.template_id,

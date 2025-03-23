@@ -56,7 +56,10 @@ async def send_email(subject, body_html, body_text, to_email):
 
 
 async def send_notification(notification: Notification) -> None:
-    to_email = await get_user_email_by_id(notification.user_id)
+    if notification.user_email is not None:
+        to_email = notification.user_email
+    else:
+        to_email = await get_user_email_by_id(notification.user_id)
     body_html = None
     if notification.template_id:
         template_code = await get_template_code_by_id(notification.template_id)

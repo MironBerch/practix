@@ -18,7 +18,8 @@ class User(UUIDMixin):
 
 
 class Notification(CustomBaseModel):
-    user_id: UUID
+    user_id: UUID | None = None
+    user_email: str | None = None
     subject: str
     template_id: UUID | None = None
     context: dict[str, Any] | None = None
@@ -27,13 +28,18 @@ class Notification(CustomBaseModel):
 
     @model_validator(mode='before')
     def check_notification_fields(cls, values: dict):
-        error_message = 'Must specify at least "text" or "template_id" and "context"'
+        content_error_message = 'Must specify at least "text" or "template_id" and "context"'
+        recipient_error_message = 'Must specify at least "user_id" or "user_email"'
 
         text = values.get('text')
         template_id = values.get('template_id')
         context = values.get('context')
+        user_id = values.get('user_id')
+        user_email = values.get('user_email')
 
         if text is not None or (template_id is not None and context is not None):
-            return values
+            if user_id is not None or user_email is not None:
+                return values
+            raise ValueError(recipient_error_message)
 
-        raise ValueError(error_message)
+        raise ValueError(content_error_message)
