@@ -5,11 +5,17 @@ from marshmallow import ValidationError
 
 from flask import Blueprint, jsonify, request
 
-from api.schemas import ConfirmCodeSchema, EmailSchema, PasswordChangeSchema, UserSessionSchema
+from api.schemas import (
+    ConfirmCodeSchema,
+    EmailSchema,
+    Notification,
+    PasswordChangeSchema,
+    UserSessionSchema,
+)
 from db import postgres, redis
 from models.session import Session
 from models.user import User
-from utils import code, hash_password, tasks
+from utils import code, hash_password, notification
 
 bp = Blueprint(
     'user',
@@ -92,9 +98,13 @@ def change_email():
         user = User.query.get(identity)
         if User.query.filter_by(email=data['email']).first():
             raise ValidationError('user with this email exist')
-        tasks.send_change_email_verification_code.delay(
-            user.email,
-            code.create_change_email_verification_code(user.email, data['email']),
+        verification_code = code.create_change_email_verification_code(user.email, data['email'])
+        notification.send_notification(
+            data=Notification(
+              user_email=data['email'],
+              subject=f'{verification_code} — ваш код для подтверждения электронной почты',
+              text=f'Код {verification_code}. Код действителен в течение 10 минут',
+            ).model_dump(),
         )
         return jsonify({'message': 'email changed'}), HTTPStatus.CREATED
     except ValidationError as err:
@@ -132,13 +142,17 @@ def resend_change_email():
     verification_code = redis.redis.get(f'email_change:{user.email}')
     if verification_code is None:
         return jsonify({'message': 'no code for your email'}), HTTPStatus.BAD_REQUEST
-    verification_code = verification_code.split(':')
-    tasks.send_registration_email_verification_code.delay(
-        user.email,
-        code.create_change_email_verification_code(
-            user.email,
-            verification_code[0],
-        ),
+    old_verification_code = verification_code.split(':')
+    verification_code = code.create_change_email_verification_code(
+        old_email=user.email,
+        new_email=old_verification_code[0],
+    )
+    notification.send_notification(
+        data=Notification(
+          user_email=old_verification_code[0],
+          subject=f'{verification_code} — ваш код для подтверждения электронной почты',
+          text=f'Код {verification_code}. Код действителен в течение 10 минут',
+        ).model_dump(),
     )
     return jsonify({'message': 'code sended on email'}), HTTPStatus.OK
 

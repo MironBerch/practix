@@ -12,11 +12,11 @@ from marshmallow import ValidationError
 
 from flask import Blueprint, current_app, jsonify, request
 
-from api.schemas import ConfirmCodeSchema, SignInSchema, SignUpSchema
+from api.schemas import ConfirmCodeSchema, Notification, SignInSchema, SignUpSchema
 from core.config import settings
 from db import postgres, redis
 from models.user import User
-from utils import code, hash_password, sessions, tasks
+from utils import code, hash_password, notification, sessions
 
 bp = Blueprint(
     'auth',
@@ -66,12 +66,13 @@ def signup():
         )
         postgres.db.session.add(user)
         postgres.db.session.commit()
-        created_user = User.query.filter_by(email=data['email']).first()
         verification_code = code.create_registration_email_verification_code(user.email)
-        tasks.send_2_step_verification_code.delay(user.email, verification_code)
-        tasks.delete_user_with_not_confirmed_email.apply_async(
-          (created_user.id,),
-          countdown=60*60,
+        notification.send_notification(
+            data=Notification(
+              user_email=user.email,
+              subject=f'{verification_code} — ваш код для подтверждения регистрации',
+              text=f'Код {verification_code}. Код действителен в течение 10 минут',
+            ).model_dump(),
         )
         temp_token = create_access_token(
             identity=user.id,
@@ -117,9 +118,13 @@ def resend_confirm_registration_email():
     """
     identity = get_jwt_identity()
     user = User.query.get(identity)
-    tasks.send_registration_email_verification_code.delay(
-        user.email,
-        code.create_registration_email_verification_code(user.email),
+    verification_code = code.create_registration_email_verification_code(user.email),
+    notification.send_notification(
+        data=Notification(
+          user_email=user.email,
+          subject=f'{verification_code} — ваш код для подтверждения регистрации',
+          text=f'Код {verification_code}. Код действителен в течение 10 минут',
+        ).model_dump(),
     )
     return jsonify({'message': 'code sended on email'}), HTTPStatus.OK
 
@@ -253,9 +258,13 @@ def signin():
                 minutes=settings.security.jwt_temp_token_expires,
             ),
         )
-        tasks.send_2_step_verification_code.delay(
-            user.email,
-            code.create_2_step_verification_code(user.email),
+        verification_code = code.create_2_step_verification_code(user.email)
+        notification.send_notification(
+            data=Notification(
+              user_email=user.email,
+              subject=f'{verification_code} — ваш код для входа',
+              text=f'Код {verification_code}. Код действителен в течение 10 минут',
+            ).model_dump(),
         )
         return jsonify(
             {
@@ -296,7 +305,13 @@ def resend_2_step_verification_email():
     identity = get_jwt_identity()
     user = User.query.get(identity)
     verification_code = code.create_2_step_verification_code(user.email)
-    tasks.send_2_step_verification_code.delay(user.email, verification_code)
+    notification.send_notification(
+        data=Notification(
+          user_email=user.email,
+          subject=f'{verification_code} — ваш код для входа',
+          text=f'Код {verification_code}. Код действителен в течение 10 минут',
+        ).model_dump(),
+    )
     return jsonify({'message': 'new verification code sent to email'}), HTTPStatus.OK
 
 

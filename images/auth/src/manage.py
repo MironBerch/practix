@@ -1,6 +1,5 @@
 import click
 import flask_migrate
-from celery import Celery, Task
 from flasgger import Swagger
 from flask_jwt_extended import JWTManager
 
@@ -10,21 +9,7 @@ from flask.cli import with_appcontext
 from api.urls import init_routers
 from core.config import settings
 from core.logger import logger
-from core.mail import mail
 from db import postgres, redis
-
-
-def celery_init_app(app: Flask) -> Celery:
-    class FlaskTask(Task):
-        def __call__(self, *args: object, **kwargs: object) -> object:
-            with app.app_context():
-                return self.run(*args, **kwargs)
-
-    celery_app = Celery(app.name, task_cls=FlaskTask)
-    celery_app.config_from_object(app.config['CELERY'])
-    celery_app.set_default()
-    app.extensions['celery'] = celery_app
-    return celery_app
 
 
 @click.command()
@@ -50,32 +35,12 @@ def create_app() -> Flask:
     app = Flask(__name__)
     app.logger = logger
 
-    app.config.from_mapping(
-        CELERY=dict(
-            broker_url=settings.celery.broker_url,
-            result_backend=settings.celery.result_backend,
-            broker_connection_retry_on_startup=True,
-            task_ignore_result=True,
-        )
-    )
-
-    app.config['MAIL_SERVER'] = settings.mail.server
-    app.config['MAIL_PORT'] = settings.mail.port
-    app.config['MAIL_USERNAME'] = settings.mail.username
-    app.config['MAIL_PASSWORD'] = settings.mail.password
-    app.config['MAIL_USE_TLS'] = settings.mail.use_tls
-    app.config['MAIL_USE_SSL'] = settings.mail.use_ssl
-
-    mail.init_app(app)
-
     app.config['JWT_SECRET_KEY'] = settings.security.jwt_secret_key
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = settings.security.jwt_access_token_expires
     app.config['JWT_REFRESH_TOKEN_EXPIRES'] = settings.security.jwt_refresh_token_expires
 
     postgres.init(app)
     redis.redis = redis.init()
-
-    celery_init_app(app)
 
     app.cli.add_command(makemigrations)
     app.cli.add_command(migrate)
