@@ -54,7 +54,7 @@ services:
       elastic:
         condition: service_healthy
     volumes:
-      - /data:/tmp
+      - ./data:/tmp
     entrypoint: >
       sh -c "sleep 10 && elasticdump \
       --input=/tmp/dump.json \
