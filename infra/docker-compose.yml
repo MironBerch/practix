@@ -354,6 +354,7 @@ services:
       - media_volume:/app/src/media
       - notifications_static_volume:/app/src/notifications/static/
       - notifications_media_volume:/app/src/notifications/media/
+      - ./logs/nginx:/var/log/nginx
     ports:
       - "80:80"
     depends_on:
