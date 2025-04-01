@@ -30,7 +30,7 @@ services:
       - "NOTIFICATIONS_RECEIVER_PORT=${NOTIFICATIONS_RECEIVER_PORT}"
 
   auth_db:
-    image: postgres:16
+    image: postgres:16-alpine
     restart: always
     ports:
       - "5432:5432"

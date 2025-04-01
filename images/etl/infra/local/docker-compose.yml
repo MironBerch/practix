@@ -76,7 +76,7 @@ services:
       retries: 100
 
   auth_db:
-    image: postgres:16
+    image: postgres:16-alpine
     restart: always
     ports:
       - "5433:5432"
