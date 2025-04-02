@@ -8,9 +8,9 @@ services:
     build: ../../images/admin-panel/
     command: >
       sh -c "cd /app/src/
-      && python manage.py migrate --noinput
-      && python manage.py createsuperuser --noinput || true
-      && python manage.py runserver 0.0.0.0:8000"
+      && uv run manage.py migrate --noinput
+      && uv run manage.py createsuperuser --noinput || true
+      && uv run manage.py runserver 0.0.0.0:8000"
     volumes:
       - ../../images/admin-panel/:/app/
     expose:
@@ -37,7 +37,7 @@ services:
     build: ../../images/async-api/
     command: >
       sh -c "cd /app/src/
-      && python main.py"
+      && uv run main.py"
     volumes:
       - ../../images/async-api:/app/
     environment:
@@ -62,8 +62,8 @@ services:
     build: ../../images/auth/
     command: >
       sh -c "cd /app/src/
-      && flask --app manage:create_app migrate
-      && python manage.py"
+      && uv run flask --app manage:create_app migrate
+      && uv run manage.py"
     volumes:
       - ../../images/auth/:/app/
     expose:
@@ -91,7 +91,7 @@ services:
     build: ../../images/etl/postgres-to-elastic/
     command: >
       sh -c "cd /app/src/
-      && python main.py"
+      && uv run main.py"
     volumes:
       - ../../images/etl/postgres-to-elastic/:/app/
     environment:
@@ -117,7 +117,7 @@ services:
     build: ../../images/etl/postgres-to-mongo/
     command: >
       sh -c "cd /app/src/
-      && python main.py"
+      && uv run main.py"
     volumes:
       - ../../images/etl/postgres-to-mongo/:/app
     environment:
@@ -149,7 +149,7 @@ services:
     build: ../../images/ugc/
     command: >
       sh -c "cd /app/src/
-      && python main.py"
+      && uv run main.py"
     volumes:
       - ../../images/ugc/:/app/
     environment:
@@ -170,9 +170,9 @@ services:
     build: ../../images/notifications/admin-panel/
     command: >
       sh -c "cd /app/src/
-      && poetry run python manage.py migrate --noinput
-      && poetry run python manage.py createsuperuser --noinput || true
-      && poetry run python manage.py runserver 0.0.0.0:8001"
+      && uv run manage.py migrate --noinput
+      && uv run manage.py createsuperuser --noinput || true
+      && uv run manage.py runserver 0.0.0.0:8001"
     volumes:
       - ../../images/notifications/admin-panel/:/app
     expose:
@@ -198,7 +198,7 @@ services:
     build: ../../images/notifications/receiver/
     command: >
       sh -c "cd /app/src/
-      && poetry run python main.py"
+      && uv run main.py"
     volumes:
       - ../../images/notifications/receiver/:/app
     expose:
@@ -227,7 +227,7 @@ services:
     build: ../../images/notifications/worker/
     command: >
       sh -c "cd /app/src/
-      && poetry run python main.py"
+      && uv run main.py"
     volumes:
       - ../../images/notifications/worker/:/app
     environment:

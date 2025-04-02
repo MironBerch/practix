@@ -1,13 +1,11 @@
 [project]
-name = "notifications-worker"
+name = "postgres-to-mongo"
 version = "0.1.0"
 description = ""
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "aio-pika==9.5.5",
-    "jinja2==3.1.6",
     "psycopg2-binary==2.9.10",
-    "pydantic==2.11.1",
-    "sqlalchemy==2.0.40",
+    "pymongo==4.11.3",
+    "redis==5.2.1",
 ]

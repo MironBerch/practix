@@ -25,7 +25,7 @@ resource "kubernetes_deployment" "postgres-to-elastic" {
           name  = "postgres-to-elastic"
 
           command = ["sh", "-c"]
-          args    = ["cd /app/src/ && python main.py"]
+          args    = ["cd /app/src/ && uv run main.py"]
 
           env {
             name  = "DB_NAME"

@@ -5,8 +5,8 @@ services:
     build: ../..
     command: >
       sh -c "cd /app/src/
-      && flask --app manage:create_app migrate
-      && python manage.py"
+      && uv run flask --app manage:create_app migrate
+      && uv run manage.py"
     volumes:
       - ../..:/app
     expose:

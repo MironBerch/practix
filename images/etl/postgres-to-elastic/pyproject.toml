@@ -1,13 +1,12 @@
 [project]
-name = "notifications-worker"
+name = "postgres-to-elastic"
 version = "0.1.0"
 description = ""
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "aio-pika==9.5.5",
-    "jinja2==3.1.6",
+    "elasticsearch==8.17.2",
     "psycopg2-binary==2.9.10",
     "pydantic==2.11.1",
-    "sqlalchemy==2.0.40",
+    "redis==5.2.1",
 ]

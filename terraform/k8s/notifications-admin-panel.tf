@@ -60,10 +60,10 @@ resource "kubernetes_deployment" "notifications-admin-panel" {
             <<EOT
             cd /app/src/
             mkdir -p media
-            poetry run python manage.py collectstatic --noinput
-            poetry run python manage.py migrate --noinput
-            poetry run python manage.py createsuperuser --noinput || true
-            poetry run gunicorn --reload -c gunicorn.py --bind 0.0.0.0:1000 config.wsgi:application
+            uv run manage.py collectstatic --noinput
+            uv run manage.py migrate --noinput
+            uv run manage.py createsuperuser --noinput || true
+            uv run gunicorn --reload -c gunicorn.py --bind 0.0.0.0:1000 config.wsgi:application
             EOT
           ]
           env {

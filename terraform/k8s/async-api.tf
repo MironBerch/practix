@@ -25,7 +25,7 @@ resource "kubernetes_deployment" "async-api" {
           name  = "async-api"
 
           command = ["sh", "-c"]
-          args    = ["cd /app/src/ && python main.py"]
+          args    = ["cd /app/src/ && uv run main.py"]
 
           port {
             name           = "http"

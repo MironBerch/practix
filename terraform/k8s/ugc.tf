@@ -25,7 +25,7 @@ resource "kubernetes_deployment" "ugc-api" {
           name  = "ugc-api"
 
           command = ["sh", "-c"]
-          args    = ["cd /app/src/ && python main.py"]
+          args    = ["cd /app/src/ && uv run main.py"]
 
           port {
             name           = "http"

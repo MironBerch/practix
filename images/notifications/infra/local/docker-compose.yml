@@ -5,9 +5,9 @@ services:
     build: ../../admin-panel/
     command: >
       sh -c "cd /app/src/
-      && poetry run python manage.py migrate --noinput
-      && poetry run python manage.py createsuperuser --noinput || true
-      && poetry run python manage.py runserver 0.0.0.0:8000"
+      && uv run manage.py migrate --noinput
+      && uv run manage.py createsuperuser --noinput || true
+      && uv run manage.py runserver 0.0.0.0:8000"
     volumes:
       - ../../admin-panel/:/app
     expose:
@@ -33,7 +33,7 @@ services:
     build: ../../receiver/
     command: >
       sh -c "cd /app/src/
-      && poetry run python main.py"
+      && uv run main.py"
     volumes:
       - ../../receiver/:/app
     expose:
@@ -62,7 +62,7 @@ services:
     build: ../../worker/
     command: >
       sh -c "cd /app/src/
-      && poetry run python main.py"
+      && uv run main.py"
     volumes:
       - ../../worker/:/app
     environment:

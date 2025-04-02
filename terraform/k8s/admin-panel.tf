@@ -63,10 +63,10 @@ resource "kubernetes_deployment" "admin-panel" {
             <<EOT
             cd /app/src/ 
             mkdir -p media 
-            python manage.py collectstatic --noinput 
-            python manage.py migrate --noinput 
-            python manage.py createsuperuser --noinput || true 
-            gunicorn --reload -c ../infra/gunicorn/gunicorn_config.py config.wsgi:application
+            uv run manage.py collectstatic --noinput 
+            uv run manage.py migrate --noinput 
+            uv run manage.py createsuperuser --noinput || true 
+            uv run gunicorn --reload -c ../infra/gunicorn/gunicorn_config.py config.wsgi:application
             EOT
           ]
 

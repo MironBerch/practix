@@ -25,7 +25,7 @@ resource "kubernetes_deployment" "postgres-to-mongo" {
           name  = "postgres-to-mongo"
 
           command = ["sh", "-c"]
-          args    = ["cd /app/src/ && python main.py"]
+          args    = ["cd /app/src/ && uv run main.py"]
 
           env {
             name  = "MOVIES_DB_NAME"

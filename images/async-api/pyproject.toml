@@ -1,16 +1,15 @@
 [project]
-name = "notifications-receiver"
+name = "async-api"
 version = "0.1.0"
 description = ""
 readme = "README.md"
 requires-python = ">=3.13"
 dependencies = [
-    "aio-pika==9.5.5",
+    "elasticsearch[async]==8.17.2",
     "fastapi==0.115.12",
     "orjson==3.10.16",
-    "psycopg2-binary==2.9.10",
     "pydantic==2.11.1",
     "pydantic-settings==2.8.1",
-    "sqlalchemy==2.0.40",
-    "uvicorn==0.34.0",
+    "redis==5.2.1",
+    "uvicorn[standard]==0.34.0",
 ]

@@ -1,9 +1,0 @@
-# Pydantic
-pydantic==2.7.1
-
-# Database
-psycopg2-binary==2.9.9
-redis==5.0.4
-
-# Elasticsearch
-elasticsearch==8.13.1

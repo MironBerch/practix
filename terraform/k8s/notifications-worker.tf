@@ -25,7 +25,7 @@ resource "kubernetes_deployment" "notifications-worker" {
           name  = "notifications-worker"
 
           command = ["sh", "-c"]
-          args    = ["cd /app/src/ && poetry run python main.py"]
+          args    = ["cd /app/src/ && uv run main.py"]
 
           env {
             name  = "RABBITMQ_USER"

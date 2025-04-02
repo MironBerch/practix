@@ -28,8 +28,8 @@ resource "kubernetes_deployment" "auth-api" {
           args    = [
             <<EOT
             cd /app/src/
-            flask --app manage:create_app migrate
-            gunicorn --workers 1 --bind 0.0.0.0:5000 manage:app
+            uv run flask --app manage:create_app migrate
+            uv run gunicorn --workers 1 --bind 0.0.0.0:5000 manage:app
             EOT
           ]
 
