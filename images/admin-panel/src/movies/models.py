@@ -148,9 +148,9 @@ class PersonFilmwork(UUIDMixin):
 
     class Meta:
         db_table = 'content\".\"person_film_work'
-        index_together = (
-            ('film_work', 'person'),
-        )
+        indexes = [
+            models.Index(fields=['film_work', 'person']),
+        ]
 
     def __str__(self) -> str:
         return f'{self.film_work.title} - {self.person.full_name} - {self.role}'
