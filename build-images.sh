@@ -47,3 +47,5 @@ for image in "${images[@]}"; do
   done
 
 cd ..
+
+export CONTAINER_REGISTRY_ID="$registry_id"
