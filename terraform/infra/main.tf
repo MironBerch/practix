@@ -27,3 +27,28 @@ provider "yandex" {
   folder_id                = var.folder_id
   zone                     = "ru-central1-d"
 }
+
+resource "null_resource" "create_movies_db_schema" {
+  depends_on = [
+    yandex_mdb_postgresql_cluster.movies_db_cluster,
+    yandex_mdb_postgresql_database.movies_db,
+    yandex_mdb_postgresql_user.movies_db_user,
+  ]
+
+  provisioner "local-exec" {
+    command = <<EOT
+      until PGPASSWORD='${yandex_mdb_postgresql_user.movies_db_user.password}' \
+        pg_isready -h ${yandex_mdb_postgresql_cluster.movies_db_cluster.host[0].fqdn} \
+        -U ${yandex_mdb_postgresql_user.movies_db_user.name}; 
+      do
+        echo "Waiting for PostgreSQL to start..."
+        sleep 5
+      done
+      PGPASSWORD='${yandex_mdb_postgresql_user.movies_db_user.password}' \
+        psql -h ${yandex_mdb_postgresql_cluster.movies_db_cluster.host[0].fqdn} \
+        -U ${yandex_mdb_postgresql_user.movies_db_user.name} \
+        -d ${yandex_mdb_postgresql_database.movies_db.name} \
+        -c "CREATE SCHEMA IF NOT EXISTS content;"
+    EOT
+  }
+}
