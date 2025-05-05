@@ -19,3 +19,25 @@ dependencies = [
     "requests==2.32.3",
     "user-agents==2.2.0",
 ]
+
+[tool.flake8]
+max-line-length = 100
+exclude = [".venv", "*/migrations/*.py"]
+
+[tool.isort]
+line_length = 100
+multi_line_output = 3
+include_trailing_comma = true
+use_parentheses = true
+skip_glob = [".venv"]
+default_section = "THIRDPARTY"
+src_paths = ["src"]
+known_flask = ["flask"]
+sections = [
+    "FUTURE",
+    "STDLIB",
+    "THIRDPARTY",
+    "FLASK",
+    "FIRSTPARTY",
+    "LOCALFOLDER"
+]
