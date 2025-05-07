@@ -29,3 +29,8 @@ sections = [
     "FIRSTPARTY",
     "LOCALFOLDER"
 ]
+
+[tool.black]
+line-length = 100
+exclude = '\.venv/'
+skip-string-normalization = true
