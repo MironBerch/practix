@@ -29,7 +29,7 @@ LOGGING = {
             'level': 'INFO',
             'class': 'logging.handlers.RotatingFileHandler',
             'filename': 'main.log',
-            'maxBytes': 128*1024*1024,
+            'maxBytes': 128 * 1024 * 1024,
             'backupCount': 5,
             'formatter': 'verbose',
         },

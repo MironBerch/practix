@@ -11,17 +11,30 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
             name='Template',
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                (
+                    'id',
+                    models.UUIDField(
+                        default=uuid.uuid4, editable=False, primary_key=True, serialize=False
+                    ),
+                ),
                 ('name', models.CharField(max_length=255, verbose_name='название')),
-                ('code', models.TextField(validators=[notifications.validators.validate_jinja_template], verbose_name='шаблон')),
-                ('updated_at', models.DateTimeField(auto_now=True, verbose_name='дата последнего обновления')),
+                (
+                    'code',
+                    models.TextField(
+                        validators=[notifications.validators.validate_jinja_template],
+                        verbose_name='шаблон',
+                    ),
+                ),
+                (
+                    'updated_at',
+                    models.DateTimeField(auto_now=True, verbose_name='дата последнего обновления'),
+                ),
             ],
             options={
                 'verbose_name': 'шаблон',
@@ -32,7 +45,12 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='User',
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                (
+                    'id',
+                    models.UUIDField(
+                        default=uuid.uuid4, editable=False, primary_key=True, serialize=False
+                    ),
+                ),
                 ('email', models.EmailField(max_length=255, verbose_name='почта')),
             ],
             options={

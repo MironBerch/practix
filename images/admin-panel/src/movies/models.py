@@ -109,9 +109,7 @@ class GenreFilmwork(UUIDMixin):
 
     class Meta:
         db_table = 'content\".\"genre_film_work'
-        unique_together = (
-            ('film_work', 'genre'),
-        )
+        unique_together = (('film_work', 'genre'),)
 
     def __str__(self) -> str:
         return f'{self.film_work.title} - {self.genre.name}'

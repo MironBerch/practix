@@ -2,7 +2,7 @@ from rest_framework.routers import SimpleRouter
 
 from django.urls import include, path
 
-from .views import MovieViewSet
+from movies.views import MovieViewSet
 
 app_name = 'movies'
 

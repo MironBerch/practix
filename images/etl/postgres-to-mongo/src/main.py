@@ -15,10 +15,10 @@ from services.state import State
 
 
 def postgres_to_mongo(
-        postgres_auth: connection,
-        postgres_movies: connection,
-        redis: Redis,
-        mongo: MongoClient,
+    postgres_auth: connection,
+    postgres_movies: connection,
+    redis: Redis,
+    mongo: MongoClient,
 ):
     state = State(redis)
     while True:

@@ -36,9 +36,7 @@ class BaseListService:
         redis_key = get_redis_key(self.index, query, page_size, page_number)
         objects = await self.cache_adapter.get_objects_from_cache(redis_key)
         if objects:
-            objects = [
-                self.model.model_validate_json(document) for document in json.loads(objects)
-            ]
+            objects = [self.model.model_validate_json(document) for document in json.loads(objects)]
         else:
             objects = await self.db_adapter.get_objects_from_db(
                 self.index,
@@ -56,11 +54,11 @@ class BaseListService:
 
 class RetrieveService:
     def __init__(
-            self,
-            db_adapter: ElasticAdapter,
-            cache_adapter: RedisAdapter,
-            index: str,
-            model: Any,
+        self,
+        db_adapter: ElasticAdapter,
+        cache_adapter: RedisAdapter,
+        index: str,
+        model: Any,
     ):
         self.cache_adapter = cache_adapter
         self.db_adapter = db_adapter

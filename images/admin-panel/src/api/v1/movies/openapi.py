@@ -1,6 +1,6 @@
 from drf_spectacular.utils import extend_schema
 
-from .serializers import FilmworkSerializer
+from movies.serializers import FilmworkSerializer
 
 filmwork_list = extend_schema(
     summary='Список кинопроизведений',

@@ -11,8 +11,7 @@ class Migration(migrations.Migration):
 
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
@@ -20,14 +19,56 @@ class Migration(migrations.Migration):
             fields=[
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                (
+                    'id',
+                    models.UUIDField(
+                        default=uuid.uuid4, editable=False, primary_key=True, serialize=False
+                    ),
+                ),
                 ('title', models.CharField(max_length=255)),
                 ('description', models.TextField(blank=True)),
                 ('release_date', models.DateField(blank=True, db_index=True, null=True)),
-                ('rating', models.FloatField(blank=True, null=True, validators=[django.core.validators.MinValueValidator(0), django.core.validators.MaxValueValidator(10)])),
-                ('access_type', models.CharField(choices=[('public', 'Public'), ('subscription', 'Subscription')], default='public', max_length=31)),
-                ('type', models.CharField(choices=[('movie', 'movie'), ('tv_show', 'tv show')], default='movie', max_length=31)),
-                ('age_rating', models.CharField(choices=[('G', 'G: General audience'), ('PG', 'PG: Parental guidance suggested'), ('PG-13', 'PG-13: Parents cautioned'), ('R', 'R: Restricted'), ('NC-17', 'NC-17: Adults only')], default='G', max_length=31)),
+                (
+                    'rating',
+                    models.FloatField(
+                        blank=True,
+                        null=True,
+                        validators=[
+                            django.core.validators.MinValueValidator(0),
+                            django.core.validators.MaxValueValidator(10),
+                        ],
+                    ),
+                ),
+                (
+                    'access_type',
+                    models.CharField(
+                        choices=[('public', 'Public'), ('subscription', 'Subscription')],
+                        default='public',
+                        max_length=31,
+                    ),
+                ),
+                (
+                    'type',
+                    models.CharField(
+                        choices=[('movie', 'movie'), ('tv_show', 'tv show')],
+                        default='movie',
+                        max_length=31,
+                    ),
+                ),
+                (
+                    'age_rating',
+                    models.CharField(
+                        choices=[
+                            ('G', 'G: General audience'),
+                            ('PG', 'PG: Parental guidance suggested'),
+                            ('PG-13', 'PG-13: Parents cautioned'),
+                            ('R', 'R: Restricted'),
+                            ('NC-17', 'NC-17: Adults only'),
+                        ],
+                        default='G',
+                        max_length=31,
+                    ),
+                ),
             ],
             options={
                 'db_table': 'content"."film_work',
@@ -38,7 +79,12 @@ class Migration(migrations.Migration):
             fields=[
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                (
+                    'id',
+                    models.UUIDField(
+                        default=uuid.uuid4, editable=False, primary_key=True, serialize=False
+                    ),
+                ),
                 ('name', models.CharField(max_length=255, unique=True)),
                 ('description', models.TextField(blank=True)),
             ],
@@ -51,7 +97,12 @@ class Migration(migrations.Migration):
             fields=[
                 ('created_at', models.DateTimeField(auto_now_add=True)),
                 ('updated_at', models.DateTimeField(auto_now=True)),
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                (
+                    'id',
+                    models.UUIDField(
+                        default=uuid.uuid4, editable=False, primary_key=True, serialize=False
+                    ),
+                ),
                 ('full_name', models.CharField(max_length=255)),
             ],
             options={
@@ -61,10 +112,25 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='GenreFilmwork',
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
+                (
+                    'id',
+                    models.UUIDField(
+                        default=uuid.uuid4, editable=False, primary_key=True, serialize=False
+                    ),
+                ),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('film_work', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='movies.filmwork')),
-                ('genre', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='movies.genre')),
+                (
+                    'film_work',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to='movies.filmwork'
+                    ),
+                ),
+                (
+                    'genre',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to='movies.genre'
+                    ),
+                ),
             ],
             options={
                 'db_table': 'content"."genre_film_work',
@@ -79,11 +145,36 @@ class Migration(migrations.Migration):
         migrations.CreateModel(
             name='PersonFilmwork',
             fields=[
-                ('id', models.UUIDField(default=uuid.uuid4, editable=False, primary_key=True, serialize=False)),
-                ('role', models.CharField(choices=[('actor', 'Actor'), ('director', 'Director'), ('writer', 'Writer')], default='actor')),
+                (
+                    'id',
+                    models.UUIDField(
+                        default=uuid.uuid4, editable=False, primary_key=True, serialize=False
+                    ),
+                ),
+                (
+                    'role',
+                    models.CharField(
+                        choices=[
+                            ('actor', 'Actor'),
+                            ('director', 'Director'),
+                            ('writer', 'Writer'),
+                        ],
+                        default='actor',
+                    ),
+                ),
                 ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('film_work', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='movies.filmwork')),
-                ('person', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='movies.person')),
+                (
+                    'film_work',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to='movies.filmwork'
+                    ),
+                ),
+                (
+                    'person',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to='movies.person'
+                    ),
+                ),
             ],
             options={
                 'db_table': 'content"."person_film_work',
@@ -96,6 +187,8 @@ class Migration(migrations.Migration):
         ),
         migrations.AddIndex(
             model_name='personfilmwork',
-            index=models.Index(fields=['film_work', 'person'], name='person_film_film_wo_5069dc_idx'),
+            index=models.Index(
+                fields=['film_work', 'person'], name='person_film_film_wo_5069dc_idx'
+            ),
         ),
     ]

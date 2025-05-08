@@ -36,17 +36,11 @@ class DataExtraction:
     def extract_data(self) -> dict[str, list[Schema]]:
         cursor = self.sqlite_connection.cursor()
         cursor.execute("""SELECT * FROM film_work;""")
-        film_works = [
-            Filmwork(**film_work) for film_work in cursor.fetchall()
-        ]
+        film_works = [Filmwork(**film_work) for film_work in cursor.fetchall()]
         cursor.execute("""SELECT * FROM genre;""")
-        genres = [
-            Genre(**genre) for genre in cursor.fetchall()
-        ]
+        genres = [Genre(**genre) for genre in cursor.fetchall()]
         cursor.execute("""SELECT * FROM person;""")
-        persons = [
-            Person(**person) for person in cursor.fetchall()
-        ]
+        persons = [Person(**person) for person in cursor.fetchall()]
         cursor.execute("""SELECT * FROM genre_film_work;""")
         genre_film_work = [
             GenreFilmwork(**genre_film_work) for genre_film_work in cursor.fetchall()
@@ -86,8 +80,7 @@ class PostgresDataLoader:
                         [obj.to_tuple() for obj in objects],
                     )
                     logging.info(
-                        f'Сохраняем данные в postgres, таблица: '
-                        f'{db_table_name}',
+                        f'Сохраняем данные в postgres, таблица: ' f'{db_table_name}',
                     )
                 except psycopg2.OperationalError as e:
                     logging.error(f'psycopg2 operational error: `{e}`')
@@ -117,8 +110,9 @@ if __name__ == '__main__':
         'host': environ.get('DB_HOST'),
         'port': int(environ.get('DB_PORT')),
     }
-    with sqlite3.connect('db.sqlite') as sqlite_connection, \
-            psycopg2.connect(**dsn, cursor_factory=DictCursor) as postgres_connection:
+    with sqlite3.connect('db.sqlite') as sqlite_connection, psycopg2.connect(
+        **dsn, cursor_factory=DictCursor
+    ) as postgres_connection:
         load_from_sqlite(
             sqlite_connection=sqlite_connection,
             postgres_connection=postgres_connection,

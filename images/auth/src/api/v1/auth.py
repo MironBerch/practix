@@ -18,11 +18,7 @@ from db import postgres, redis
 from models.user import User
 from utils import code, hash_password, notification, sessions
 
-bp = Blueprint(
-    'auth',
-    __name__,
-    url_prefix='/auth'
-)
+bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 
 @bp.route('/signup', methods=['POST'])
@@ -69,9 +65,9 @@ def signup():
         verification_code = code.create_registration_email_verification_code(user.email)
         notification.send_notification(
             data=Notification(
-              user_email=user.email,
-              subject=f'{verification_code} — ваш код для подтверждения регистрации',
-              text=f'Код {verification_code}. Код действителен в течение 10 минут',
+                user_email=user.email,
+                subject=f'{verification_code} — ваш код для подтверждения регистрации',
+                text=f'Код {verification_code}. Код действителен в течение 10 минут',
             ).model_dump(),
         )
         temp_token = create_access_token(
@@ -80,12 +76,15 @@ def signup():
                 minutes=settings.security.jwt_temp_token_expires,
             ),
         )
-        return jsonify(
-            {
-                'message': 'user created',
-                'temp_token': temp_token,
-            }
-        ), HTTPStatus.CREATED
+        return (
+            jsonify(
+                {
+                    'message': 'user created',
+                    'temp_token': temp_token,
+                }
+            ),
+            HTTPStatus.CREATED,
+        )
     except ValidationError as err:
         return jsonify({'message': err.messages}), HTTPStatus.BAD_REQUEST
     except Exception as e:
@@ -118,12 +117,12 @@ def resend_confirm_registration_email():
     """
     identity = get_jwt_identity()
     user = User.query.get(identity)
-    verification_code = code.create_registration_email_verification_code(user.email),
+    verification_code = (code.create_registration_email_verification_code(user.email),)
     notification.send_notification(
         data=Notification(
-          user_email=user.email,
-          subject=f'{verification_code} — ваш код для подтверждения регистрации',
-          text=f'Код {verification_code}. Код действителен в течение 10 минут',
+            user_email=user.email,
+            subject=f'{verification_code} — ваш код для подтверждения регистрации',
+            text=f'Код {verification_code}. Код действителен в течение 10 минут',
         ).model_dump(),
     )
     return jsonify({'message': 'code sended on email'}), HTTPStatus.OK
@@ -182,13 +181,16 @@ def confirm_registration():
             user_id=user.id,
             user_agent=request.headers.get('User-Agent'),
         )
-        return jsonify(
-            {
-                'message': 'email confirmed',
-                'access_token': access_token,
-                'refresh_token': refresh_token,
-            }
-        ), HTTPStatus.OK
+        return (
+            jsonify(
+                {
+                    'message': 'email confirmed',
+                    'access_token': access_token,
+                    'refresh_token': refresh_token,
+                }
+            ),
+            HTTPStatus.OK,
+        )
     return jsonify({'message': 'code is not correct'}), HTTPStatus.BAD_REQUEST
 
 
@@ -247,9 +249,12 @@ def signin():
         data = SignInSchema().load(request.get_json())
         user: User = User.query.filter_by(email=data['email']).first()
         if user is None:
-            return jsonify(
-                {'message': 'user with this email does not exist'},
-            ), HTTPStatus.FORBIDDEN
+            return (
+                jsonify(
+                    {'message': 'user with this email does not exist'},
+                ),
+                HTTPStatus.FORBIDDEN,
+            )
         if not hash_password.check_password(user.password_hash, data['password']):
             return jsonify({'message': 'password is not correct'}), HTTPStatus.FORBIDDEN
         temp_token = create_access_token(
@@ -261,17 +266,20 @@ def signin():
         verification_code = code.create_2_step_verification_code(user.email)
         notification.send_notification(
             data=Notification(
-              user_email=user.email,
-              subject=f'{verification_code} — ваш код для входа',
-              text=f'Код {verification_code}. Код действителен в течение 10 минут',
+                user_email=user.email,
+                subject=f'{verification_code} — ваш код для входа',
+                text=f'Код {verification_code}. Код действителен в течение 10 минут',
             ).model_dump(),
         )
-        return jsonify(
-            {
-                'temp_token': temp_token,
-                'message': '2-step verification code sent to email.',
-            },
-        ), HTTPStatus.OK
+        return (
+            jsonify(
+                {
+                    'temp_token': temp_token,
+                    'message': '2-step verification code sent to email.',
+                },
+            ),
+            HTTPStatus.OK,
+        )
     except ValidationError as err:
         return jsonify({'message': err.messages}), HTTPStatus.BAD_REQUEST
     except Exception as e:
@@ -307,9 +315,9 @@ def resend_2_step_verification_email():
     verification_code = code.create_2_step_verification_code(user.email)
     notification.send_notification(
         data=Notification(
-          user_email=user.email,
-          subject=f'{verification_code} — ваш код для входа',
-          text=f'Код {verification_code}. Код действителен в течение 10 минут',
+            user_email=user.email,
+            subject=f'{verification_code} — ваш код для входа',
+            text=f'Код {verification_code}. Код действителен в течение 10 минут',
         ).model_dump(),
     )
     return jsonify({'message': 'new verification code sent to email'}), HTTPStatus.OK
@@ -366,15 +374,16 @@ def confirm_2_step_verification():
             user_id=user.id,
             user_agent=request.headers.get('User-Agent'),
         )
-        return jsonify(
-            {
-              'access_token': access_token,
-              'refresh_token': refresh_token,
-            }
-        ), HTTPStatus.OK
-    return jsonify(
-        {'message': 'сode is not correct or has expired'}
-      ), HTTPStatus.BAD_REQUEST
+        return (
+            jsonify(
+                {
+                    'access_token': access_token,
+                    'refresh_token': refresh_token,
+                }
+            ),
+            HTTPStatus.OK,
+        )
+    return jsonify({'message': 'сode is not correct or has expired'}), HTTPStatus.BAD_REQUEST
 
 
 @bp.route('/logout', methods=['POST'])

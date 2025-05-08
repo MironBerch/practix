@@ -59,8 +59,8 @@ class PersonService:
         return result['hits']['hits']
 
     async def get_person_filmwork_ids_and_roles(
-            self,
-            person_id: str,
+        self,
+        person_id: str,
     ) -> dict[str, list[str | UUID]]:
         """Возвращает `id` фильмов в которых учавствовавала персона и его роли."""
         roles, filmwork_ids = set(), set()

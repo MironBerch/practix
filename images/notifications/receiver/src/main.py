@@ -3,13 +3,13 @@ from logging import DEBUG
 
 import aio_pika
 import uvicorn
-from api.urls import api_router
-from core.config import settings
-from core.logger import LOGGING
 
 from fastapi import FastAPI
 from fastapi.responses import ORJSONResponse
 
+from api.urls import api_router
+from core.config import settings
+from core.logger import LOGGING
 from db import rabbitmq
 
 
@@ -20,9 +20,7 @@ async def lifespan(app: FastAPI):
     host = settings.rabbitmq.host
     port = settings.rabbitmq.client_port
 
-    rabbitmq.rabbitmq = await aio_pika.connect_robust(
-        f'amqp://{user}:{password}@{host}:{port}'
-    )
+    rabbitmq.rabbitmq = await aio_pika.connect_robust(f'amqp://{user}:{password}@{host}:{port}')
 
     async with rabbitmq.rabbitmq.channel() as channel:
         await channel.declare_queue(

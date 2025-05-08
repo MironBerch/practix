@@ -5,8 +5,8 @@ from models.session import Session
 
 
 def create_session(
-        user_id: str | UUID,
-        user_agent: str,
+    user_id: str | UUID,
+    user_agent: str,
 ):
     new_session = Session(
         user_id=user_id,

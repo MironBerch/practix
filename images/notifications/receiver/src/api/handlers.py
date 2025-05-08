@@ -56,9 +56,13 @@ async def publish_notification(
                 detail='User not found',
             )
     if notification.template_id:
-        template_exist = db.query(Template).filter(
-            Template.id == notification.template_id,
-        ).first()
+        template_exist = (
+            db.query(Template)
+            .filter(
+                Template.id == notification.template_id,
+            )
+            .first()
+        )
         if not template_exist:
             raise HTTPException(
                 status_code=HTTPStatus.NOT_FOUND,

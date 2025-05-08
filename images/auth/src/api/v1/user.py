@@ -17,11 +17,7 @@ from models.session import Session
 from models.user import User
 from utils import code, hash_password, notification
 
-bp = Blueprint(
-    'user',
-    __name__,
-    url_prefix='/user'
-)
+bp = Blueprint('user', __name__, url_prefix='/user')
 
 
 @bp.route('/password_change', methods=['POST'])
@@ -101,9 +97,9 @@ def change_email():
         verification_code = code.create_change_email_verification_code(user.email, data['email'])
         notification.send_notification(
             data=Notification(
-              user_email=data['email'],
-              subject=f'{verification_code} — ваш код для подтверждения электронной почты',
-              text=f'Код {verification_code}. Код действителен в течение 10 минут',
+                user_email=data['email'],
+                subject=f'{verification_code} — ваш код для подтверждения электронной почты',
+                text=f'Код {verification_code}. Код действителен в течение 10 минут',
             ).model_dump(),
         )
         return jsonify({'message': 'email changed'}), HTTPStatus.CREATED
@@ -149,9 +145,9 @@ def resend_change_email():
     )
     notification.send_notification(
         data=Notification(
-          user_email=old_verification_code[0],
-          subject=f'{verification_code} — ваш код для подтверждения электронной почты',
-          text=f'Код {verification_code}. Код действителен в течение 10 минут',
+            user_email=old_verification_code[0],
+            subject=f'{verification_code} — ваш код для подтверждения электронной почты',
+            text=f'Код {verification_code}. Код действителен в течение 10 минут',
         ).model_dump(),
     )
     return jsonify({'message': 'code sended on email'}), HTTPStatus.OK

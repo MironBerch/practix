@@ -27,8 +27,7 @@ def migrate():
 
 @click.command()
 @with_appcontext
-def createsuperuser():
-    ...
+def createsuperuser(): ...
 
 
 def create_app() -> Flask:
@@ -78,7 +77,7 @@ def create_app() -> Flask:
         ],
         'static_url_path': '/auth/flasgger_static',
         'swagger_ui': True,
-        'specs_route': '/auth/api/docs'
+        'specs_route': '/auth/api/docs',
     }
 
     Swagger(app, template=swagger_template, config=swagger_config)

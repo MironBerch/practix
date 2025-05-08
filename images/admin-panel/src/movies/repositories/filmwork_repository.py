@@ -11,8 +11,7 @@ class FilmworkRepository:
     @staticmethod
     def get_filmworks_with_related_data() -> QuerySet[Filmwork]:
         filmworks_data = (
-            Filmwork.objects
-            .annotate(
+            Filmwork.objects.annotate(
                 genres_list=ArrayAgg(
                     'genres__name',
                     distinct=True,

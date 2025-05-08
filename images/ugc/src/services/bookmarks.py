@@ -1,7 +1,8 @@
 from uuid import UUID
 
-from fastapi import Depends
 from motor.motor_asyncio import AsyncIOMotorDatabase
+
+from fastapi import Depends
 
 from api.paginator import Paginator
 from db.mongo import get_mongo
@@ -20,9 +21,8 @@ class BookmarksService(BaseService):
         )
         if result != []:
             result = [
-                {
-                    'filmwork_id': to_uuid(bookmark['filmwork_id'])
-                } for bookmark in result[0].get('bookmarks', [])
+                {'filmwork_id': to_uuid(bookmark['filmwork_id'])}
+                for bookmark in result[0].get('bookmarks', [])
             ]
         return result
 
@@ -67,6 +67,6 @@ class BookmarksService(BaseService):
 
 
 def get_bookmarks_service(
-        mongo: AsyncIOMotorDatabase = Depends(get_mongo),
+    mongo: AsyncIOMotorDatabase = Depends(get_mongo),
 ) -> BookmarksService:
     return BookmarksService(mongo=mongo)

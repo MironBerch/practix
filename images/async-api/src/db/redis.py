@@ -16,10 +16,10 @@ class RedisAdapter:
         return data
 
     async def put_objects_to_cache(
-            self,
-            redis_key: str,
-            objects: list | dict,
-            expire: int = 60 * 10,
+        self,
+        redis_key: str,
+        objects: list | dict,
+        expire: int = 60 * 10,
     ) -> None:
         await self.redis.set(redis_key, objects, ex=expire)
 

@@ -3,9 +3,10 @@ from http import HTTPStatus
 from uuid import UUID
 
 import jwt
+from jwt.exceptions import ExpiredSignatureError
+
 from fastapi import Depends, HTTPException
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from jwt.exceptions import ExpiredSignatureError
 
 from core.config import settings
 

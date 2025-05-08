@@ -1,7 +1,8 @@
 from uuid import UUID
 
-from fastapi import Depends
 from motor.motor_asyncio import AsyncIOMotorDatabase
+
+from fastapi import Depends
 
 from db.mongo import get_mongo
 from services.base import BaseService
@@ -18,10 +19,10 @@ class FilmworksService(BaseService):
         return result['rating']
 
     async def rate(
-            self,
-            filmwork_id: UUID,
-            user_id: UUID,
-            score: int,
+        self,
+        filmwork_id: UUID,
+        user_id: UUID,
+        score: int,
     ):
         filmwork_id = to_binary(filmwork_id)
         user_id_bytes = user_id.bytes
@@ -68,6 +69,6 @@ class FilmworksService(BaseService):
 
 
 def get_filmworks_service(
-        mongo: AsyncIOMotorDatabase = Depends(get_mongo),
+    mongo: AsyncIOMotorDatabase = Depends(get_mongo),
 ) -> FilmworksService:
     return FilmworksService(mongo=mongo)

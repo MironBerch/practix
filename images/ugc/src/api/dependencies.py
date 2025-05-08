@@ -9,8 +9,8 @@ from services.reviews import ReviewsService, get_reviews_service
 
 
 async def check_filmwork_exist(
-        filmwork_id: UUID,
-        filmworks_service: FilmworksService = Depends(get_filmworks_service),
+    filmwork_id: UUID,
+    filmworks_service: FilmworksService = Depends(get_filmworks_service),
 ):
     """Функция для проверки наличия фильма."""
     if not (await filmworks_service.get(filmwork_id)):
@@ -18,9 +18,9 @@ async def check_filmwork_exist(
 
 
 async def check_review_exists(
-        filmwork_id: UUID,
-        reviews_service: ReviewsService = Depends(get_reviews_service),
-        auth: AuthService = Depends(),
+    filmwork_id: UUID,
+    reviews_service: ReviewsService = Depends(get_reviews_service),
+    auth: AuthService = Depends(),
 ):
     """Функция для проверки наличия обзора."""
     if not (await reviews_service.get(user_id=auth.user_id, filmwork_id=filmwork_id)):

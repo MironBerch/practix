@@ -46,8 +46,8 @@ class FilmworksSearchService(BaseListService):
 
 
 def get_filmworks_list_service(
-        redis: RedisAdapter = Depends(get_redis_adapter),
-        elastic: ElasticAdapter = Depends(get_elastic_adapter),
+    redis: RedisAdapter = Depends(get_redis_adapter),
+    elastic: ElasticAdapter = Depends(get_elastic_adapter),
 ) -> FilmworksListService:
     return FilmworksListService(
         cache_adapter=redis,
@@ -58,8 +58,8 @@ def get_filmworks_list_service(
 
 
 def get_filmworks_search_service(
-        redis: RedisAdapter = Depends(get_redis_adapter),
-        elastic: ElasticAdapter = Depends(get_elastic_adapter),
+    redis: RedisAdapter = Depends(get_redis_adapter),
+    elastic: ElasticAdapter = Depends(get_elastic_adapter),
 ) -> FilmworksSearchService:
     return FilmworksSearchService(
         cache_adapter=redis,
@@ -70,8 +70,8 @@ def get_filmworks_search_service(
 
 
 def get_retrieve_filmwork_service(
-        redis: RedisAdapter = Depends(get_redis_adapter),
-        elastic: ElasticAdapter = Depends(get_elastic_adapter),
+    redis: RedisAdapter = Depends(get_redis_adapter),
+    elastic: ElasticAdapter = Depends(get_elastic_adapter),
 ) -> RetrieveService:
     return RetrieveService(
         cache_adapter=redis,

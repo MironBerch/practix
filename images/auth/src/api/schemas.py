@@ -26,7 +26,7 @@ class SignUpSchema(Schema):
 
 
 class SignInSchema(SignUpSchema):
-    ...
+    pass
 
 
 class ConfirmCodeSchema(Schema):

@@ -18,7 +18,7 @@ class PersonFilmworkInline(admin.TabularInline):
 @admin.register(Person)
 class PersonAdmin(admin.ModelAdmin):
     list_display = ('full_name', 'get_roles')
-    list_filter = ('personfilmwork__role', )
+    list_filter = ('personfilmwork__role',)
     search_fields = ('full_name', 'id')
 
     @admin.display(description='роль')

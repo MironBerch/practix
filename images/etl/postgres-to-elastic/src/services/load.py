@@ -127,8 +127,8 @@ class ElasticLoader(object):
         self._create_indexes()
 
     def bulk_insert(
-            self,
-            data: list[filmwork.Filmwork | person.Person | genre.Genre],
+        self,
+        data: list[filmwork.Filmwork | person.Person | genre.Genre],
     ):
         """Загружает данные."""
         actions = (
@@ -136,6 +136,7 @@ class ElasticLoader(object):
                 '_index': document._index,
                 '_id': document.id,
                 '_source': document.model_dump(by_alias=True),
-            } for document in data
+            }
+            for document in data
         )
         helpers.bulk(self.elastic, actions)

@@ -136,12 +136,12 @@ class ElasticAdapter:
         self.elastic = elastic
 
     async def get_objects_from_db(
-            self,
-            index: str,
-            model: Any,
-            query: dict,
-            page_size: int,
-            page_number: int,
+        self,
+        index: str,
+        model: Any,
+        query: dict,
+        page_size: int,
+        page_number: int,
     ) -> list:
         data = await self.elastic.search(
             index=index,

@@ -1,8 +1,9 @@
 from datetime import datetime
 from uuid import UUID, uuid4
 
-from fastapi import Depends
 from motor.motor_asyncio import AsyncIOMotorDatabase
+
+from fastapi import Depends
 
 from api.paginator import Paginator
 from db.mongo import get_mongo
@@ -114,6 +115,6 @@ class ReviewsService(BaseService):
 
 
 def get_reviews_service(
-        mongo: AsyncIOMotorDatabase = Depends(get_mongo),
+    mongo: AsyncIOMotorDatabase = Depends(get_mongo),
 ) -> ReviewsService:
     return ReviewsService(mongo=mongo)

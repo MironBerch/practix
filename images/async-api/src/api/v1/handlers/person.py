@@ -118,7 +118,8 @@ async def get_person_filmworks_by_pk(
     return [
         BaseFilmwork(
             **filmwork['_source'],
-        ) for filmwork in await person_service.get_person_filmworks(
+        )
+        for filmwork in await person_service.get_person_filmworks(
             person_id=person_pk,
         )
     ]

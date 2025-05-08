@@ -11,8 +11,6 @@ async def get_rabbitmq() -> aio_pika.Connection:
 
     rabbitmq: aio_pika.Connection | None = None
 
-    rabbitmq = await aio_pika.connect_robust(
-        f'amqp://{user}:{password}@{host}:{client_port}'
-    )
+    rabbitmq = await aio_pika.connect_robust(f'amqp://{user}:{password}@{host}:{client_port}')
 
     return rabbitmq

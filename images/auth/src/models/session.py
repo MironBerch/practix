@@ -32,12 +32,10 @@ class Session(db.Model):
     """Модель сессии пользователя."""
 
     __tablename__ = 'sessions'
-    __table_args__ = (
-        {
-            'postgresql_partition_by': 'LIST (user_device_type);',
-            'listeners': [('after_create', create_partition)],
-        }
-    )
+    __table_args__ = {
+        'postgresql_partition_by': 'LIST (user_device_type);',
+        'listeners': [('after_create', create_partition)],
+    }
 
     id = db.Column(
         UUID(as_uuid=True),

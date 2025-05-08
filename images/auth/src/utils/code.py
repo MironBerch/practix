@@ -8,37 +8,37 @@ def generate_code() -> str:
 
 
 def create_2_step_verification_code(
-        email: str,
+    email: str,
 ) -> None:
     code = generate_code()
     redis.redis.set(
         f'2_step_verification_code:{email}',
         code,
-        ex=60*10,
+        ex=60 * 10,
     )
     return code
 
 
 def create_registration_email_verification_code(
-        email: str,
+    email: str,
 ) -> None:
     code = generate_code()
     redis.redis.set(
         f'email_registration:{email}',
         code,
-        ex=60*10,
+        ex=60 * 10,
     )
     return code
 
 
 def create_change_email_verification_code(
-        old_email: str,
-        new_email: str,
+    old_email: str,
+    new_email: str,
 ) -> None:
     code = generate_code()
     redis.redis.set(
         f'email_change:{old_email}',
         new_email + ':' + code,
-        ex=60*10,
+        ex=60 * 10,
     )
     return code

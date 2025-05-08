@@ -19,13 +19,10 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
     # drf
     'rest_framework',
-
     # django 3rd party
     'django_celery_beat',
-
     # local
     'notifications.apps.NotificationsConfig',
 ]

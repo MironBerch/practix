@@ -1,11 +1,12 @@
 import uuid
 
-from core.config import settings
 from sqlalchemy import Column, DateTime, String, Text, create_engine
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.sql import func
+
+from core.config import settings
 
 DATABASE_URL = (
     f'postgresql://{settings.postgres.user}:{settings.postgres.password}'
