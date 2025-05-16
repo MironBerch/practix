@@ -1,4 +1,5 @@
 from typing import ClassVar
+from uuid import UUID
 
 from pydantic import field_validator
 
@@ -23,6 +24,6 @@ class Filmwork(UUIDMixin):
 
     @field_validator('actors', 'writers', 'directors', mode='before')
     @classmethod
-    def change_persons_field(cls, persons: list[FilmworkPerson]) -> list[dict]:
+    def change_persons_field(cls, persons: list[FilmworkPerson]) -> list[dict[str, UUID | str]]:
         """Валидатор для смены названия поля полного имени персоны."""
         return [{'id': person.id, 'name': person.name} for person in persons]

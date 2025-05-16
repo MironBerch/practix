@@ -14,11 +14,11 @@ def get_movies_postgres() -> Iterator[postgres_connection]:
     """
 
     dsn: dict[str, str | int] = {
-        'dbname': environ.get('MOVIES_DB_NAME'),
-        'user': environ.get('MOVIES_DB_USER'),
-        'password': environ.get('MOVIES_DB_PASSWORD'),
-        'host': environ.get('MOVIES_DB_HOST'),
-        'port': int(environ.get('MOVIES_DB_PORT')),
+        'host': environ.get('MOVIES_DB_HOST', 'movies_db'),
+        'port': int(environ.get('MOVIES_DB_PORT', 5432)),
+        'dbname': environ.get('MOVIES_DB_NAME', 'movies'),
+        'user': environ.get('MOVIES_DB_USER', 'postgres'),
+        'password': environ.get('MOVIES_DB_PASSWORD', 'postgres'),
         'options': '-c search_path=content',
     }
     connection: postgres_connection = psycopg2.connect(**dsn)
@@ -36,11 +36,11 @@ def get_auth_postgres() -> Iterator[postgres_connection]:
     """
 
     dsn: dict[str, str | int] = {
-        'dbname': environ.get('AUTH_DB_NAME'),
-        'user': environ.get('AUTH_DB_USER'),
-        'password': environ.get('AUTH_DB_PASSWORD'),
-        'host': environ.get('AUTH_DB_HOST'),
-        'port': int(environ.get('AUTH_DB_PORT')),
+        'host': environ.get('AUTH_DB_HOST', 'auth_db'),
+        'port': int(environ.get('AUTH_DB_PORT', 5432)),
+        'dbname': environ.get('AUTH_DB_NAME', 'auth'),
+        'user': environ.get('AUTH_DB_USER', 'postgres'),
+        'password': environ.get('AUTH_DB_PASSWORD', 'postgres'),
     }
     connection: postgres_connection = psycopg2.connect(**dsn)
     connection.cursor_factory = DictCursor

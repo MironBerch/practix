@@ -5,7 +5,7 @@ from elasticsearch import AsyncElasticsearch, RequestError
 
 logger = logging.getLogger()
 
-elastic: AsyncElasticsearch | None = None
+elastic: AsyncElasticsearch
 
 
 SETTINGS = {

@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from datetime import date, datetime
-from typing import Union
+from typing import Type, Union
 from uuid import UUID
 
 
@@ -20,7 +20,7 @@ class Genre(UUIDMixin, TimeStampedMixin):
     name: str
     description: str | None
 
-    def to_tuple(self) -> tuple:
+    def to_tuple(self) -> tuple[UUID | str | datetime | None, ...]:
         return (
             self.id,
             self.name,
@@ -34,7 +34,7 @@ class Genre(UUIDMixin, TimeStampedMixin):
         return 'content.genre'
 
     @classmethod
-    def get_db_field_names(cls) -> tuple[str]:
+    def get_db_field_names(cls) -> tuple[str, ...]:
         return ('id', 'name', 'description', 'created_at', 'updated_at')
 
 
@@ -42,7 +42,7 @@ class Genre(UUIDMixin, TimeStampedMixin):
 class Person(UUIDMixin, TimeStampedMixin):
     full_name: str
 
-    def to_tuple(self) -> tuple:
+    def to_tuple(self) -> tuple[UUID | str | datetime, ...]:
         return (self.id, self.full_name, self.created_at, self.updated_at)
 
     @classmethod
@@ -50,7 +50,7 @@ class Person(UUIDMixin, TimeStampedMixin):
         return 'content.person'
 
     @classmethod
-    def get_db_field_names(cls) -> tuple[str]:
+    def get_db_field_names(cls) -> tuple[str, ...]:
         return ('id', 'full_name', 'created_at', 'updated_at')
 
 
@@ -64,7 +64,7 @@ class Filmwork(UUIDMixin, TimeStampedMixin):
     type: str
     age_rating: str
 
-    def to_tuple(self) -> tuple:
+    def to_tuple(self) -> tuple[UUID | str | date | float | datetime | None, ...]:
         return (
             self.id,
             self.title,
@@ -83,7 +83,7 @@ class Filmwork(UUIDMixin, TimeStampedMixin):
         return 'content.film_work'
 
     @classmethod
-    def get_db_field_names(cls) -> tuple[str]:
+    def get_db_field_names(cls) -> tuple[str, ...]:
         return (
             'id',
             'title',
@@ -104,7 +104,7 @@ class GenreFilmwork(UUIDMixin):
     genre_id: UUID
     created_at: datetime
 
-    def to_tuple(self) -> tuple:
+    def to_tuple(self) -> tuple[UUID | datetime, ...]:
         return (
             self.id,
             self.film_work_id,
@@ -117,7 +117,7 @@ class GenreFilmwork(UUIDMixin):
         return 'content.genre_film_work'
 
     @classmethod
-    def get_db_field_names(cls) -> tuple[str]:
+    def get_db_field_names(cls) -> tuple[str, ...]:
         return ('id', 'film_work_id', 'genre_id', 'created_at')
 
 
@@ -128,7 +128,7 @@ class PersonFilmwork(UUIDMixin):
     role: str
     created_at: datetime
 
-    def to_tuple(self) -> tuple:
+    def to_tuple(self) -> tuple[UUID | str | datetime, ...]:
         return (
             self.id,
             self.film_work_id,
@@ -142,16 +142,16 @@ class PersonFilmwork(UUIDMixin):
         return 'content.person_film_work'
 
     @classmethod
-    def get_db_field_names(cls) -> tuple[str]:
+    def get_db_field_names(cls) -> tuple[str, ...]:
         return ('id', 'film_work_id', 'person_id', 'role', 'created_at')
 
 
 Schema = Union[
-    Filmwork,
-    Genre,
-    Person,
-    GenreFilmwork,
-    PersonFilmwork,
+    Type[Filmwork],
+    Type[Genre],
+    Type[Person],
+    Type[GenreFilmwork],
+    Type[PersonFilmwork],
 ]
 
 schemas: dict[str, Schema] = {

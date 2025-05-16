@@ -2,7 +2,7 @@ from typing import Any
 
 from redis.asyncio import Redis
 
-redis: Redis | None = None
+redis: Redis
 
 
 class RedisAdapter:

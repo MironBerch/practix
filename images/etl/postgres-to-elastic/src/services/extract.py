@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Iterator
+from typing import Any, Iterator
 
 from psycopg2.extensions import connection, cursor
 from psycopg2.extras import DictRow
@@ -59,7 +59,7 @@ class PostgresExtractor(object):
         else:
             return [row['id'] for row in data]
 
-    def get_film_works_data(self, film_work_ids: list[str]) -> Iterator[DictRow]:
+    def get_film_works_data(self, film_work_ids: list[str]) -> list[tuple[Any, ...]]:
         with self.postgres.cursor() as cursor:
             film_work_ids = ', '.join([f"'{film_work_id}'" for film_work_id in film_work_ids])
             cursor.execute(

@@ -14,20 +14,20 @@ from db import postgres, redis
 
 @click.command()
 @with_appcontext
-def makemigrations():
+def makemigrations() -> None:
     flask_migrate.Migrate(current_app, postgres.db)
     flask_migrate.migrate()
 
 
 @click.command()
 @with_appcontext
-def migrate():
+def migrate() -> None:
     flask_migrate.upgrade()
 
 
 @click.command()
 @with_appcontext
-def createsuperuser(): ...
+def createsuperuser() -> None: ...
 
 
 def create_app() -> Flask:
@@ -85,7 +85,7 @@ def create_app() -> Flask:
     jwt = JWTManager(app)
 
     @jwt.token_in_blocklist_loader
-    def check_if_token_is_revoked(jwt_header, jwt_payload):
+    def check_if_token_is_revoked(jwt_header, jwt_payload) -> bool:
         jti = jwt_payload['jti']
         token_in_redis = redis.redis.get(jti)
         return token_in_redis is not None

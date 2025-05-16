@@ -5,24 +5,24 @@ from pydantic_settings import BaseSettings
 
 
 class PostgresConfig(BaseSettings):
-    host: str = environ.get('POSTGRES_HOST')
-    port: int = int(environ.get('POSTGRES_PORT'))
-    db: str = environ.get('POSTGRES_NAME')
-    user: str = environ.get('POSTGRES_USER')
-    password: str = environ.get('POSTGRES_PASSWORD')
+    host: str = environ.get('POSTGRES_HOST', 'notifications_db')
+    port: int = int(environ.get('POSTGRES_PORT', 5432))
+    db: str = environ.get('POSTGRES_NAME', 'notifications')
+    user: str = environ.get('POSTGRES_USER', 'postgres')
+    password: str = environ.get('POSTGRES_PASSWORD', 'postgres')
 
 
 class RabbitMQConfig(BaseSettings):
-    host: str = environ.get('RABBITMQ_HOST')
-    server_port: int = environ.get('RABBITMQ_SERVER_PORT')
-    client_port: int = environ.get('RABBITMQ_CLIENT_PORT')
-    user: str = environ.get('RABBITMQ_USER')
-    password: str = environ.get('RABBITMQ_PASS')
+    host: str = environ.get('RABBITMQ_HOST', 'rabbit')
+    server_port: int = int(environ.get('RABBITMQ_SERVER_PORT', 15672))
+    client_port: int = int(environ.get('RABBITMQ_CLIENT_PORT', 5672))
+    user: str = environ.get('RABBITMQ_USER', 'user')
+    password: str = environ.get('RABBITMQ_PASS', 'password')
 
 
 class FastAPIConfig(BaseSettings):
     host: str = '0.0.0.0'
-    port: int = environ.get('FASTAPI_PORT')
+    port: int = int(environ.get('FASTAPI_PORT', 8000))
     debug: bool = environ.get('DEBUG') == 'True'
 
 

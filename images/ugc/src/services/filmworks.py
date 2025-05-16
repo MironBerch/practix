@@ -58,13 +58,13 @@ class FilmworksService(BaseService):
         result = await self.mongo['filmworks'].find_one({'_id': to_binary(filmwork_id)})
         return result['rating']
 
-    def filter(self):
+    def filter(self) -> None:
         raise NotImplementedError()
 
-    def update(self):
+    def update(self) -> None:
         raise NotImplementedError()
 
-    def remove(self):
+    def remove(self) -> None:
         raise NotImplementedError()
 
 

@@ -53,16 +53,16 @@ class BookmarksService(BaseService):
         )
         return {'filmwork_id': filmwork_id}
 
-    def get(self):
+    def get(self) -> None:
         raise NotImplementedError()
 
-    def get_rating(self):
+    def get_rating(self) -> None:
         raise NotImplementedError()
 
-    def rate(self):
+    def rate(self) -> None:
         raise NotImplementedError()
 
-    def unrate(self):
+    def unrate(self) -> None:
         raise NotImplementedError()
 
 

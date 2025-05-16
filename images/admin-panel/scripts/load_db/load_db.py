@@ -24,7 +24,7 @@ def dict_factory(cursor: sqlite3.Cursor, row: tuple) -> dict:
     return d
 
 
-def parse_db_field_names(db_field_names: tuple[str]) -> str:
+def parse_db_field_names(db_field_names: tuple[str, ...]) -> str:
     return ', '.join(db_field_names)
 
 
@@ -62,7 +62,7 @@ class PostgresDataLoader:
     def __init__(self, postgres_connection: postgres_connection_object):
         self.postgres_connection = postgres_connection
 
-    def load_data(self, data: dict[str, list[Schema]]):
+    def load_data(self, data: dict[str, list[Schema]]) -> None:
         with self.postgres_connection.cursor() as cursor:
             for schema, objects in data.items():
                 db_table_name = schemas[schema].db_table_name()
@@ -91,7 +91,7 @@ class PostgresDataLoader:
 def load_from_sqlite(
     sqlite_connection: sqlite3.Connection,
     postgres_connection: postgres_connection_object,
-):
+) -> None:
     logging.info('Начато извлечение данных из SQLite')
     logging.info('Начата загрузка данных в PostgreSQL')
 
@@ -103,12 +103,12 @@ def load_from_sqlite(
 
 
 if __name__ == '__main__':
-    dsn: dict[str, str | int] = {
+    dsn: dict[str, str | int | None] = {
         'dbname': environ.get('DB_NAME'),
         'user': environ.get('DB_USER'),
         'password': environ.get('DB_PASSWORD'),
         'host': environ.get('DB_HOST'),
-        'port': int(environ.get('DB_PORT')),
+        'port': int(environ.get('DB_PORT', 5432)),
     }
     with sqlite3.connect('db.sqlite') as sqlite_connection, psycopg2.connect(
         **dsn, cursor_factory=DictCursor

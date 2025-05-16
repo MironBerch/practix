@@ -1,6 +1,7 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter, SearchFilter
 from rest_framework.permissions import AllowAny
+from rest_framework.response import Response
 from rest_framework.viewsets import ReadOnlyModelViewSet
 
 from api.v1.movies import openapi
@@ -40,9 +41,9 @@ class MovieViewSet(ReadOnlyModelViewSet):
         return FilmworkRepository.get_filmworks_with_related_data()
 
     @openapi.filmwork_list
-    def list(self, request, *args, **kwargs):
+    def list(self, request, *args, **kwargs) -> Response:
         return super(MovieViewSet, self).list(request, *args, **kwargs)
 
     @openapi.filmwork_detail
-    def retrieve(self, request, *args, **kwargs):
+    def retrieve(self, request, *args, **kwargs) -> Response:
         return super(MovieViewSet, self).retrieve(request, *args, **kwargs)

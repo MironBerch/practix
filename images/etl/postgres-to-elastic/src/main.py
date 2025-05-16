@@ -60,7 +60,7 @@ def postgres_to_elastic(postgres: connection, elastic: Elasticsearch, redis: Red
         time.sleep(60)
 
 
-def main():
+def main() -> None:
     with get_postgres() as postgres_connection:
         with get_redis() as redis_connection:
             with get_elastic() as elastic_connection:

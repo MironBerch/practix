@@ -14,11 +14,11 @@ def get_postgres() -> Iterator[postgres_connection]:
     """
 
     dsn: dict[str, str | int] = {
-        'dbname': environ.get('DB_NAME'),
-        'user': environ.get('DB_USER'),
-        'password': environ.get('DB_PASSWORD'),
-        'host': environ.get('DB_HOST'),
-        'port': int(environ.get('DB_PORT')),
+        'host': environ.get('DB_HOST', 'movies_db'),
+        'port': int(environ.get('DB_PORT', 5432)),
+        'dbname': environ.get('DB_NAME', 'movies'),
+        'user': environ.get('DB_USER', 'postgres'),
+        'password': environ.get('DB_PASSWORD', 'postgres'),
         'options': '-c search_path=content',
     }
     connection: postgres_connection = psycopg2.connect(**dsn)

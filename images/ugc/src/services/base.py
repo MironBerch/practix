@@ -4,33 +4,33 @@ from motor.motor_asyncio import AsyncIOMotorDatabase
 
 
 class BaseService(ABC):
-    def __init__(self, mongo: AsyncIOMotorDatabase):
+    def __init__(self, mongo: AsyncIOMotorDatabase) -> None:
         self.mongo = mongo
 
     @abstractmethod
-    def get(self):
+    def get(self) -> None:
         pass
 
     @abstractmethod
-    def filter(self):
+    def filter(self) -> None:
         pass
 
     @abstractmethod
-    def update(self):
+    def update(self) -> None:
         pass
 
     @abstractmethod
-    def remove(self):
+    def remove(self) -> None:
         pass
 
     @abstractmethod
-    def get_rating(self):
+    def get_rating(self) -> None:
         pass
 
     @abstractmethod
-    def rate(self):
+    def rate(self) -> None:
         pass
 
     @abstractmethod
-    def unrate(self):
+    def unrate(self) -> None:
         pass
