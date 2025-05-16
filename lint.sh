@@ -26,6 +26,7 @@ for image in "${images[@]}"; do
   flake8 .
   isort .
   black .
+  mypy .
 
   cd "$base_dir"
 
