@@ -36,3 +36,12 @@ sections = [
 line-length = 100
 exclude = '\.venv/'
 skip-string-normalization = true
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+show_error_codes = true
+warn_unused_ignores = true
+exclude = "(^|/)(.venv|migrations)/"
+namespace_packages = true
+ignore_missing_imports = true
