@@ -50,3 +50,7 @@ warn_unused_ignores = true
 exclude = "(^|/)(.venv|migrations)/"
 namespace_packages = true
 ignore_missing_imports = true
+plugins = ["mypy_django_plugin.main"]
+
+[tool.django-stubs]
+django_settings_module = "src.config"
