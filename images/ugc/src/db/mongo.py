@@ -4,7 +4,7 @@ from pymongo.errors import CollectionInvalid
 from core.config import settings
 from core.enums import MongoCollections
 
-mongo: AsyncIOMotorDatabase | None = None
+mongo: AsyncIOMotorDatabase
 
 collection_schemas = {
     'users': {
@@ -78,7 +78,7 @@ collection_schemas = {
 }
 
 
-async def create_users_collection():
+async def create_users_collection() -> None:
     try:
         await mongo.create_collection(
             name=MongoCollections.users.name,
@@ -90,7 +90,7 @@ async def create_users_collection():
         pass
 
 
-async def create_filmworks_collection():
+async def create_filmworks_collection() -> None:
     try:
         await mongo.create_collection(
             name=MongoCollections.filmworks.name,
@@ -102,7 +102,7 @@ async def create_filmworks_collection():
         pass
 
 
-async def create_reviews_collection():
+async def create_reviews_collection() -> None:
     try:
         await mongo.create_collection(
             name=MongoCollections.reviews.name,
@@ -118,7 +118,7 @@ async def create_reviews_collection():
     )
 
 
-async def start():
+async def start() -> None:
     global mongo
     mongo = AsyncIOMotorDatabase(
         name='ugc_database',
@@ -135,7 +135,7 @@ async def start():
     await create_reviews_collection()
 
 
-async def stop():
+async def stop() -> None:
     mongo.client.close()
 
 

@@ -7,9 +7,7 @@ def generate_code() -> str:
     return str(random.randint(100000, 999999))
 
 
-def create_2_step_verification_code(
-    email: str,
-) -> None:
+def create_2_step_verification_code(email: str) -> str:
     code = generate_code()
     redis.redis.set(
         f'2_step_verification_code:{email}',
@@ -19,9 +17,7 @@ def create_2_step_verification_code(
     return code
 
 
-def create_registration_email_verification_code(
-    email: str,
-) -> None:
+def create_registration_email_verification_code(email: str) -> str:
     code = generate_code()
     redis.redis.set(
         f'email_registration:{email}',
@@ -34,7 +30,7 @@ def create_registration_email_verification_code(
 def create_change_email_verification_code(
     old_email: str,
     new_email: str,
-) -> None:
+) -> str:
     code = generate_code()
     redis.redis.set(
         f'email_change:{old_email}',

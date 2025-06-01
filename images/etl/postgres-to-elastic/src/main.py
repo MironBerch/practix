@@ -20,7 +20,7 @@ def etl_process(
     data: transform.DataTransform,
     elastic: load.ElasticLoader,
     state: State,
-):
+) -> None:
     """Запускает внутренние компоненты процесса Extract-Transform-Load."""
     timestamp = state.get('last_updated', datetime.min)
     for table, rows in postgres.get_updates(timestamp):
@@ -37,7 +37,7 @@ def etl_process(
     )
 
 
-def postgres_to_elastic(postgres: connection, elastic: Elasticsearch, redis: Redis):
+def postgres_to_elastic(postgres: connection, elastic: Elasticsearch, redis: Redis) -> None:
     state = State(redis)
     while True:
         try:

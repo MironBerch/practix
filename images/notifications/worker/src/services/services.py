@@ -10,10 +10,10 @@ from sqlalchemy.orm import Session
 from db.postgres import Template, User, get_db
 from models.models import Notification
 
-SMTP_SERVER = environ.get('SMTP_SERVER')
-SMTP_PORT = int(environ.get('SMTP_PORT'))
-SMTP_USER = environ.get('SMTP_USER')
-SMTP_PASSWORD = environ.get('SMTP_PASSWORD')
+SMTP_SERVER: str = environ.get('SMTP_SERVER', 'smtp.gmail.com')
+SMTP_PORT: int = int(environ.get('SMTP_PORT', '587'))
+SMTP_USER: str | None = environ.get('SMTP_USER')
+SMTP_PASSWORD: str | None = environ.get('SMTP_PASSWORD')
 
 
 async def get_user_email_by_id(user_id: UUID) -> str:
@@ -35,7 +35,7 @@ async def create_template(template_code: str, context: dict) -> str:
     return rendered_html
 
 
-async def send_email(subject, body_html, body_text, to_email):
+async def send_email(subject: str, body_html: str, body_text: str, to_email: str):
     msg = MIMEMultipart('alternative')
     msg['Subject'] = subject
     msg['From'] = SMTP_USER

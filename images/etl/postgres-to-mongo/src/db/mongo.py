@@ -3,7 +3,7 @@ from os import environ
 from pymongo import MongoClient
 from pymongo.errors import CollectionInvalid
 
-mongo: MongoClient | None = None
+mongo: MongoClient
 
 collection_schemas = {
     'users': {
@@ -77,7 +77,7 @@ collection_schemas = {
 }
 
 
-def create_users_collection():
+def create_users_collection() -> None:
     try:
         mongo['ugc_database'].create_collection(
             name='users',
@@ -89,7 +89,7 @@ def create_users_collection():
         pass
 
 
-def create_filmworks_collection():
+def create_filmworks_collection() -> None:
     try:
         mongo['ugc_database'].create_collection(
             name='filmworks',
@@ -101,7 +101,7 @@ def create_filmworks_collection():
         pass
 
 
-def start():
+def start() -> None:
     global mongo
     mongo = MongoClient(
         host=environ.get('MONGO_HOST', 'mongo'),
@@ -114,9 +114,8 @@ def start():
     create_filmworks_collection()
 
 
-def stop():
-    if mongo:
-        mongo.client.close()
+def stop() -> None:
+    mongo.client.close()
 
 
 def get_mongo() -> MongoClient:

@@ -123,13 +123,13 @@ class ElasticLoader(object):
                 }
                 self.elastic.indices.create(index=index, body=body)
 
-    def __post_init__(self):
+    def __post_init__(self) -> None:
         self._create_indexes()
 
     def bulk_insert(
         self,
         data: list[filmwork.Filmwork | person.Person | genre.Genre],
-    ):
+    ) -> None:
         """Загружает данные."""
         actions = (
             {

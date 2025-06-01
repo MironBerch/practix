@@ -8,14 +8,14 @@ from models.models import Notification
 from services.services import send_notification
 
 
-async def process_message(message: aio_pika.Message):
+async def process_message(message: aio_pika.Message) -> None:
     async with message.process():
         notification_data = loads(message.body.decode())
         notification = Notification(**notification_data)
         await send_notification(notification)
 
 
-async def main():
+async def main() -> None:
     rabbitmq_connection: aio_pika.Connection = await get_rabbitmq()
 
     async with rabbitmq_connection:

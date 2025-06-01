@@ -3,7 +3,7 @@ from http import HTTPStatus
 from flask_jwt_extended import get_jwt_identity, jwt_required
 from marshmallow import ValidationError
 
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, Response, jsonify, request
 
 from api.schemas import (
     ConfirmCodeSchema,
@@ -22,7 +22,7 @@ bp = Blueprint('user', __name__, url_prefix='/user')
 
 @bp.route('/password_change', methods=['POST'])
 @jwt_required()
-def password_change():
+def password_change() -> tuple[Response, HTTPStatus]:
     """
     Change user password
     ---
@@ -65,7 +65,7 @@ def password_change():
 
 @bp.route('/change_email', methods=['POST'])
 @jwt_required()
-def change_email():
+def change_email() -> tuple[Response, HTTPStatus]:
     """
     Change user email
     ---
@@ -111,7 +111,7 @@ def change_email():
 
 @bp.route('/resend_change_email', methods=['POST'])
 @jwt_required()
-def resend_change_email():
+def resend_change_email() -> tuple[Response, HTTPStatus]:
     """
     Resend change email
     ---
@@ -155,7 +155,7 @@ def resend_change_email():
 
 @bp.route('/confirm_change_email', methods=['POST'])
 @jwt_required()
-def confirm_change_email():
+def confirm_change_email() -> tuple[Response, HTTPStatus]:
     """
     Confirm email for change with verification code
     ---
@@ -209,7 +209,7 @@ def confirm_change_email():
 
 @bp.route('/user_sessions', methods=['GET'])
 @jwt_required()
-def get_user_sessions():
+def get_user_sessions() -> tuple[Response, HTTPStatus]:
     """
     Get user sessions
     ---

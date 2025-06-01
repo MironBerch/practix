@@ -10,7 +10,7 @@ from flask_jwt_extended import (
 )
 from marshmallow import ValidationError
 
-from flask import Blueprint, current_app, jsonify, request
+from flask import Blueprint, Response, current_app, jsonify, request
 
 from api.schemas import ConfirmCodeSchema, Notification, SignInSchema, SignUpSchema
 from core.config import settings
@@ -22,7 +22,7 @@ bp = Blueprint('auth', __name__, url_prefix='/auth')
 
 
 @bp.route('/signup', methods=['POST'])
-def signup():
+def signup() -> tuple[Response, HTTPStatus]:
     """
     User sign up
     ---
@@ -93,7 +93,7 @@ def signup():
 
 @bp.route('/resend_confirm_registration_email', methods=['POST'])
 @jwt_required()
-def resend_confirm_registration_email():
+def resend_confirm_registration_email() -> tuple[Response, HTTPStatus]:
     """
     Resend confirmation registration email
     ---
@@ -130,7 +130,7 @@ def resend_confirm_registration_email():
 
 @bp.route('/confirm_registration', methods=['POST'])
 @jwt_required()
-def confirm_registration():
+def confirm_registration() -> tuple[Response, HTTPStatus]:
     """
     Confirm registration with verification code
     ---
@@ -195,7 +195,7 @@ def confirm_registration():
 
 
 @bp.route('/signin', methods=['POST'])
-def signin():
+def signin() -> tuple[Response, HTTPStatus]:
     """
     User sign in
     ---
@@ -288,7 +288,7 @@ def signin():
 
 @bp.route('/resend_2_step_verification_email', methods=['POST'])
 @jwt_required()
-def resend_2_step_verification_email():
+def resend_2_step_verification_email() -> tuple[Response, HTTPStatus]:
     """
     Resend two-step verification email
     ---
@@ -325,7 +325,7 @@ def resend_2_step_verification_email():
 
 @bp.route('/confirm_2_step_verification', methods=['POST'])
 @jwt_required()
-def confirm_2_step_verification():
+def confirm_2_step_verification() -> tuple[Response, HTTPStatus]:
     """
     Confirm two-step verification with verification code
     ---
@@ -388,7 +388,7 @@ def confirm_2_step_verification():
 
 @bp.route('/logout', methods=['POST'])
 @jwt_required()
-def logout():
+def logout() -> tuple[Response, HTTPStatus]:
     """
     User log out
     ---
@@ -413,7 +413,7 @@ def logout():
 
 @bp.route('/refresh', methods=['POST'])
 @jwt_required(refresh=True)
-def refresh():
+def refresh() -> tuple[Response, HTTPStatus]:
     """
     Refresh token
     ---

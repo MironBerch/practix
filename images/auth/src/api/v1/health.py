@@ -1,12 +1,12 @@
 from http import HTTPStatus
 
-from flask import Blueprint, jsonify
+from flask import Blueprint, Response, jsonify
 
 bp = Blueprint('health', __name__, url_prefix='/healthcheck')
 
 
 @bp.route('/health', methods=['GET'])
-def healthcheck():
+def healthcheck() -> tuple[Response, HTTPStatus]:
     """
     Checking the service's health
     ---

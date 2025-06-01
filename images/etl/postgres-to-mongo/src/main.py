@@ -19,7 +19,7 @@ def postgres_to_mongo(
     postgres_movies: connection,
     redis: Redis,
     mongo: MongoClient,
-):
+) -> None:
     state = State(redis)
     while True:
         try:
@@ -53,7 +53,7 @@ def postgres_to_mongo(
         time.sleep(60)
 
 
-def main():
+def main() -> None:
     with get_auth_postgres() as postgres_auth_connection:
         with get_movies_postgres() as postgres_movies_connection:
             with get_redis() as redis_connection:

@@ -16,7 +16,7 @@ class User(models.Model):
         verbose_name = 'пользователь'
         verbose_name_plural = 'пользователи'
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'{self.id}'
 
 
@@ -39,5 +39,5 @@ class Template(models.Model):
         verbose_name = 'шаблон'
         verbose_name_plural = 'шаблоны'
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f'{self.id}'
