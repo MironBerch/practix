@@ -21,6 +21,7 @@ dev = [
     { name = "black" },
     { name = "django-stubs" },
     { name = "flake8" },
+    { name = "flake8-pyproject" },
     { name = "isort" },
     { name = "mypy" },
     { name = "wemake-python-styleguide" },
@@ -42,6 +43,7 @@ dev = [
     { name = "black", specifier = ">=25.1.0" },
     { name = "django-stubs", specifier = ">=5.2.1" },
     { name = "flake8", specifier = ">=7.3.0" },
+    { name = "flake8-pyproject", specifier = ">=1.2.3" },
     { name = "isort", specifier = ">=6.0.1" },
     { name = "mypy", specifier = ">=1.16.1" },
     { name = "wemake-python-styleguide", specifier = ">=1.2.0" },
@@ -214,6 +216,17 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/9b/af/fbfe3c4b5a657d79e5c47a2827a362f9e1b763336a52f926126aa6dc7123/flake8-7.3.0.tar.gz", hash = "sha256:fe044858146b9fc69b551a4b490d69cf960fcb78ad1edcb84e7fbb1b4a8e3872", size = 48326 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/9f/56/13ab06b4f93ca7cac71078fbe37fcea175d3216f31f85c3168a6bbd0bb9a/flake8-7.3.0-py2.py3-none-any.whl", hash = "sha256:b9696257b9ce8beb888cdbe31cf885c90d31928fe202be0889a7cdafad32f01e", size = 57922 },
+]
+
+[[package]]
+name = "flake8-pyproject"
+version = "1.2.3"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "flake8" },
+]
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/5f/1d/635e86f9f3a96b7ea9e9f19b5efe17a987e765c39ca496e4a893bb999112/flake8_pyproject-1.2.3-py3-none-any.whl", hash = "sha256:6249fe53545205af5e76837644dc80b4c10037e73a0e5db87ff562d75fb5bd4a", size = 4756 },
 ]
 
 [[package]]

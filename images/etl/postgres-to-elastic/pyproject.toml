@@ -15,6 +15,7 @@ dependencies = [
 dev = [
     "black>=25.1.0",
     "flake8>=7.3.0",
+    "flake8-pyproject>=1.2.3",
     "isort>=6.0.1",
     "mypy>=1.16.1",
     "wemake-python-styleguide>=1.2.0",
