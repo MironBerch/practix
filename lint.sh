@@ -23,10 +23,10 @@ for image in "${images[@]}"; do
 
   echo $image_name
 
-  flake8 .
-  isort .
-  black .
-  mypy .
+  uv run flake8 .
+  uv run isort .
+  uv run black .
+  uv run mypy .
 
   cd "$base_dir"
 
