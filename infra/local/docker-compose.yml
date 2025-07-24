@@ -250,6 +250,18 @@ services:
       - notifications_db
       - receiver
 
+  frontend:
+    restart: always
+    build: ../../images/frontend/
+    command: >
+      sh -c "npm run dev"
+    expose:
+      - "3001"
+    volumes:
+      - ../../images/frontend/:/app/
+    ports:
+      - "3001:3001"
+
   #===============================================================
   #                          DATASTORES
   #===============================================================
