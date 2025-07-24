@@ -6,10 +6,10 @@ from flask_jwt_extended import JWTManager
 from flask import Flask, current_app
 from flask.cli import with_appcontext
 
-from api.urls import init_routers
-from core.config import settings
-from core.logger import logger
-from db import postgres, redis
+from src.api.urls import init_routers
+from src.core.config import settings
+from src.core.logger import logger
+from src.db import postgres, redis
 
 
 @click.command()

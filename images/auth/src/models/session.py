@@ -8,7 +8,7 @@ from sqlalchemy.orm import validates
 from user_agents import parse as parse_user_agent
 from werkzeug.user_agent import UserAgent
 
-from db.postgres import db
+from src.db.postgres import db
 
 
 def create_partition(target: Table, connection: Connection, **kwargs) -> None:

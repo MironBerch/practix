@@ -1,7 +1,7 @@
 from uuid import UUID
 
-from db.postgres import db
-from models.session import Session
+from src.db.postgres import db
+from src.models.session import Session
 
 
 def create_session(

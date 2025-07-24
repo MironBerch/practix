@@ -12,11 +12,11 @@ from marshmallow import ValidationError
 
 from flask import Blueprint, Response, current_app, jsonify, request
 
-from api.schemas import ConfirmCodeSchema, Notification, SignInSchema, SignUpSchema
-from core.config import settings
-from db import postgres, redis
-from models.user import User
-from utils import code, hash_password, notification, sessions
+from src.api.schemas import ConfirmCodeSchema, Notification, SignInSchema, SignUpSchema
+from src.core.config import settings
+from src.db import postgres, redis
+from src.models.user import User
+from src.utils import code, hash_password, notification, sessions
 
 bp = Blueprint('auth', __name__, url_prefix='/auth')
 

@@ -1,17 +1,17 @@
 import requests
 
-from core.config import settings
-from core.logger import logger
+from src.core.config import settings
+from src.core.logger import logger
 
 
 def send_notification(data: dict):
+    path = 'notifications/api/notification'
+    notifications = settings.notifications
+    url = f'http://{notifications.receiver_host}:{notifications.receiver_port}/{path}'
+    if not notifications.receiver_host:
+        return None
     try:
-        path = 'notifications/api/notification'
-        notifications = settings.notifications
-        url = f'http://{notifications.receiver_host}:{notifications.receiver_port}/{path}'
-        response = requests.post(url, json=data)
-        if response.status_code != 200:
-            pass
+        requests.post(url, json=data)
     except Exception as e:
         logger.error(
             msg=(

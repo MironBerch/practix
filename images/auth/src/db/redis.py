@@ -1,6 +1,6 @@
 from redis import Redis
 
-from core.config import settings
+from src.core.config import settings
 
 redis: Redis | None = None
 

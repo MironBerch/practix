@@ -5,17 +5,17 @@ from marshmallow import ValidationError
 
 from flask import Blueprint, Response, jsonify, request
 
-from api.schemas import (
+from src.api.schemas import (
     ConfirmCodeSchema,
     EmailSchema,
     Notification,
     PasswordChangeSchema,
     UserSessionSchema,
 )
-from db import postgres, redis
-from models.session import Session
-from models.user import User
-from utils import code, hash_password, notification
+from src.db import postgres, redis
+from src.models.session import Session
+from src.models.user import User
+from src.utils import code, hash_password, notification
 
 bp = Blueprint('user', __name__, url_prefix='/user')
 

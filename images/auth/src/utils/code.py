@@ -1,6 +1,6 @@
 import random
 
-from db import redis
+from src.db import redis
 
 
 def generate_code() -> str:

@@ -4,7 +4,7 @@ from uuid import UUID
 from marshmallow import Schema, fields, post_load
 from pydantic import BaseModel, Field
 
-from models.session import Session
+from src.models.session import Session
 
 
 class Notification(BaseModel):

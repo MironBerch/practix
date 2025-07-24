@@ -3,7 +3,7 @@ from datetime import datetime, timezone
 
 from sqlalchemy.dialects.postgresql import UUID
 
-from db.postgres import db
+from src.db.postgres import db
 
 
 class User(db.Model):

@@ -1,7 +1,7 @@
 import hashlib
 import hmac
 
-from core.config import settings
+from src.core.config import settings
 
 
 def hash_password(password: str) -> str:

@@ -1,6 +1,6 @@
 from flask import Flask
 
-from api.v1 import auth, health, user
+from src.api.v1 import auth, health, user
 
 
 def init_routers(app: Flask) -> None:
