@@ -64,6 +64,10 @@ export interface ErrorResponse {
   message: string;
 }
 
+export interface ResendEmailResponse {
+  message: string;
+}
+
 export interface SignInRequest {
   email: string;
   password: string;
