@@ -60,11 +60,19 @@ export interface Confirm2StepVerificationResponse {
   refresh_token: string;
 }
 
+export interface RefreshResponse {
+  access_token: string;
+}
+
 export interface ErrorResponse {
   message: string;
 }
 
 export interface ResendEmailResponse {
+  message: string;
+}
+
+export interface MessageResponse {
   message: string;
 }
 
@@ -81,6 +89,11 @@ export interface SignInResponse {
 export interface SignUpRequest {
   email: string;
   password: string;
+}
+
+export interface ChangePasswordRequest {
+  old_password: string;
+  new_password: string;
 }
 
 export interface UserSession {
