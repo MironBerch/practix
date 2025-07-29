@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import type { SignInRequest, SignInResponse, Confirm2StepVerificationRequest, Confirm2StepVerificationResponse, ResendEmailResponse, SignUpRequest } from '../types/types';
+import type { SignInRequest, SignInResponse, Confirm2StepVerificationRequest, Confirm2StepVerificationResponse, ResendEmailResponse, SignUpRequest, MessageResponse, RefreshResponse, ChangeEmailRequest, UserSessionCollection, ChangePasswordRequest } from '../types/types';
 
 const BASE_AUTH_API_URL = import.meta.env.BASE_AUTH_API_URL;
 const API_URL = BASE_AUTH_API_URL + '/auth/api/v1';
@@ -9,7 +9,7 @@ export const useAuth = () => {
 
     const error = ref<string | null>(null);
 
-    const SignUp = async (data: SignUpRequest): Promise<SignInResponse | null> => {
+    const signUp = async (data: SignUpRequest): Promise<SignInResponse | null> => {
         try {
             loading.value = true;
             const response = await fetch(
@@ -36,7 +36,7 @@ export const useAuth = () => {
         }
     }
 
-    const SignIn = async (data: SignInRequest): Promise<SignInResponse | null> => {
+    const signIn = async (data: SignInRequest): Promise<SignInResponse | null> => {
         try {
             loading.value = true;
             const response = await fetch(
@@ -173,7 +173,7 @@ export const useAuth = () => {
         }
     }
 
-    const SignOut = async (access_token: string): Promise<ResendEmailResponse | null> => {
+    const signOut = async (access_token: string): Promise<ResendEmailResponse | null> => {
         try {
             loading.value = true;
             const response = await fetch(
@@ -200,7 +200,7 @@ export const useAuth = () => {
         }
     }
 
-    const refresh = async (refresh_token: string): Promise<ResendEmailResponse | null> => {
+    const refresh = async (refresh_token: string): Promise<RefreshResponse | null> => {
         try {
             loading.value = true;
             const response = await fetch(
@@ -227,16 +227,150 @@ export const useAuth = () => {
         }
     }
 
+    const changeEmail = async (data: ChangeEmailRequest, access_token: string): Promise<MessageResponse | null> => {
+        try {
+            loading.value = true;
+            const response = await fetch(
+                `${API_URL}/change_email`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${access_token}`,
+                    },
+                    body: JSON.stringify(data),
+                },
+            );
+
+            if (!response.ok) {
+                throw new Error('Failed signout');
+            }
+
+            return await response.json();
+        } catch (err) {
+            error.value = err instanceof Error ? err.message : 'Unknown error';
+            return null;
+        } finally {
+            loading.value = false;
+        }
+    }
+
+    const resendChangeEmail = async (temp_token: string): Promise<MessageResponse | null> => {
+        try {
+            loading.value = true;
+            const response = await fetch(
+                `${API_URL}/resend_change_email`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${temp_token}`,
+                    },
+                },
+            );
+
+            if (!response.ok) {
+                throw new Error('Failed resend email');
+            }
+
+            return await response.json();
+        } catch (err) {
+            error.value = err instanceof Error ? err.message : 'Unknown error';
+            return null;
+        } finally {
+            loading.value = false;
+        }
+    }
+
+    const confirmChangeEmail = async (data: Confirm2StepVerificationRequest, access_token: string): Promise<MessageResponse | null> => {
+        try {
+            loading.value = true;
+            const response = await fetch(
+                `${API_URL}/confirm_change_email`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${access_token}`,
+                    },
+                    body: JSON.stringify(data),
+                },
+            );
+
+            if (!response.ok) {
+                throw new Error('Failed signout');
+            }
+
+            return await response.json();
+        } catch (err) {
+            error.value = err instanceof Error ? err.message : 'Unknown error';
+            return null;
+        } finally {
+            loading.value = false;
+        }
+    }
+
+    const passwordChange = async (data: ChangePasswordRequest, access_token: string): Promise<MessageResponse | null> => {
+        try {
+            loading.value = true;
+            const response = await fetch(
+                `${API_URL}/password_change`,
+                {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${access_token}`,
+                    },
+                    body: JSON.stringify(data),
+                },
+            );
+
+            if (!response.ok) {
+                throw new Error('Failed signout');
+            }
+
+            return await response.json();
+        } catch (err) {
+            error.value = err instanceof Error ? err.message : 'Unknown error';
+            return null;
+        } finally {
+            loading.value = false;
+        }
+    }
+
+    const getUserSessions = async (): Promise<UserSessionCollection[] | null> => {
+        try {
+            loading.value = true;
+            const response = await fetch(`${API_URL}/user_sessions`);
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch pastes');
+            }
+
+            return await response.json();
+        } catch (err) {
+            error.value = err instanceof Error ? err.message : 'Unknown error';
+            return null;
+        } finally {
+            loading.value = false;
+        }
+    };
+
     return {
         loading,
         error,
-        SignUp,
-        SignIn,
+        signUp,
+        signIn,
         confirmRegistration,
         confirm2StepVerification,
         resendConfirmRegistrationEmail,
         resend2StepVerificationEmail,
-        SignOut,
+        signOut,
         refresh,
+        changeEmail,
+        resendChangeEmail,
+        confirmChangeEmail,
+        passwordChange,
+        getUserSessions,
     };
 };
