@@ -257,6 +257,9 @@ services:
       sh -c "npm run dev"
     expose:
       - "3001"
+    volumes:
+      - ../../images/frontend/:/app/
+      - /app/node_modules
     ports:
       - "3001:3001"
 
