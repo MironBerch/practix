@@ -1,7 +1,7 @@
 import { ref } from 'vue';
 import type { FilmworkBookmark, FilmworkBookmarkCollection, Score, Rating, ReviewCollection, Review, ReviewRating, Text, ReviewScore } from '../types/types';
 
-const BASE_UGC_API_URL = import.meta.env.BASE_UGC_API_URL;
+const BASE_UGC_API_URL = import.meta.env.VITE_UGC_API_URL;
 const API_URL = BASE_UGC_API_URL + '/ugc/api/v1';
 
 export const useUGC = () => {

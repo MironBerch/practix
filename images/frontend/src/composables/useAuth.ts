@@ -1,7 +1,7 @@
 import { ref } from 'vue';
 import type { SignInRequest, SignInResponse, Confirm2StepVerificationRequest, Confirm2StepVerificationResponse, ResendEmailResponse, SignUpRequest, MessageResponse, RefreshResponse, ChangeEmailRequest, UserSessionCollection, ChangePasswordRequest } from '../types/types';
 
-const BASE_AUTH_API_URL = import.meta.env.BASE_AUTH_API_URL;
+const BASE_AUTH_API_URL = import.meta.env.VITE_AUTH_API_URL;
 const API_URL = BASE_AUTH_API_URL + '/auth/api/v1';
 
 export const useAuth = () => {

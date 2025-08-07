@@ -1,7 +1,7 @@
 import { ref } from 'vue';
 import type { Filmwork, FilmworkCollection, Genre, GenreCollection, Person, PersonCollection } from '../types/types';
 
-const BASE_MOVIES_API_URL = import.meta.env.BASE_MOVIES_API_URL;
+const BASE_MOVIES_API_URL = import.meta.env.VITE_MOVIES_API_URL;
 const API_URL = BASE_MOVIES_API_URL + '/movies/api/v1';
 
 export const useMovies = () => {
