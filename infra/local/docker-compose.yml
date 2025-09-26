@@ -258,9 +258,9 @@ services:
     expose:
       - "3001"
     environment:
-      - "VITE_AUTH_API_URL=auth:5000"
-      - "VITE_MOVIES_API_URL=movies_api:3000"
-      - "VITE_UGC_API_URL=movies_ugc:8080"
+      - "VITE_AUTH_API_URL=http://localhost:5000"
+      - "VITE_MOVIES_API_URL=http://localhost:3000"
+      - "VITE_UGC_API_URL=http://localhost:8080"
     volumes:
       - ../../images/frontend/:/app/
       - /app/node_modules
