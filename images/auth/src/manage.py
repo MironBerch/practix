@@ -33,13 +33,14 @@ def createsuperuser() -> None: ...
 
 def create_app() -> Flask:
     app = Flask(__name__)
+
+    CORS(app)
+
     app.logger = logger
 
     app.config['JWT_SECRET_KEY'] = settings.security.jwt_secret_key
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = settings.security.jwt_access_token_expires
     app.config['JWT_REFRESH_TOKEN_EXPIRES'] = settings.security.jwt_refresh_token_expires
-
-    CORS(app)
 
     postgres.init(app)
     redis.redis = redis.init()
