@@ -4,6 +4,7 @@ from logging import DEBUG
 import uvicorn
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import ORJSONResponse
 
 from api.urls import api_router
@@ -28,6 +29,14 @@ app = FastAPI(
     openapi_url='/ugc/api/openapi.json',
     default_response_class=ORJSONResponse,
     lifespan=lifespan,
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=['*'],
+    allow_credentials=True,
+    allow_methods=['*'],
+    allow_headers=['*'],
 )
 
 app.include_router(api_router)
