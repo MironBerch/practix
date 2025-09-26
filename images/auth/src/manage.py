@@ -1,6 +1,7 @@
 import click
 import flask_migrate
 from flasgger import Swagger
+from flask_cors import CORS
 from flask_jwt_extended import JWTManager
 
 from flask import Flask, current_app
@@ -37,6 +38,8 @@ def create_app() -> Flask:
     app.config['JWT_SECRET_KEY'] = settings.security.jwt_secret_key
     app.config['JWT_ACCESS_TOKEN_EXPIRES'] = settings.security.jwt_access_token_expires
     app.config['JWT_REFRESH_TOKEN_EXPIRES'] = settings.security.jwt_refresh_token_expires
+
+    CORS(app)
 
     postgres.init(app)
     redis.redis = redis.init()
