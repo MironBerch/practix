@@ -1,45 +1,32 @@
+<script setup lang="ts">
+  import AppHeader from '../components/Header.vue'
+</script>
+
 <template>
-  <div>
-    <header>
-      <nav>
-        <router-link to="/">Home</router-link>
-        <router-link to="/change-email">Change Email</router-link>
-        <router-link to="/change-password">Change Password</router-link>
-        <router-link to="/sessions">Sessions</router-link>
-        <button @click="handleLogout">Logout</button>
-      </nav>
-    </header>
-    <main>
+  <div class="layout">
+    <AppHeader />
+    <main class="main-content">
       <router-view />
     </main>
   </div>
 </template>
 
-<script lang="ts">
-  import { defineComponent } from 'vue'
-  import { useRouter } from 'vue-router'
-  import { useAuth } from '../composables/useAuth'
+<style scoped>
+  .layout {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
 
-  export default defineComponent(
-    {
-      setup() {
-        const router = useRouter()
-        const { signOut } = useAuth()
+  .main-content {
+    flex: 1;
+    padding: 2rem;
+    background-color: #f5f5f5;
+  }
 
-        const handleLogout = async () => {
-          const access_token = localStorage.getItem('access_token')
-          if (!access_token) return
-          
-          await signOut(access_token)
-          localStorage.removeItem('access_token')
-          localStorage.removeItem('refresh_token')
-          router.push({ name: 'signin' })
-        }
-
-        return {
-          handleLogout
-        }
-      }
+  @media (max-width: 768px) {
+    .main-content {
+      padding: 1rem;
     }
-  )
-</script>
+  }
+</style>
