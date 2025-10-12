@@ -84,8 +84,8 @@
 <script setup lang="ts">
     import { ref, onMounted, computed } from 'vue'
     import { useRoute } from 'vue-router'
-    import { useMovies } from '../composables/useMovies'
-    import type { Person, BaseFilmwork } from '../types/types'
+    import { useMovies } from '../../composables/useMovies'
+    import type { Person, BaseFilmwork } from '../../types/types'
 
     const route = useRoute()
     const { getPerson, getFilmworksByPerson, loading, error } = useMovies()

@@ -105,8 +105,8 @@
 
 <script setup lang="ts">
     import { ref, onMounted, watch, computed } from 'vue'
-    import { useMovies } from '../composables/useMovies'
-    import type { Person } from '../types/types'
+    import { useMovies } from '../../composables/useMovies'
+    import type { Person } from '../../types/types'
 
     const {
         loading,

@@ -76,12 +76,12 @@ const router = createRouter(
           {
             path: 'persons',
             name: 'persons',
-            component: () => import('../pages/PersonsPage.vue')
+            component: () => import('../pages/persons/PersonsPage.vue')
           },
           {
             path: 'persons/:uuid',
             name: 'person',
-            component: () => import('../pages/PersonPage.vue'),
+            component: () => import('../pages/persons/PersonPage.vue'),
             props: true
           },
           {
