@@ -103,8 +103,8 @@
 <script setup lang="ts">
     import { ref, onMounted, watch } from 'vue'
     import { useRouter } from 'vue-router'
-    import { useMovies } from '../composables/useMovies'
-    import type { FilmworkCollection, BaseFilmwork } from '../types/types'
+    import { useMovies } from '../../composables/useMovies'
+    import type { FilmworkCollection, BaseFilmwork } from '../../types/types'
 
     const router = useRouter()
     const {

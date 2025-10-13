@@ -249,9 +249,9 @@
 <script setup lang="ts">
     import { ref, onMounted, computed } from 'vue'
     import { useRoute, useRouter } from 'vue-router'
-    import { useMovies } from '../composables/useMovies'
-    import { useUGC } from '../composables/useUGC'
-    import type { Filmwork, Review, ReviewRating, Score, Text, ReviewScore } from '../types/types'
+    import { useMovies } from '../../composables/useMovies'
+    import { useUGC } from '../../composables/useUGC'
+    import type { Filmwork, Review, ReviewRating, Score, Text, ReviewScore } from '../../types/types'
 
     const route = useRoute()
     const router = useRouter()

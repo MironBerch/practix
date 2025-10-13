@@ -54,12 +54,12 @@ const router = createRouter(
           {
             path: 'filmworks',
             name: 'filmworks',
-            component: () => import('../pages/FilmworksPage.vue')
+            component: () => import('../pages/filmworks/FilmworksPage.vue')
           },
           {
             path: 'filmworks/:uuid',
             name: 'filmwork',
-            component: () => import('../pages/FilmworkPage.vue'),
+            component: () => import('../pages/filmworks/FilmworkPage.vue'),
             props: true
           },
           {
