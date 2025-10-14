@@ -48,7 +48,7 @@ export interface Person {
 
 // Auth API v1 interfaces
 export interface User {
-  created_at: string;
+  user_created_at: string;
   user_email: string;
   user_id: string;
 }
