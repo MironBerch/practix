@@ -20,6 +20,43 @@ from src.utils import code, hash_password, notification
 bp = Blueprint('user', __name__, url_prefix='/user')
 
 
+@bp.route('/user_info', methods=['GET'])
+@jwt_required()
+def get_user_info() -> tuple[Response, HTTPStatus]:
+    """
+    Get user info
+    ---
+    get:
+      summary: Get user info
+      security:
+        - Bearer: []
+    responses:
+      '200':
+        description: Return user info
+        schema:
+          type: object
+          properties:
+            user_id:
+              type: string
+              format: uuid
+            user_email:
+              type: string
+            created_at:
+              type: string
+              format: date
+      '403':
+        description: Forbidden error
+    tags:
+      - user
+    """
+    identity = get_jwt_identity()
+    user: User = User.query.get(identity)
+    return (
+        jsonify({'user_id': user.id, 'user_created_at': user.created_at, 'user_email': user.email}),
+        HTTPStatus.OK,
+    )
+
+
 @bp.route('/password_change', methods=['POST'])
 @jwt_required()
 def password_change() -> tuple[Response, HTTPStatus]:
