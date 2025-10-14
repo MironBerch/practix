@@ -1,5 +1,5 @@
 import { ref } from 'vue';
-import type { SignInRequest, SignInResponse, Confirm2StepVerificationRequest, Confirm2StepVerificationResponse, ResendEmailResponse, SignUpRequest, MessageResponse, RefreshResponse, ChangeEmailRequest, UserSessionCollection, ChangePasswordRequest } from '../types/types';
+import type { SignInRequest, SignInResponse, Confirm2StepVerificationRequest, Confirm2StepVerificationResponse, ResendEmailResponse, SignUpRequest, MessageResponse, RefreshResponse, ChangeEmailRequest, UserSessionCollection, ChangePasswordRequest, User } from '../types/types';
 
 const BASE_AUTH_API_URL = import.meta.env.VITE_AUTH_API_URL;
 const API_URL = BASE_AUTH_API_URL + '/auth/api/v1';
@@ -356,6 +356,35 @@ export const useAuth = () => {
         }
     };
 
+    const getUserInfo = async (access_token: string): Promise<User | null> => {
+        try {
+            loading.value = true;
+            const response = await fetch(
+                `${API_URL}/user_info`,
+                {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${access_token}`,
+                    },
+                },
+            );
+            console.log(`Bearer ${access_token}`)
+            console.log(response)
+
+            if (!response.ok) {
+                throw new Error('Failed to get user info');
+            }
+
+            return await response.json();
+        } catch (err) {
+            error.value = err instanceof Error ? err.message : 'Unknown error';
+            return null;
+        } finally {
+            loading.value = false;
+        }
+    };
+
     return {
         loading,
         error,
@@ -372,5 +401,6 @@ export const useAuth = () => {
         confirmChangeEmail,
         passwordChange,
         getUserSessions,
+        getUserInfo,
     };
 };
