@@ -47,7 +47,13 @@ export const useMovies = () => {
     const searchFilmworks = async (query: string, page_number: number, page_size: number): Promise<FilmworkCollection[] | null> => {
         try {
             loading.value = true;
-            const response = await fetch(`${API_URL}/filmworks/search`);
+
+            const url = new URL(`${API_URL}/filmworks/search`);
+            url.searchParams.set('query', query);
+            url.searchParams.set('page_number', page_number.toString());
+            url.searchParams.set('page_size', page_size.toString());
+            
+            const response = await fetch(url.toString());
 
             if (!response.ok) {
                 throw new Error('Failed to fetch filmworks');
@@ -155,7 +161,13 @@ export const useMovies = () => {
     const searchPersons = async (query: string, page_number: number, page_size: number): Promise<PersonCollection[] | null> => {
         try {
             loading.value = true;
-            const response = await fetch(`${API_URL}/persons/search`);
+
+            const url = new URL(`${API_URL}/persons/search`);
+            url.searchParams.set('query', query);
+            url.searchParams.set('page_number', page_number.toString());
+            url.searchParams.set('page_size', page_size.toString());
+            
+            const response = await fetch(url.toString());
 
             if (!response.ok) {
                 throw new Error('Failed to fetch persons');
