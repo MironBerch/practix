@@ -65,9 +65,8 @@
       
       <ul class="nav-links">
         <li><router-link to="/" class="nav-link">Home</router-link></li>
-        <li><router-link to="/filmworks" class="nav-link">TV Shows</router-link></li>
         <li><router-link to="/filmworks" class="nav-link">Movies</router-link></li>
-        <li><router-link to="/filmworks" class="nav-link">Latest</router-link></li>
+        <li><router-link to="/persons" class="nav-link">Persons</router-link></li>
         <li><router-link to="/bookmarks" class="nav-link">My List</router-link></li>
       </ul>
 
@@ -107,10 +106,7 @@
         <!-- Для неавторизованных пользователей - ссылки на вход и регистрацию -->
         <div v-else class="auth-links">
           <router-link :to="{ name: 'signin' }" class="auth-link signin">
-            Sign In
-          </router-link>
-          <router-link :to="{ name: 'signup' }" class="auth-link signup">
-            Sign Up
+            Войти
           </router-link>
         </div>
       </div>
@@ -208,18 +204,6 @@
   .search-icon, .bell-icon, .user-icon {
     width: 20px;
     height: 20px;
-  }
-
-  .notification-icon {
-    position: relative;
-    cursor: pointer;
-    padding: 0.5rem;
-    border-radius: 50%;
-    transition: background-color 0.3s ease;
-  }
-
-  .notification-icon:hover {
-    background: rgba(255, 255, 255, 0.1);
   }
 
   .notification-dot {
@@ -338,16 +322,6 @@
   .auth-link.signin:hover {
     background: rgba(255, 255, 255, 0.1);
     border-color: rgba(255, 255, 255, 0.5);
-  }
-
-  .auth-link.signup {
-    background: #e50914;
-    border: 1px solid #e50914;
-  }
-
-  .auth-link.signup:hover {
-    background: #f40612;
-    border-color: #f40612;
   }
 
   /* Адаптивность */
