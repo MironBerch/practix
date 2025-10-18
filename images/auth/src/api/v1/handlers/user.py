@@ -19,7 +19,7 @@ from src.schemas.schemas import (
 )
 from src.utils import code, hash_password, notification
 
-router = APIRouter(tags=['user'], prefix='/user')
+router = APIRouter(tags=['user'])
 
 
 @router.get('/user_info', status_code=HTTPStatus.OK)

@@ -16,21 +16,21 @@ async def get_current_user(
     payload = jwt_manager.verify_token(token)
 
     # Проверка типа токена
-    if payload.get("type") != "access":
+    if payload.get('type') != 'access':
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid token type",
+            detail='Invalid token type',
         )
 
     # Проверка blacklist
-    jti = payload.get("jti")
-    if jti and await cache_adapter.get_object_from_cache(f"blacklist:{jti}"):
+    jti = payload.get('jti')
+    if jti and await cache_adapter.get_object_from_cache(f'blacklist:{jti}'):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Token has been revoked",
+            detail='Token has been revoked',
         )
 
-    return payload.get("sub")
+    return payload.get('sub')
 
 
 async def get_current_user_temp(
@@ -41,21 +41,21 @@ async def get_current_user_temp(
     token = credentials.credentials
     payload = jwt_manager.verify_token(token)
 
-    if payload.get("type") != "temp":
+    if payload.get('type') != 'temp':
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid token type",
+            detail='Invalid token type',
         )
 
     # Проверка blacklist
-    jti = payload.get("jti")
-    if jti and await cache_adapter.get_object_from_cache(f"blacklist:{jti}"):
+    jti = payload.get('jti')
+    if jti and await cache_adapter.get_object_from_cache(f'blacklist:{jti}'):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Token has been revoked",
+            detail='Token has been revoked',
         )
 
-    return payload.get("sub")
+    return payload.get('sub')
 
 
 async def get_current_user_refresh(
@@ -66,18 +66,18 @@ async def get_current_user_refresh(
     token = credentials.credentials
     payload = jwt_manager.verify_token(token)
 
-    if payload.get("type") != "refresh":
+    if payload.get('type') != 'refresh':
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid token type",
+            detail='Invalid token type',
         )
 
     # Проверка blacklist
-    jti = payload.get("jti")
-    if jti and await cache_adapter.get_object_from_cache(f"blacklist:{jti}"):
+    jti = payload.get('jti')
+    if jti and await cache_adapter.get_object_from_cache(f'blacklist:{jti}'):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Token has been revoked",
+            detail='Token has been revoked',
         )
 
-    return payload.get("sub")
+    return payload.get('sub')

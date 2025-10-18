@@ -1,17 +1,15 @@
-from datetime import timedelta
 from http import HTTPStatus
 from typing import Any
+from datetime import datetime, timezone
 
 from fastapi import APIRouter, Depends, HTTPException, Request
 from fastapi.security import HTTPAuthorizationCredentials
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from core.config import settings
 from db import redis
 from src.db.postgres import get_async_session
 from src.dependencies.auth_deps import (
-    get_current_user,
     get_current_user_refresh,
     get_current_user_temp,
     security,
@@ -21,7 +19,7 @@ from src.schemas.schemas import ConfirmCodeSchema, Notification, SignInSchema, S
 from src.utils import code, hash_password, notification, sessions
 from src.utils.jwt_manager import jwt_manager
 
-router = APIRouter(tags=['auth'], prefix='/auth')
+router = APIRouter(tags=['auth'])
 
 
 def create_full_tokens(user_id: str) -> tuple[str, str]:
@@ -241,19 +239,17 @@ async def logout(
     try:
         # Получаем payload без проверки expiration (чтобы можно было logout с просроченным токеном)
         payload = jwt_manager.get_token_payload(token)
-        jti = payload.get("jti")
-        exp_timestamp = payload.get("exp")
+        jti = payload.get('jti')
+        exp_timestamp = payload.get('exp')
 
         if jti and exp_timestamp:
             # Вычисляем TTL для blacklist
-            from datetime import datetime
-
             exp_datetime = datetime.fromtimestamp(exp_timestamp)
-            now = datetime.utcnow()
+            now = datetime.now(timezone.utc)
             ttl = max(0, int((exp_datetime - now).total_seconds()))
 
             if ttl > 0:
-                await cache_adapter.put_object_to_cache(f"blacklist:{jti}", "revoked", ex=ttl)
+                await cache_adapter.put_object_to_cache(f'blacklist:{jti}', 'revoked', ex=ttl)
 
         return {'message': 'logout completed'}
     except HTTPException:
@@ -271,18 +267,18 @@ async def refresh(
     # Добавляем старый refresh токен в blacklist
     old_token = credentials.credentials
     old_payload = jwt_manager.get_token_payload(old_token)
-    old_jti = old_payload.get("jti")
-    old_exp = old_payload.get("exp")
+    old_jti = old_payload.get('jti')
+    old_exp = old_payload.get('exp')
 
     if old_jti and old_exp:
         from datetime import datetime
 
         exp_datetime = datetime.fromtimestamp(old_exp)
-        now = datetime.utcnow()
+        now = datetime.now(timezone.utc)
         ttl = max(0, int((exp_datetime - now).total_seconds()))
 
         if ttl > 0:
-            await cache_adapter.put_object_to_cache(f"blacklist:{old_jti}", "refreshed", ex=ttl)
+            await cache_adapter.put_object_to_cache(f'blacklist:{old_jti}', 'refreshed', ex=ttl)
 
     # Создаем новый access токен
     access_token = jwt_manager.create_access_token(user_id)
