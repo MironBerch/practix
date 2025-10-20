@@ -1,12 +1,37 @@
 <script setup lang="ts">
-  import { ref } from 'vue'
+  import { ref, onMounted, onUnmounted } from 'vue'
   import { useRouter } from 'vue-router'
   import { useAuth } from '../composables/useAuth'
 
   const router = useRouter()
   const { signOut } = useAuth()
   const isDropdownOpen = ref(false)
+  const dropdownRef = ref<HTMLElement | null>(null)
+  const avatarRef = ref<HTMLElement | null>(null)
 
+  // Переключение дропдауна
+  const toggleDropdown = () => {
+    isDropdownOpen.value = !isDropdownOpen.value
+  }
+
+  // Закрытие дропдауна
+  const closeDropdown = () => {
+    isDropdownOpen.value = false
+  }
+
+  // Обработка клика вне области
+  const handleClickOutside = (event: MouseEvent) => {
+    if (
+      dropdownRef.value && 
+      avatarRef.value &&
+      !dropdownRef.value.contains(event.target as Node) &&
+      !avatarRef.value.contains(event.target as Node)
+    ) {
+      closeDropdown()
+    }
+  }
+
+  // Выход из аккаунта
   const handleLogout = async () => {
     const access_token = localStorage.getItem('access_token')
     if (!access_token) return
@@ -16,6 +41,16 @@
     localStorage.removeItem('refresh_token')
     router.push({ name: 'signin' })
   }
+
+  // Добавляем обработчик клика при монтировании
+  onMounted(() => {
+    document.addEventListener('click', handleClickOutside)
+  })
+
+  // Убираем обработчик при размонтировании
+  onUnmounted(() => {
+    document.removeEventListener('click', handleClickOutside)
+  })
 </script>
 
 <template>
@@ -41,26 +76,23 @@
           </button>
         </form>
 
-        <div class="notification-icon">
-          <svg class="bell-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-5 5v-5zM10.324 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
-          </svg>
-          <div class="notification-dot"></div>
-        </div>
-
-        <div class="avatar-container" 
-             @mouseenter="isDropdownOpen = true" 
-             @mouseleave="isDropdownOpen = false">
-          <div class="avatar">
+        <div class="avatar-container">
+          <div 
+            ref="avatarRef"
+            class="avatar" 
+            @click="toggleDropdown"
+          >
             <svg class="user-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
             </svg>
           </div>
           
-          <div v-if="isDropdownOpen" class="dropdown-menu">
-            <router-link to="/profile" class="dropdown-item">Profile</router-link>
-            <router-link to="/settings" class="dropdown-item">Settings</router-link>
+          <div 
+            v-if="isDropdownOpen" 
+            ref="dropdownRef"
+            class="dropdown-menu"
+          >
+            <router-link to="/settings" class="dropdown-item" @click="closeDropdown">Settings</router-link>
             <div class="dropdown-divider"></div>
             <button @click="handleLogout" class="dropdown-item logout">Log Out</button>
           </div>
@@ -187,7 +219,6 @@
 
   .avatar-container {
     position: relative;
-    cursor: pointer;
   }
 
   .avatar {
@@ -198,13 +229,19 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
     border: 2px solid rgba(255, 255, 255, 0.3);
+    cursor: pointer;
   }
 
   .avatar:hover {
     background: rgba(255, 255, 255, 0.2);
     border-color: rgba(255, 255, 255, 0.5);
+  }
+
+  .avatar.active {
+    background: rgba(255, 255, 255, 0.2);
+    border-color: #e50914;
   }
 
   .dropdown-menu {
@@ -218,6 +255,18 @@
     z-index: 1000;
     margin-top: 0.5rem;
     overflow: hidden;
+    animation: dropdownFadeIn 0.2s ease-out;
+  }
+
+  @keyframes dropdownFadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
 
   .dropdown-item {
@@ -262,6 +311,16 @@
     
     .search-input {
       width: 150px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .nav-links {
+      display: none;
+    }
+    
+    .search-form {
+      display: none;
     }
   }
 </style>
