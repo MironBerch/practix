@@ -97,10 +97,9 @@
         )
         
         if (response) {
-          router.push({ 
-            name: 'signin',
-            query: { registered: 'true' } // Добавляем параметр для отображения успешного сообщения
-          })
+          localStorage.setItem('access_token', response.access_token)
+          localStorage.setItem('refresh_token', response.refresh_token)
+          router.push({ name: 'main' })
         }
       }
 
