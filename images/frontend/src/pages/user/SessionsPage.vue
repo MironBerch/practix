@@ -13,30 +13,28 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent, ref, onMounted } from 'vue'
-  import { useAuth } from '../../composables/useAuth'
+import { defineComponent, ref, onMounted } from "vue";
+import { useAuth } from "../../composables/useAuth";
 
-  const token = localStorage.getItem('access_token')
+const token = localStorage.getItem("access_token");
 
-  export default defineComponent(
-    {
-      setup() {
-        const { getUserSessions, loading, error } = useAuth()
-        const sessions = ref([])
+export default defineComponent({
+  setup() {
+    const { getUserSessions, loading, error } = useAuth();
+    const sessions = ref([]);
 
-        onMounted(async () => {
-          const data = await getUserSessions(token)
-          if (data) {
-            sessions.value = data
-          }
-        })
-
-        return {
-          sessions,
-          loading,
-          error
-        }
+    onMounted(async () => {
+      const data = await getUserSessions(token);
+      if (data) {
+        sessions.value = data;
       }
-    }
-  )
+    });
+
+    return {
+      sessions,
+      loading,
+      error,
+    };
+  },
+});
 </script>

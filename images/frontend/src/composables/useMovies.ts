@@ -1,198 +1,222 @@
-import { ref } from 'vue';
-import type { Filmwork, FilmworkCollection, Genre, GenreCollection, Person, PersonCollection } from '../types/types';
+import { ref } from "vue";
+import type {
+  Filmwork,
+  FilmworkCollection,
+  Genre,
+  GenreCollection,
+  Person,
+  PersonCollection,
+} from "../types/types";
 
 const BASE_MOVIES_API_URL = import.meta.env.VITE_MOVIES_API_URL;
-const API_URL = BASE_MOVIES_API_URL + '/movies/api/v1';
+const API_URL = BASE_MOVIES_API_URL + "/movies/api/v1";
 
 export const useMovies = () => {
-    const loading = ref(false);
-    const error = ref<string | null>(null);
+  const loading = ref(false);
+  const error = ref<string | null>(null);
 
-    const getFilmwork = async (uuid: string): Promise<Filmwork | null> => {
-        try {
-            loading.value = true;
-            const response = await fetch(`${API_URL}/filmworks/${uuid}`);
+  const getFilmwork = async (uuid: string): Promise<Filmwork | null> => {
+    try {
+      loading.value = true;
+      const response = await fetch(`${API_URL}/filmworks/${uuid}`);
 
-            if (!response.ok) {
-                throw new Error('Filmworks not found');
-            }
+      if (!response.ok) {
+        throw new Error("Filmworks not found");
+      }
 
-            return await response.json();
-        } catch (err) {
-            error.value = err instanceof Error ? err.message : 'Unknown error';
-            return null;
-        } finally {
-            loading.value = false;
-        }
-    };
+      return await response.json();
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : "Unknown error";
+      return null;
+    } finally {
+      loading.value = false;
+    }
+  };
 
-    const getFilmworks = async (sort_by: string | null, page_number: number, page_size: number): Promise<FilmworkCollection[] | null> => {
-        try {
-            loading.value = true;
-            const response = await fetch(`${API_URL}/filmworks`);
+  const getFilmworks = async (
+    sort_by: string | null,
+    page_number: number,
+    page_size: number,
+  ): Promise<FilmworkCollection[] | null> => {
+    try {
+      loading.value = true;
+      const response = await fetch(`${API_URL}/filmworks`);
 
-            if (!response.ok) {
-                throw new Error('Failed to fetch filmworks');
-            }
+      if (!response.ok) {
+        throw new Error("Failed to fetch filmworks");
+      }
 
-            return await response.json();
-        } catch (err) {
-            error.value = err instanceof Error ? err.message : 'Unknown error';
-            return null;
-        } finally {
-            loading.value = false;
-        }
-    };
+      return await response.json();
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : "Unknown error";
+      return null;
+    } finally {
+      loading.value = false;
+    }
+  };
 
-    const searchFilmworks = async (query: string, page_number: number, page_size: number): Promise<FilmworkCollection[] | null> => {
-        try {
-            loading.value = true;
+  const searchFilmworks = async (
+    query: string,
+    page_number: number,
+    page_size: number,
+  ): Promise<FilmworkCollection[] | null> => {
+    try {
+      loading.value = true;
 
-            const url = new URL(`${API_URL}/filmworks/search`);
-            url.searchParams.set('query', query);
-            url.searchParams.set('page_number', page_number.toString());
-            url.searchParams.set('page_size', page_size.toString());
-            
-            const response = await fetch(url.toString());
+      const url = new URL(`${API_URL}/filmworks/search`);
+      url.searchParams.set("query", query);
+      url.searchParams.set("page_number", page_number.toString());
+      url.searchParams.set("page_size", page_size.toString());
 
-            if (!response.ok) {
-                throw new Error('Failed to fetch filmworks');
-            }
+      const response = await fetch(url.toString());
 
-            return await response.json();
-        } catch (err) {
-            error.value = err instanceof Error ? err.message : 'Unknown error';
-            return null;
-        } finally {
-            loading.value = false;
-        }
-    };
+      if (!response.ok) {
+        throw new Error("Failed to fetch filmworks");
+      }
 
-    const getGenre = async (uuid: string): Promise<Genre | null> => {
-        try {
-            loading.value = true;
-            const response = await fetch(`${API_URL}/genres/${uuid}`);
+      return await response.json();
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : "Unknown error";
+      return null;
+    } finally {
+      loading.value = false;
+    }
+  };
 
-            if (!response.ok) {
-                throw new Error('Genre not found');
-            }
+  const getGenre = async (uuid: string): Promise<Genre | null> => {
+    try {
+      loading.value = true;
+      const response = await fetch(`${API_URL}/genres/${uuid}`);
 
-            return await response.json();
-        } catch (err) {
-            error.value = err instanceof Error ? err.message : 'Unknown error';
-            return null;
-        } finally {
-            loading.value = false;
-        }
-    };
+      if (!response.ok) {
+        throw new Error("Genre not found");
+      }
 
-    const getGenres = async (): Promise<GenreCollection[] | null> => {
-        try { 
-            loading.value = true;
-            const response = await fetch(`${API_URL}/genres`);
+      return await response.json();
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : "Unknown error";
+      return null;
+    } finally {
+      loading.value = false;
+    }
+  };
 
-            if (!response.ok) {
-                throw new Error('Failed to fetch genres');
-            }
+  const getGenres = async (): Promise<GenreCollection[] | null> => {
+    try {
+      loading.value = true;
+      const response = await fetch(`${API_URL}/genres`);
 
-            return await response.json();
-        } catch (err) {
-            error.value = err instanceof Error ? err.message : 'Unknown error';
-            return null;
-        } finally {
-            loading.value = false;
-        }
-    };
+      if (!response.ok) {
+        throw new Error("Failed to fetch genres");
+      }
 
-    const getPerson = async (uuid: string): Promise<Person | null> => {
-        try {
-            loading.value = true;
-            const response = await fetch(`${API_URL}/persons/${uuid}`);
+      return await response.json();
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : "Unknown error";
+      return null;
+    } finally {
+      loading.value = false;
+    }
+  };
 
-            if (!response.ok) {
-                throw new Error('Person not found');
-            }
+  const getPerson = async (uuid: string): Promise<Person | null> => {
+    try {
+      loading.value = true;
+      const response = await fetch(`${API_URL}/persons/${uuid}`);
 
-            return await response.json();
-        } catch (err) {
-            error.value = err instanceof Error ? err.message : 'Unknown error';
-            return null;
-        } finally {
-            loading.value = false;
-        }
-    };
+      if (!response.ok) {
+        throw new Error("Person not found");
+      }
 
-    const getPersons = async (page_number: number, page_size: number): Promise<PersonCollection[] | null> => {
-        try {
-            loading.value = true;
-            const response = await fetch(`${API_URL}/persons`);
+      return await response.json();
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : "Unknown error";
+      return null;
+    } finally {
+      loading.value = false;
+    }
+  };
 
-            if (!response.ok) {
-                throw new Error('Failed to fetch persons');
-            }
+  const getPersons = async (
+    page_number: number,
+    page_size: number,
+  ): Promise<PersonCollection[] | null> => {
+    try {
+      loading.value = true;
+      const response = await fetch(`${API_URL}/persons`);
 
-            return await response.json();
-        } catch (err) {
-            error.value = err instanceof Error ? err.message : 'Unknown error';
-            return null;
-        } finally {
-            loading.value = false;
-        }
-    };
+      if (!response.ok) {
+        throw new Error("Failed to fetch persons");
+      }
 
-    const getFilmworksByPerson = async (uuid: string): Promise<FilmworkCollection[] | null> => {
-        try {
-            loading.value = true;
-            const response = await fetch(`${API_URL}/persons/${uuid}/filmworks`);
+      return await response.json();
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : "Unknown error";
+      return null;
+    } finally {
+      loading.value = false;
+    }
+  };
 
-            if (!response.ok) {
-                throw new Error('Failed to fetch filmworks');
-            }
+  const getFilmworksByPerson = async (
+    uuid: string,
+  ): Promise<FilmworkCollection[] | null> => {
+    try {
+      loading.value = true;
+      const response = await fetch(`${API_URL}/persons/${uuid}/filmworks`);
 
-            return await response.json();
-        } catch (err) {
-            error.value = err instanceof Error ? err.message : 'Unknown error';
-            return null;
-        } finally {
-            loading.value = false;
-        }
-    };
+      if (!response.ok) {
+        throw new Error("Failed to fetch filmworks");
+      }
 
-    const searchPersons = async (query: string, page_number: number, page_size: number): Promise<PersonCollection[] | null> => {
-        try {
-            loading.value = true;
+      return await response.json();
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : "Unknown error";
+      return null;
+    } finally {
+      loading.value = false;
+    }
+  };
 
-            const url = new URL(`${API_URL}/persons/search`);
-            url.searchParams.set('query', query);
-            url.searchParams.set('page_number', page_number.toString());
-            url.searchParams.set('page_size', page_size.toString());
-            
-            const response = await fetch(url.toString());
+  const searchPersons = async (
+    query: string,
+    page_number: number,
+    page_size: number,
+  ): Promise<PersonCollection[] | null> => {
+    try {
+      loading.value = true;
 
-            if (!response.ok) {
-                throw new Error('Failed to fetch persons');
-            }
+      const url = new URL(`${API_URL}/persons/search`);
+      url.searchParams.set("query", query);
+      url.searchParams.set("page_number", page_number.toString());
+      url.searchParams.set("page_size", page_size.toString());
 
-            return await response.json();
-        } catch (err) {
-            error.value = err instanceof Error ? err.message : 'Unknown error';
-            return null;
-        } finally {
-            loading.value = false;
-        }
-    };
+      const response = await fetch(url.toString());
 
-    return {
-        loading,
-        error,
-        getFilmwork,
-        getFilmworks,
-        searchFilmworks,
-        getGenre,
-        getGenres,
-        getPerson,
-        getPersons,
-        searchPersons,
-        getFilmworksByPerson,
-    };
+      if (!response.ok) {
+        throw new Error("Failed to fetch persons");
+      }
+
+      return await response.json();
+    } catch (err) {
+      error.value = err instanceof Error ? err.message : "Unknown error";
+      return null;
+    } finally {
+      loading.value = false;
+    }
+  };
+
+  return {
+    loading,
+    error,
+    getFilmwork,
+    getFilmworks,
+    searchFilmworks,
+    getGenre,
+    getGenres,
+    getPerson,
+    getPersons,
+    searchPersons,
+    getFilmworksByPerson,
+  };
 };

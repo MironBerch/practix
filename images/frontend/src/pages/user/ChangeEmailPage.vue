@@ -4,7 +4,7 @@
     <form @submit.prevent="handleSubmit">
       <div class="form-group">
         <label for="email">New Email</label>
-        <input v-model="email" type="email" id="email" required>
+        <input v-model="email" type="email" id="email" required />
       </div>
       <button type="submit" :disabled="loading">Change Email</button>
       <p v-if="error" class="error">{{ error }}</p>
@@ -13,33 +13,34 @@
 </template>
 
 <script lang="ts">
-  import { defineComponent, ref } from 'vue'
-  import { useAuth } from '../../composables/useAuth'
+import { defineComponent, ref } from "vue";
+import { useAuth } from "../../composables/useAuth";
+import { useRouter } from "vue-router";
 
-  export default defineComponent(
-    {
-      setup() {
-        const { changeEmail, loading, error } = useAuth()
-        const email = ref('')
+const router = useRouter();
 
-        const handleSubmit = async () => {
-          const access_token = localStorage.getItem('access_token')
-          if (!access_token) return
-          
-          const response = await changeEmail({ email: email.value }, access_token)
-          if (response) {
-            // Redirect to confirmation page
-            router.push({ name: 'confirm-change-email' })
-          }
-        }
+export default defineComponent({
+  setup() {
+    const { changeEmail, loading, error } = useAuth();
+    const email = ref("");
 
-        return {
-          email,
-          handleSubmit,
-          loading,
-          error
-        }
+    const handleSubmit = async () => {
+      const access_token = localStorage.getItem("access_token");
+      if (!access_token) return;
+
+      const response = await changeEmail({ email: email.value }, access_token);
+      if (response) {
+        // Redirect to confirmation page
+        router.push({ name: "confirm-change-email" });
       }
-    }
-  )
+    };
+
+    return {
+      email,
+      handleSubmit,
+      loading,
+      error,
+    };
+  },
+});
 </script>
