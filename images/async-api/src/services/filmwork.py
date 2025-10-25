@@ -17,8 +17,12 @@ class FilmworksListService(BaseListService):
             'sort': {},
         }
         if sort:
+            sort_field_mapping = {'title': 'title.raw', 'rating': 'rating'}
             field = sort.lstrip('-')
-            query['sort'][field] = {'order': 'asc' if sort.startswith('-') else 'desc'}
+            elastic_field = sort_field_mapping.get(field, field)
+            order = 'asc' if sort.startswith('-') else 'desc'
+            query['sort'][elastic_field] = {'order': order}
+
         if genres:
             query['query']['bool']['must'] = [
                 {
