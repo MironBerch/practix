@@ -1,18 +1,23 @@
-from redis import Redis
+from typing import Any
 
-from src.core.config import settings
+from redis.asyncio import Redis
 
-redis: Redis | None = None
-
-
-def init():
-    return Redis(
-        host=settings.redis.host,
-        port=settings.redis.port,
-        db=settings.redis.db,
-        decode_responses=True,
-    )
+redis: Redis
 
 
-def get_redis() -> Redis:
-    return redis
+class RedisAdapter:
+    def __init__(self, redis_instance: Redis):
+        self.redis = redis_instance
+
+    async def get_object_from_cache(self, redis_key: str) -> Any:
+        data = await self.redis.get(redis_key)
+        if not data:
+            return None
+        return data
+
+    async def put_object_to_cache(self, redis_key: str, object: Any, ex: int | None = None) -> None:
+        await self.redis.set(redis_key, object, ex=ex)
+
+
+async def get_redis_adapter() -> RedisAdapter:
+    return RedisAdapter(redis_instance=redis)

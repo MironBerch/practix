@@ -4,9 +4,9 @@ services:
     restart: always
     build: ../..
     command: >
-      sh -c "cd /app/src/
-      && uv run flask --app manage:create_app migrate
-      && uv run manage.py"
+      sh -c "uv run alembic upgrade head
+      && cd /app/src/
+      && uv run main.py"
     volumes:
       - ../..:/app
     expose:
@@ -16,7 +16,7 @@ services:
     environment:
       - "JWT_SECRET_KEY=jwtsecretkey"
       - "SECRET_KEY=secretkey"
-      - "FLASK_PORT=5000"
+      - "FASTAPI_PORT=5000"
       - "DEBUG=True"
       - "DB_NAME=postgres"
       - "DB_USER=postgres"

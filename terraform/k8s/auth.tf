@@ -48,7 +48,7 @@ resource "kubernetes_deployment" "auth-api" {
           }
 
           env {
-            name  = "FLASK_PORT"
+            name  = "FASTAPI_PORT"
             value = "5000"
           }
 

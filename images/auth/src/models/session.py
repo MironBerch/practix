@@ -1,54 +1,33 @@
 import uuid
 from datetime import datetime, timezone
 
-#  from sqlalchemy import Table, text
+from sqlalchemy import Column, DateTime, ForeignKey, String
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
 
-from src.db.postgres import db
-
-#  from sqlalchemy.engine import Connection
-
-
-#  def create_partition(target: Table, connection: Connection, **kwargs) -> None:
-#      """
-#      Функция для партицирования таблицы `sessions` по типам устройств.
-#      """
-#
-#      device_types = ('pc', 'tablet', 'mobile', 'other')
-#      for device_type in device_types:
-#          connection.execute(
-#              statement=text(
-#                  text=f"""
-#                      CREATE TABLE IF NOT EXISTS "sessions_{device_type}"
-#                      PARTITION OF "sessions" FOR VALUES IN ('{device_type}')
-#                  """
-#              )
-#          )
+from db.postgres import Base
 
 
-class Session(db.Model):
+class Session(Base):
     """Модель сессии пользователя."""
 
     __tablename__ = 'sessions'
-    #  __table_args__ = {
-    #      'postgresql_partition_by': 'LIST (user_device_type);',
-    #      'listeners': [('after_create', create_partition)],
-    #  }
 
-    id = db.Column(
+    id = Column(
         UUID(as_uuid=True),
         primary_key=True,
         default=uuid.uuid4,
     )
-    event_date = db.Column(
-        db.DateTime,
+    event_date = Column(
+        DateTime(timezone=True),
         default=datetime.now(timezone.utc),
     )
-    user_id = db.Column(
+    user_id = Column(
         UUID(as_uuid=True),
-        db.ForeignKey('users.id', ondelete='CASCADE'),
+        ForeignKey('users.id', ondelete='CASCADE'),
         nullable=False,
     )
-    user_agent = db.Column(db.String)
-    user_device_type = db.Column(db.String)
-    #  user_device_type = db.Column(db.String, primary_key=True)
+    user_agent = Column(String)
+    user_device_type = Column(String)
+
+    user = relationship('User', back_populates='sessions')

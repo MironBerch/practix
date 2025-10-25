@@ -1,22 +1,20 @@
-import requests
+import aiohttp
 
-from src.core.config import settings
-from src.core.logger import logger
+from core.config import settings
+from src.schemas.schemas import Notification
 
 
-def send_notification(data: dict):
-    path = 'notifications/api/notification'
-    notifications = settings.notifications
-    url = f'http://{notifications.receiver_host}:{notifications.receiver_port}/{path}'
-    if not notifications.receiver_host:
-        return None
+async def send_notification(data: Notification) -> bool:
+    """Отправка уведомления"""
     try:
-        requests.post(url, json=data)
-    except Exception as e:
-        logger.error(
-            msg=(
-                f'Can not send message with use notifications receiver '
-                f'Json data: {data} '
-                f'Exception: {e} '
-            )
-        )
+        async with aiohttp.ClientSession() as session:
+            path = 'notifications/api/notification'
+            notifications = settings.notifications
+            url = f'http://{notifications.receiver_host}:{notifications.receiver_port}/{path}'
+            async with session.post(
+                url,
+                json=data,
+            ) as response:
+                return response.status == 200
+    except Exception:
+        return False

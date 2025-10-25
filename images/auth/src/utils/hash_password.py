@@ -7,7 +7,7 @@ from src.core.config import settings
 def hash_password(password: str) -> str:
     """Хеширует пароль с использованием HMAC и секретного ключа."""
     hmac_hash = hmac.new(
-        settings.flask.secret_key.encode('utf-8'),
+        settings.fastapi.secret_key.get_secret_value().encode('utf-8'),
         password.encode('utf-8'),
         hashlib.sha256,
     )

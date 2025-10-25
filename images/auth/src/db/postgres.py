@@ -1,23 +1,21 @@
-from flask_migrate import Migrate
-from flask_sqlalchemy import SQLAlchemy
+from typing import AsyncGenerator
 
-from flask import Flask
+from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
+from sqlalchemy.ext.declarative import DeclarativeMeta, declarative_base
 
-from src.core.config import settings
+from core.config import settings
 
-db = SQLAlchemy()
-migrate = Migrate()
+pg = settings.postgres
+
+DATABASE_URL = (
+    f'postgresql+asyncpg://{pg.user}:{pg.password.get_secret_value()}@{pg.host}:{pg.port}/{pg.db}'
+)
+
+Base: DeclarativeMeta = declarative_base()
+engine = create_async_engine(DATABASE_URL)
+async_session_maker = async_sessionmaker(engine, expire_on_commit=False)
 
 
-def init(app: Flask):
-    app.config['SQLALCHEMY_DATABASE_URI'] = (
-        'postgresql://{user}:{password}@{host}:{port}/{db}'.format(
-            user=settings.postgres.user,
-            password=settings.postgres.password,
-            host=settings.postgres.host,
-            port=settings.postgres.port,
-            db=settings.postgres.db,
-        )
-    )
-    db.init_app(app)
-    migrate.init_app(app, db)
+async def get_async_session() -> AsyncGenerator[AsyncSession, None]:
+    async with async_session_maker() as session:
+        yield session

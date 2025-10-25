@@ -1,41 +1,43 @@
 import uuid
 from datetime import datetime, timezone
 
+from sqlalchemy import Boolean, Column, DateTime, String
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
 
-from src.db.postgres import db
+from db.postgres import Base
 
 
-class User(db.Model):
+class User(Base):
     """Модель пользователя."""
 
     __tablename__ = 'users'
 
-    id = db.Column(
+    id = Column(
         UUID(as_uuid=True),
         primary_key=True,
         default=uuid.uuid4,
     )
-    email = db.Column(
-        db.String(255),
+    email = Column(
+        String(255),
         unique=True,
         index=True,
     )
 
-    password_hash = db.Column(db.String(255))
+    password_hash = Column(String(255))
 
-    is_active = db.Column(db.Boolean())
-    is_email_confirmed = db.Column(db.Boolean())
+    is_active = Column(Boolean())
+    is_email_confirmed = Column(Boolean())
 
-    created_at = db.Column(
-        db.DateTime,
+    created_at = Column(
+        DateTime(timezone=True),
         default=datetime.now(timezone.utc),
     )
 
-    sessions = db.relationship(
+    sessions = relationship(
         'Session',
-        backref=db.backref('user', lazy='joined'),
-        lazy='dynamic',
+        back_populates='user',
+        lazy='selectin',
         order_by='Session.event_date.desc()',
         passive_deletes=True,
     )

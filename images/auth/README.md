@@ -6,7 +6,7 @@
 
 ### **Технологии**
 
-```Python``` ```Flask``` ```PostgreSQL``` ```Redis``` ```NGINX``` ```Gunicorn``` ```Docker``` ```Docker Compose```
+```Python``` ```FastAPI``` ```PostgreSQL``` ```Redis``` ```NGINX``` ```Uvicorn``` ```Docker``` ```Docker Compose```
 
 ### **Как запустить проект:**
 

@@ -1,10 +1,7 @@
-from flask import Flask
+from fastapi import APIRouter
 
-from src.api.v1 import auth, health, user
+from .v1.urls import api_v1_router
 
+api_router = APIRouter(prefix='/api')
 
-def init_routers(app: Flask) -> None:
-    """Register all `flask.Blueprint` on the application."""
-    app.register_blueprint(health.bp, url_prefix='/auth/api/v1')
-    app.register_blueprint(auth.bp, url_prefix='/auth/api/v1')
-    app.register_blueprint(user.bp, url_prefix='/auth/api/v1')
+api_router.include_router(api_v1_router)
