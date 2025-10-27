@@ -40,7 +40,10 @@ export const useMovies = () => {
   ): Promise<FilmworkCollection[] | null> => {
     try {
       loading.value = true;
-      const response = await fetch(`${API_URL}/filmworks`);
+
+      const url = new URL(`${API_URL}/filmworks`);
+      url.searchParams.set("sort_by", sort_by.toString());
+      const response = await fetch(url.toString());
 
       if (!response.ok) {
         throw new Error("Failed to fetch filmworks");
