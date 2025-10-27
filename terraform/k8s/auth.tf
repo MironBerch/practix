@@ -27,9 +27,9 @@ resource "kubernetes_deployment" "auth-api" {
           command = ["sh", "-c"]
           args    = [
             <<EOT
+            uv run alembic upgrade head
             cd /app/src/
-            uv run flask --app manage:create_app migrate
-            uv run gunicorn --workers 1 --bind 0.0.0.0:5000 manage:app
+            uv run main.py
             EOT
           ]
 
