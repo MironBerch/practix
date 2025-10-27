@@ -6,7 +6,7 @@
       <div v-for="session in sessions" :key="session.id" class="session-item">
         <p><strong>Device:</strong> {{ session.user_device_type }}</p>
         <p><strong>Browser:</strong> {{ session.user_agent }}</p>
-        <p><strong>Date:</strong> {{ session.date }}</p>
+        <p><strong>Date:</strong> {{ session.event_date }}</p>
       </div>
     </div>
   </div>
