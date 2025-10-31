@@ -77,25 +77,6 @@ onUnmounted(() => {
       </ul>
 
       <div class="nav-right">
-        <form class="search-form">
-          <input type="text" placeholder="Search..." class="search-input" />
-          <button type="submit" class="search-button">
-            <svg
-              class="search-icon"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
-            </svg>
-          </button>
-        </form>
-
         <!-- Для авторизованных пользователей - аватарка и dropdown -->
         <div v-if="isAuthenticated" class="avatar-container">
           <div ref="avatarRef" class="avatar" @click="toggleDropdown">
@@ -165,6 +146,7 @@ onUnmounted(() => {
 .nav-links {
   display: flex;
   list-style: none;
+  align-items: center;
   margin: 0;
   padding: 0;
   gap: 2rem;
@@ -192,56 +174,9 @@ onUnmounted(() => {
   gap: 1.5rem;
 }
 
-.search-form {
-  display: flex;
-  align-items: center;
-  background: rgb(255 255 255 / 10%);
-  border-radius: 4px;
-  overflow: hidden;
-}
-
-.search-input {
-  background: transparent;
-  border: none;
-  color: #fff;
-  padding: 0.5rem 1rem;
-  width: 200px;
-  outline: none;
-}
-
-.search-input::placeholder {
-  color: rgb(255 255 255 / 70%);
-}
-
-.search-button {
-  background: transparent;
-  border: none;
-  color: #fff;
-  padding: 0.5rem;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.search-button:hover {
-  background: rgb(255 255 255 / 10%);
-}
-
-.search-icon,
-.bell-icon,
 .user-icon {
   width: 20px;
   height: 20px;
-}
-
-.notification-dot {
-  position: absolute;
-  top: 8px;
-  right: 8px;
-  width: 8px;
-  height: 8px;
-  background-color: #e50914;
-  border-radius: 50%;
-  border: 2px solid #000;
 }
 
 .avatar-container {
@@ -363,10 +298,6 @@ onUnmounted(() => {
     gap: 1rem;
   }
 
-  .search-input {
-    width: 150px;
-  }
-
   .auth-links {
     gap: 0.5rem;
   }
@@ -379,10 +310,6 @@ onUnmounted(() => {
 
 @media (width <= 480px) {
   .nav-links {
-    display: none;
-  }
-
-  .search-form {
     display: none;
   }
 
