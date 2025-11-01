@@ -64,7 +64,6 @@ onUnmounted(() => {
       <h2 class="logo">PRACTIX</h2>
 
       <ul class="nav-links">
-        <li><router-link to="/" class="nav-link">Home</router-link></li>
         <li>
           <router-link to="/filmworks" class="nav-link">Movies</router-link>
         </li>

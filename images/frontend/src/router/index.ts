@@ -39,10 +39,10 @@ const router = createRouter({
       meta: { requiresAuth: true },
       children: [
         // Main pages
+        // Redirect from root to filmworks
         {
           path: "",
-          name: "main",
-          component: () => import("../pages/MainPage.vue"),
+          redirect: { name: "filmworks" }
         },
         {
           path: "settings",
@@ -106,8 +106,7 @@ const router = createRouter({
 // Navigation guard for authentication
 router.beforeEach((to, from, next) => {
   const isAuthenticated =
-    /* your auth check logic, e.g.: */ localStorage.getItem("access_token") !==
-    null;
+    /* your auth check logic, e.g.: */ localStorage.getItem("access_token") !== null;
 
   if (to.meta.requiresAuth && !isAuthenticated) {
     next({ name: "signin" });
@@ -115,7 +114,7 @@ router.beforeEach((to, from, next) => {
     (to.name === "signin" || to.name === "signup") &&
     isAuthenticated
   ) {
-    next({ name: "main" }); // Redirect if user is already authenticated
+    next({ name: "filmworks" }); // Redirect if user is already authenticated
   } else {
     next();
   }
