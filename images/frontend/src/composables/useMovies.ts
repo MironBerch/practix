@@ -37,12 +37,28 @@ export const useMovies = () => {
     sort_by: string | null,
     page_number: number,
     page_size: number,
+    genres_filter: string[] = []
   ): Promise<FilmworkCollection[] | null> => {
     try {
       loading.value = true;
 
       const url = new URL(`${API_URL}/filmworks`);
-      url.searchParams.set("sort_by", sort_by.toString());
+      
+      if (sort_by) {
+        url.searchParams.set("sort_by", sort_by);
+      }
+      
+      // Добавляем фильтрацию по жанрам
+      if (genres_filter.length > 0) {
+        genres_filter.forEach(genre => {
+          url.searchParams.append("filter[genres]", genre);
+        });
+      }
+      
+      // Добавляем пагинацию
+      url.searchParams.set("page[number]", page_number.toString());
+      url.searchParams.set("page[size]", page_size.toString());
+
       const response = await fetch(url.toString());
 
       if (!response.ok) {
@@ -62,6 +78,7 @@ export const useMovies = () => {
     query: string,
     page_number: number,
     page_size: number,
+    genres_filter: string[] = []
   ): Promise<FilmworkCollection[] | null> => {
     try {
       loading.value = true;
@@ -70,6 +87,13 @@ export const useMovies = () => {
       url.searchParams.set("query", query);
       url.searchParams.set("page_number", page_number.toString());
       url.searchParams.set("page_size", page_size.toString());
+
+      // Добавляем фильтрацию по жанрам для поиска
+      if (genres_filter.length > 0) {
+        genres_filter.forEach(genre => {
+          url.searchParams.append("filter[genres]", genre);
+        });
+      }
 
       const response = await fetch(url.toString());
 
