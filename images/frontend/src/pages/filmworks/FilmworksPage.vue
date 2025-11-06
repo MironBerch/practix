@@ -27,6 +27,50 @@
       </div>
     </div>
 
+    <!-- Фильтры по жанрам в аккордеоне -->
+    <div class="filters-accordion">
+      <div class="accordion-header" @click="toggleFilters">
+        <div class="accordion-title">
+          <h3>Фильтры по жанрам</h3>
+          <span class="selected-count" v-if="selectedGenres.length > 0">
+            ({{ selectedGenres.length }} выбрано)
+          </span>
+        </div>
+        <div class="accordion-arrow" :class="{ 'accordion-arrow--open': showFilters }">
+          ▼
+        </div>
+      </div>
+      
+      <transition name="filters-slide">
+        <div v-if="showFilters" class="filters-section">
+          <div class="genres-filter">
+            <div
+              v-for="genre in availableGenres"
+              :key="genre.uuid"
+              class="genre-checkbox"
+            >
+              <input
+                type="checkbox"
+                :id="`genre-${genre.uuid}`"
+                :value="genre.name"
+                v-model="selectedGenres"
+                @change="handleGenreChange"
+                class="genre-input"
+              />
+              <label :for="`genre-${genre.uuid}`" class="genre-label">
+                {{ genre.name }}
+              </label>
+            </div>
+          </div>
+          <div class="filters-actions" v-if="selectedGenres.length > 0">
+            <button @click="clearGenres" class="clear-filters-button">
+              Очистить все
+            </button>
+          </div>
+        </div>
+      </transition>
+    </div>
+
     <!-- Состояние загрузки -->
     <div v-if="loading" class="loading-state">
       <p>Загрузка фильмов...</p>
@@ -48,6 +92,21 @@
       </button>
     </div>
 
+    <!-- Выбранные жанры -->
+    <div v-if="selectedGenres.length > 0" class="active-filters">
+      <span class="active-filters-label">Выбранные жанры:</span>
+      <span
+        v-for="genre in selectedGenres"
+        :key="genre"
+        class="active-filter-tag"
+      >
+        {{ genre }}
+        <button @click="removeGenre(genre)" class="remove-genre-button">
+          ×
+        </button>
+      </span>
+    </div>
+
     <!-- Список фильмов -->
     <div v-if="!loading && !error" class="filmworks-grid">
       <div
@@ -57,16 +116,15 @@
         @click="navigateToFilmwork(filmwork.uuid)"
       >
         <div class="filmwork-poster">
-          <!-- Здесь может быть постер фильма -->
           <div class="poster-placeholder">{{ filmwork.title.charAt(0) }}</div>
         </div>
         <div class="filmwork-info">
           <h3 class="filmwork-title">{{ filmwork.title }}</h3>
           <div class="filmwork-rating">
             <span class="rating-star">⭐</span>
-            <span class="rating-value">{{ filmwork.rating.toFixed(1) }}</span>
+            <span class="rating-value">{{ filmwork.rating?.toFixed(1) || '0.0' }}</span>
           </div>
-          <div v-if="filmwork.genres" class="filmwork-genres">
+          <div v-if="filmwork.genres && filmwork.genres.length > 0" class="filmwork-genres">
             <span
               v-for="genre in filmwork.genres.slice(0, 2)"
               :key="genre"
@@ -88,6 +146,7 @@
       class="empty-state"
     >
       <p v-if="isSearchMode">По вашему запросу ничего не найдено</p>
+      <p v-else-if="selectedGenres.length > 0">По выбранным жанрам ничего не найдено</p>
       <p v-else>Нет доступных фильмов</p>
     </div>
 
@@ -110,18 +169,21 @@
 import { ref, onMounted, watch } from "vue";
 import { useRouter } from "vue-router";
 import { useMovies } from "../../composables/useMovies";
-import type { BaseFilmwork } from "../../types/types";
+import type { BaseFilmwork, Genre } from "../../types/types";
 
 const router = useRouter();
-const { loading, error, getFilmworks, searchFilmworks } = useMovies();
+const { loading, error, getFilmworks, searchFilmworks, getGenres } = useMovies();
 
 // Реактивные данные
 const filmworks = ref<BaseFilmwork[]>([]);
+const availableGenres = ref<Genre[]>([]);
+const selectedGenres = ref<string[]>([]);
 const searchQuery = ref("");
 const sortBy = ref("");
 const currentPage = ref(1);
 const pageSize = ref(20);
 const isSearchMode = ref(false);
+const showFilters = ref(false);
 
 // Загрузка данных
 const loadFilmworks = async () => {
@@ -130,6 +192,7 @@ const loadFilmworks = async () => {
       searchQuery.value,
       currentPage.value,
       pageSize.value,
+      selectedGenres.value
     );
     filmworks.value = Array.isArray(result) ? result.flat() : [];
   } else {
@@ -137,9 +200,23 @@ const loadFilmworks = async () => {
       sortBy.value,
       currentPage.value,
       pageSize.value,
+      selectedGenres.value
     );
     filmworks.value = Array.isArray(result) ? result.flat() : [];
   }
+};
+
+// Загрузка жанров
+const loadGenres = async () => {
+  const result = await getGenres();
+  if (result) {
+    availableGenres.value = Array.isArray(result) ? result.flat() : [];
+  }
+};
+
+// Переключение видимости фильтров
+const toggleFilters = () => {
+  showFilters.value = !showFilters.value;
 };
 
 // Обработчики событий
@@ -150,6 +227,23 @@ const handleSearch = () => {
 };
 
 const handleSortChange = () => {
+  currentPage.value = 1;
+  loadFilmworks();
+};
+
+const handleGenreChange = () => {
+  currentPage.value = 1;
+  loadFilmworks();
+};
+
+const removeGenre = (genre: string) => {
+  selectedGenres.value = selectedGenres.value.filter(g => g !== genre);
+  currentPage.value = 1;
+  loadFilmworks();
+};
+
+const clearGenres = () => {
+  selectedGenres.value = [];
   currentPage.value = 1;
   loadFilmworks();
 };
@@ -184,6 +278,7 @@ const refreshData = () => {
 // Загрузка при монтировании
 onMounted(() => {
   loadFilmworks();
+  loadGenres();
 });
 
 // Наблюдатель для пагинации
@@ -228,6 +323,192 @@ watch([currentPage], () => {
   background: white;
 }
 
+/* Стили для аккордеона */
+.filters-accordion {
+  margin-bottom: 30px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.accordion-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background: #f8f9fa;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  user-select: none;
+}
+
+.accordion-header:hover {
+  background: #e9ecef;
+}
+
+.accordion-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.accordion-title h3 {
+  margin: 0;
+  color: #333;
+  font-size: 1.1em;
+}
+
+.selected-count {
+  color: #3498db;
+  font-weight: 600;
+  font-size: 0.9em;
+}
+
+.accordion-arrow {
+  transition: transform 0.3s ease;
+  font-size: 0.8em;
+  color: #666;
+}
+
+.accordion-arrow--open {
+  transform: rotate(180deg);
+}
+
+.filters-section {
+  padding: 20px;
+  background: white;
+  border-top: 1px solid #e0e0e0;
+}
+
+/* Анимация для аккордеона */
+.filters-slide-enter-active,
+.filters-slide-leave-active {
+  transition: all 0.3s ease;
+  max-height: 500px;
+  overflow: hidden;
+}
+
+.filters-slide-enter-from,
+.filters-slide-leave-to {
+  max-height: 0;
+  opacity: 0;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+/* Стили для фильтров по жанрам */
+.genres-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.genre-checkbox {
+  display: flex;
+  align-items: center;
+}
+
+.genre-input {
+  margin-right: 6px;
+  cursor: pointer;
+}
+
+.genre-label {
+  cursor: pointer;
+  padding: 8px 16px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 20px;
+  transition: all 0.3s ease;
+  font-size: 0.9em;
+  user-select: none;
+}
+
+.genre-input:checked + .genre-label {
+  background: #3498db;
+  color: white;
+  border-color: #3498db;
+}
+
+.genre-label:hover {
+  border-color: #3498db;
+  transform: translateY(-1px);
+}
+
+.filters-actions {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #e0e0e0;
+  text-align: center;
+}
+
+.clear-filters-button {
+  background: #e74c3c;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: background-color 0.3s ease;
+}
+
+.clear-filters-button:hover {
+  background: #c0392b;
+}
+
+/* Активные фильтры */
+.active-filters {
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 15px;
+  background: #f8f9fa;
+  border-radius: 8px;
+}
+
+.active-filters-label {
+  font-weight: 600;
+  color: #333;
+}
+
+.active-filter-tag {
+  background: #3498db;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.9em;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.remove-genre-button {
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  font-size: 1.2em;
+  line-height: 1;
+  padding: 0;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background-color 0.3s ease;
+}
+
+.remove-genre-button:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+}
+
 .filmworks-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -246,7 +527,7 @@ watch([currentPage], () => {
 
 .filmwork-card:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgb(0 0 0 / 10%);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .filmwork-poster {
@@ -275,6 +556,7 @@ watch([currentPage], () => {
   font-size: 1.1em;
   font-weight: 600;
   color: #333;
+  line-height: 1.3;
 }
 
 .filmwork-rating {
@@ -304,7 +586,7 @@ watch([currentPage], () => {
 .genre-tag {
   background: #e3f2fd;
   color: #1976d2;
-  padding: 2px 8px;
+  padding: 4px 8px;
   border-radius: 12px;
   font-size: 0.8em;
 }
@@ -335,6 +617,7 @@ watch([currentPage], () => {
   border-radius: 4px;
   cursor: pointer;
   margin-top: 10px;
+  transition: background-color 0.3s ease;
 }
 
 .retry-button:hover,
@@ -367,6 +650,11 @@ watch([currentPage], () => {
   padding: 8px 16px;
   border-radius: 4px;
   cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.pagination-button:hover:not(:disabled) {
+  background: #2980b9;
 }
 
 .pagination-button:disabled {
@@ -380,6 +668,10 @@ watch([currentPage], () => {
 }
 
 @media (width <= 768px) {
+  .filmworks-page {
+    padding: 15px;
+  }
+
   .page-header {
     flex-direction: column;
     align-items: stretch;
@@ -387,20 +679,80 @@ watch([currentPage], () => {
 
   .controls {
     flex-direction: column;
+    width: 100%;
   }
 
   .search-input {
     min-width: auto;
+    width: 100%;
+  }
+
+  .sort-select {
+    width: 100%;
+  }
+
+  .accordion-header {
+    padding: 12px 16px;
+  }
+
+  .accordion-title {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+
+  .genres-filter {
+    gap: 8px;
+  }
+
+  .genre-label {
+    font-size: 0.8em;
+    padding: 6px 12px;
   }
 
   .filmworks-grid {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
   }
 
   .search-info {
     flex-direction: column;
     gap: 10px;
     text-align: center;
+  }
+
+  .active-filters {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+
+  .pagination {
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+@media (width <= 480px) {
+  .filmworks-grid {
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 10px;
+  }
+
+  .filmwork-card {
+    padding: 10px;
+  }
+
+  .filmwork-poster {
+    height: 150px;
+  }
+
+  .poster-placeholder {
+    font-size: 36px;
+  }
+
+  .filmwork-title {
+    font-size: 1em;
   }
 }
 </style>
