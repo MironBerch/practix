@@ -7,13 +7,14 @@
 - [Загрузка данных](https://github.com/MironBerch/practix/tree/main/images/admin-panel/scripts/load_db) в базу данных PostgreSQL
 - [ETL](https://github.com/MironBerch/practix/tree/main/images/etl) для переноса данных из PostgreSQL в Elasticsearch
 - [Асинхронный API](https://github.com/MironBerch/practix/tree/main/images/async-api) на фреймворке FastAPI
-- [Авторизация пользователей](https://github.com/MironBerch/practix/tree/main/images/auth) на фреймворке Flask
+- [Авторизация пользователей](https://github.com/MironBerch/practix/tree/main/images/auth) на фреймворке FastAPI
 - [Пользовательский контент](https://github.com/MironBerch/practix/tree/main/images/ugc) c помощью NoSQL базы данных MongoDB
 - [Система нотификаций](https://github.com/MironBerch/practix/tree/main/images/notifications) в связке Django + FastAPI
+- [Пользовательский интерфейс](https://github.com/MironBerch/practix/tree/main/images/notifications) на фреймворке Vue
 
 ### **Технологии**
 
-```Python``` ```FastAPI``` ```Django``` ```Flask``` ```PostgreSQL``` ```Elasticsearch``` ```Redis``` ```MongoDB``` ```SQLite``` ```RabbitMQ``` ```Docker``` ```Docker Compose```
+```Python``` ```TypeScript``` ```FastAPI``` ```Django``` ```Vue``` ```PostgreSQL``` ```Elasticsearch``` ```Redis``` ```MongoDB``` ```SQLite``` ```RabbitMQ``` ```Docker``` ```Docker Compose```
 
 ### **Как запустить проект в локальной среде:**
 
@@ -44,6 +45,7 @@ SMTP_PASSWORD=
 | [/ugc](http://127.0.0.1:8080/ugc/api/docs) | _Документация API пользовательского контента_  |
 | [/notifications/admin](http://127.0.0.1:8001/notifications/admin/) | _Панель управления уведомлениями_ |
 | [/notifications/api](http://127.0.0.1:6000/notifications/api/docs) | _Документация API уведомлений_ |
+| [/frontend](http://127.0.0.1:3001/) | _Пользовательский интерфейс_ |
 
 ### **Как запустить проект в производственной среде:**
 
