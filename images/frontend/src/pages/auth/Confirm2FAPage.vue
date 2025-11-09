@@ -154,3 +154,7 @@ export default defineComponent({
   },
 });
 </script>
+
+<style scoped>
+@import '../../styles/auth-form-styles.css';
+</style>
