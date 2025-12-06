@@ -14,7 +14,7 @@
 
 ### **Технологии**
 
-```Python``` ```TypeScript``` ```FastAPI``` ```Django``` ```Vue``` ```PostgreSQL``` ```Elasticsearch``` ```Redis``` ```MongoDB``` ```SQLite``` ```RabbitMQ``` ```Docker``` ```Docker Compose```
+```Python``` ```TypeScript``` ```FastAPI``` ```Django``` ```Vue``` ```PostgreSQL``` ```Elasticsearch``` ```Redis``` ```MongoDB``` ```SQLite``` ```RabbitMQ``` ```Docker``` ```Docker Compose``` ```Terraform``` ```Yandex-Cloud``` ```Kubernetes```
 
 ### **Как запустить проект в локальной среде:**
 
