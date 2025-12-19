@@ -57,15 +57,6 @@ export interface ChangeEmailRequest {
   email: string;
 }
 
-export interface Confirm2StepVerificationRequest {
-  code: string;
-}
-
-export interface Confirm2StepVerificationResponse {
-  access_token: string;
-  refresh_token: string;
-}
-
 export interface RefreshResponse {
   access_token: string;
 }
@@ -89,7 +80,8 @@ export interface SignInRequest {
 
 export interface SignInResponse {
   message: string;
-  temp_token: string;
+  access_token: string;
+  refresh_token: string;
 }
 
 export interface SignUpRequest {

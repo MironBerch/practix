@@ -19,16 +19,6 @@ const router = createRouter({
           name: "signin",
           component: () => import("../pages/auth/SigninPage.vue"),
         },
-        {
-          path: "confirm-registration",
-          name: "confirm-registration",
-          component: () => import("../pages/auth/ConfirmRegistrationPage.vue"),
-        },
-        {
-          path: "confirm-2fa",
-          name: "confirm-2fa",
-          component: () => import("../pages/auth/Confirm2FAPage.vue"),
-        },
       ],
     },
 
@@ -82,11 +72,6 @@ const router = createRouter({
           path: "change-email",
           name: "change-email",
           component: () => import("../pages/user/ChangeEmailPage.vue"),
-        },
-        {
-          path: "confirm-change-email",
-          name: "confirm-change-email",
-          component: () => import("../pages/user/ConfirmChangeEmailPage.vue"),
         },
         {
           path: "change-password",

@@ -201,11 +201,11 @@
 
             <div v-if="isAuthenticated" class="rating-actions">
               <button
-                @click="rateReview(review.id, 1)"
+                @click="rateReview(review.id, 10)"
                 :class="[
                   'rate-btn',
                   'like-btn',
-                  { active: userReviewRatings[review.id] === 1 },
+                  { active: userReviewRatings[review.id] === 10 },
                 ]"
                 :disabled="reviewRatingLoading[review.id]"
               >
@@ -213,11 +213,11 @@
                 <span v-else>👍</span>
               </button>
               <button
-                @click="rateReview(review.id, 10)"
+                @click="rateReview(review.id, 1)"
                 :class="[
                   'rate-btn',
                   'dislike-btn',
-                  { active: userReviewRatings[review.id] === 10 },
+                  { active: userReviewRatings[review.id] === 1 },
                 ]"
                 :disabled="reviewRatingLoading[review.id]"
               >

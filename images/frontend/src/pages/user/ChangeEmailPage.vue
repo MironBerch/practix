@@ -31,7 +31,7 @@ export default defineComponent({
       const response = await changeEmail({ email: email.value }, access_token);
       if (response) {
         // Redirect to confirmation page
-        router.push({ name: "confirm-change-email" });
+        router.push({ name: "settings" });
       }
     };
 

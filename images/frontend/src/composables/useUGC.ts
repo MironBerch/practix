@@ -123,7 +123,7 @@ export const useUGC = () => {
   ): Promise<Rating | null> => {
     try {
       loading.value = true;
-      const response = await fetch(`${API_URL}/filmworks/${uuid}/bookmarks`, {
+      const response = await fetch(`${API_URL}/filmworks/${uuid}/ratings`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -258,7 +258,7 @@ export const useUGC = () => {
     try {
       loading.value = true;
       const response = await fetch(
-        `${API_URL}/filmworks/${uuid}/reviews/${review_id}`,
+        `${API_URL}/filmworks/${uuid}/reviews/${review_id}/ratings`,
       );
 
       if (!response.ok) {

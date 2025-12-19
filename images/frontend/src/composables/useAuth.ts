@@ -2,8 +2,6 @@ import { ref } from "vue";
 import type {
   SignInRequest,
   SignInResponse,
-  Confirm2StepVerificationRequest,
-  Confirm2StepVerificationResponse,
   ResendEmailResponse,
   SignUpRequest,
   MessageResponse,
@@ -74,120 +72,6 @@ export const useAuth = () => {
     }
   };
 
-  const confirmRegistration = async (
-    data: Confirm2StepVerificationRequest,
-    temp_token: string,
-  ): Promise<Confirm2StepVerificationResponse | null> => {
-    try {
-      loading.value = true;
-      const response = await fetch(`${API_URL}/confirm_registration`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${temp_token}`,
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed confirm registration");
-      }
-
-      return await response.json();
-    } catch (err) {
-      error.value = err instanceof Error ? err.message : "Unknown error";
-      return null;
-    } finally {
-      loading.value = false;
-    }
-  };
-
-  const confirm2StepVerification = async (
-    data: Confirm2StepVerificationRequest,
-    temp_token: string,
-  ): Promise<Confirm2StepVerificationResponse | null> => {
-    try {
-      loading.value = true;
-      const response = await fetch(`${API_URL}/confirm_2_step_verification`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${temp_token}`,
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed confirm 2 step verification");
-      }
-
-      return await response.json();
-    } catch (err) {
-      error.value = err instanceof Error ? err.message : "Unknown error";
-      return null;
-    } finally {
-      loading.value = false;
-    }
-  };
-
-  const resendConfirmRegistrationEmail = async (
-    temp_token: string,
-  ): Promise<ResendEmailResponse | null> => {
-    try {
-      loading.value = true;
-      const response = await fetch(
-        `${API_URL}/resend_confirm_registration_email`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${temp_token}`,
-          },
-        },
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed resend email");
-      }
-
-      return await response.json();
-    } catch (err) {
-      error.value = err instanceof Error ? err.message : "Unknown error";
-      return null;
-    } finally {
-      loading.value = false;
-    }
-  };
-
-  const resend2StepVerificationEmail = async (
-    temp_token: string,
-  ): Promise<ResendEmailResponse | null> => {
-    try {
-      loading.value = true;
-      const response = await fetch(
-        `${API_URL}/resend_2_step_verification_email`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${temp_token}`,
-          },
-        },
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed resend email");
-      }
-
-      return await response.json();
-    } catch (err) {
-      error.value = err instanceof Error ? err.message : "Unknown error";
-      return null;
-    } finally {
-      loading.value = false;
-    }
-  };
-
   const signOut = async (
     access_token: string,
   ): Promise<ResendEmailResponse | null> => {
@@ -247,60 +131,6 @@ export const useAuth = () => {
     try {
       loading.value = true;
       const response = await fetch(`${API_URL}/change_email`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${access_token}`,
-        },
-        body: JSON.stringify(data),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed signout");
-      }
-
-      return await response.json();
-    } catch (err) {
-      error.value = err instanceof Error ? err.message : "Unknown error";
-      return null;
-    } finally {
-      loading.value = false;
-    }
-  };
-
-  const resendChangeEmail = async (
-    temp_token: string,
-  ): Promise<MessageResponse | null> => {
-    try {
-      loading.value = true;
-      const response = await fetch(`${API_URL}/resend_change_email`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${temp_token}`,
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed resend email");
-      }
-
-      return await response.json();
-    } catch (err) {
-      error.value = err instanceof Error ? err.message : "Unknown error";
-      return null;
-    } finally {
-      loading.value = false;
-    }
-  };
-
-  const confirmChangeEmail = async (
-    data: Confirm2StepVerificationRequest,
-    access_token: string,
-  ): Promise<MessageResponse | null> => {
-    try {
-      loading.value = true;
-      const response = await fetch(`${API_URL}/confirm_change_email`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -406,15 +236,9 @@ export const useAuth = () => {
     error,
     signUp,
     signIn,
-    confirmRegistration,
-    confirm2StepVerification,
-    resendConfirmRegistrationEmail,
-    resend2StepVerificationEmail,
     signOut,
     refresh,
     changeEmail,
-    resendChangeEmail,
-    confirmChangeEmail,
     passwordChange,
     getUserSessions,
     getUserInfo,

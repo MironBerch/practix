@@ -35,13 +35,14 @@ export default defineComponent({
       password: "",
     });
 
+    // Handle code submission
     const handleSubmit = async () => {
       const response = await signIn(form.value);
+
       if (response) {
-        router.push({
-          name: "confirm-2fa",
-          query: { temp_token: response.temp_token },
-        });
+        localStorage.setItem("access_token", response.access_token);
+        localStorage.setItem("refresh_token", response.refresh_token);
+        router.push({ name: "filmworks" });
       }
     };
 
