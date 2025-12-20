@@ -33,31 +33,6 @@ async def get_current_user(
     return payload.get('sub')
 
 
-async def get_current_user_temp(
-    credentials: HTTPAuthorizationCredentials = Depends(security),
-    cache_adapter: redis.RedisAdapter = Depends(redis.get_redis_adapter),
-) -> str:
-    """Зависимость для получения пользователя из временного токена"""
-    token = credentials.credentials
-    payload = jwt_manager.verify_token(token)
-
-    if payload.get('type') != 'temp':
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail='Invalid token type',
-        )
-
-    # Проверка blacklist
-    jti = payload.get('jti')
-    if jti and await cache_adapter.get_object_from_cache(f'blacklist:{jti}'):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail='Token has been revoked',
-        )
-
-    return payload.get('sub')
-
-
 async def get_current_user_refresh(
     credentials: HTTPAuthorizationCredentials = Depends(security),
     cache_adapter: redis.RedisAdapter = Depends(redis.get_redis_adapter),

@@ -33,17 +33,11 @@ class SecurityConfig(BaseSettings):
     jwt_algorithm: str = 'HS256'
 
 
-class NotificationsConfig(BaseSettings):
-    receiver_host: str = environ.get('NOTIFICATIONS_RECEIVER_HOST')
-    receiver_port: int = environ.get('NOTIFICATIONS_RECEIVER_PORT')
-
-
 class Settings(BaseSettings):
     fastapi: FastAPIConfig = Field(default_factory=FastAPIConfig)
     redis: RedisConfig = Field(default_factory=RedisConfig)
     postgres: PostgresConfig = Field(default_factory=PostgresConfig)
     security: SecurityConfig = Field(default_factory=SecurityConfig)
-    notifications: NotificationsConfig = Field(default_factory=NotificationsConfig)
 
 
 settings = Settings()

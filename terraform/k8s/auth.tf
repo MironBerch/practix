@@ -90,15 +90,6 @@ resource "kubernetes_deployment" "auth-api" {
             name  = "REDIS_DB"
             value = "1"
           }
-
-          env {
-            name  = "NOTIFICATIONS_RECEIVER_HOST"
-            value = "notifications-receiver"
-          }
-          env {
-            name  = "NOTIFICATIONS_RECEIVER_PORT"
-            value = "2000"
-          }
         }
       }
     }

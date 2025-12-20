@@ -11,7 +11,7 @@ from redis.asyncio import Redis
 from api.urls import api_router
 from core.config import settings
 from core.logger import LOGGING
-from db import redis
+from db import mongo, redis
 
 
 @asynccontextmanager
@@ -22,6 +22,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
         db=settings.redis.db,
         decode_responses=True,
     )
+    mongo.start()
 
     yield
 
