@@ -8,11 +8,6 @@ images=(
   "admin-panel" 
   "async-api" 
   "auth" 
-  "etl/postgres-to-elastic"
-  "etl/postgres-to-mongo" 
-  "notifications/admin-panel" 
-  "notifications/receiver" 
-  "notifications/worker"
   "ugc"
 )
 

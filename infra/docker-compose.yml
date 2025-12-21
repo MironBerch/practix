@@ -80,62 +80,6 @@ services:
       - "REDIS_PORT=6379"
       - "REDIS_DB=1"
 
-  postgres_to_elastic:
-    restart: always
-    build: ../images/etl/postgres-to-elastic/
-    command: >
-      sh -c "cd /app/src/
-      && uv run main.py"
-    environment:
-      - "SECRET_KEY=${SECRET_KEY}"
-      - "DB_NAME=${MOVIES_DB_NAME}"
-      - "DB_USER=${MOVIES_DB_USER}"
-      - "DB_PASSWORD=${MOVIES_DB_PASSWORD}"
-      - "DB_HOST=movies_db"
-      - "DB_PORT=5432"
-      - "REDIS_HOST=redis"
-      - "REDIS_PORT=6379"
-      - "REDIS_DB=0"
-    depends_on:
-      movies_db:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-      elastic:
-        condition: service_healthy
-
-  postgres_to_mongo:
-    restart: always
-    build: ../images/etl/postgres-to-mongo/
-    command: >
-      sh -c "cd /app/src/
-      && uv run main.py"
-    volumes:
-      - ../images/etl/postgres-to-mongo/:/app
-    environment:
-      - "MOVIES_DB_NAME=${MOVIES_DB_NAME}"
-      - "MOVIES_DB_USER=${MOVIES_DB_USER}"
-      - "MOVIES_DB_PASSWORD=${MOVIES_DB_PASSWORD}"
-      - "MOVIES_DB_HOST=movies_db"
-      - "MOVIES_DB_PORT=5432"
-      - "AUTH_DB_NAME=${AUTH_DB_NAME}"
-      - "AUTH_DB_USER=${AUTH_DB_USER}"
-      - "AUTH_DB_PASSWORD=${AUTH_DB_PASSWORD}"
-      - "AUTH_DB_HOST=auth_db"
-      - "AUTH_DB_PORT=5432"
-      - "REDIS_HOST=redis"
-      - "REDIS_PORT=6379"
-      - "REDIS_DB=0"
-    depends_on:
-      mongo:
-        condition: service_healthy
-      movies_db:
-        condition: service_healthy
-      auth_db:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-
   movies_ugc:
     restart: always
     build: ../images/ugc/
@@ -175,7 +119,7 @@ services:
       retries: 100
 
   movies_db:
-    build: ../images/etl/infra/postgres/
+    build: ../images/admin-panel/infra/postgres/
     restart: always
     ports:
       - "5432:5432"
@@ -208,16 +152,6 @@ services:
       timeout: 5s
       retries: 100
 
-  notifications_db:
-    image: postgres:16-alpine
-    restart: always
-    ports:
-      - "5434:5432"
-    environment:
-      - "POSTGRES_DB=${NOTIFICATIONS_DB_NAME}"
-      - "POSTGRES_USER=${NOTIFICATIONS_DB_USER}"
-      - "POSTGRES_PASSWORD=${NOTIFICATIONS_DB_PASSWORD}"
-
   mongo:
     image: mongo:8.0.1
     ports:
@@ -238,19 +172,6 @@ services:
       interval: 5s
       timeout: 5s
       retries: 100
-
-  rabbit:
-    image: rabbitmq:4-alpine
-    restart: always
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    expose:
-      - "5672"
-      - "15672"
-    environment:
-      - "RABBITMQ_DEFAULT_USER=${RABBITMQ_DEFAULT_USER}"
-      - "RABBITMQ_DEFAULT_PASS=${RABBITMQ_DEFAULT_PASS}"
 
   kibana:
     image: kibana:8.13.0
@@ -282,5 +203,3 @@ volumes:
   auth_db_volume:
   static_volume:
   media_volume:
-  notifications_static_volume:
-  notifications_media_volume:

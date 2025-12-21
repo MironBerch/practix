@@ -84,64 +84,6 @@ services:
       - "REDIS_PORT=6379"
       - "REDIS_DB=1"
 
-  postgres_to_elastic:
-    restart: always
-    build: ../../images/etl/postgres-to-elastic/
-    command: >
-      sh -c "cd /app/src/
-      && uv run main.py"
-    volumes:
-      - ../../images/etl/postgres-to-elastic/:/app/
-    environment:
-      - "SECRET_KEY=secretkey"
-      - "DB_NAME=movies"
-      - "DB_USER=postgres"
-      - "DB_PASSWORD=postgres"
-      - "DB_HOST=movies_db"
-      - "DB_PORT=5432"
-      - "REDIS_HOST=redis"
-      - "REDIS_PORT=6379"
-      - "REDIS_DB=0"
-    depends_on:
-      movies_db:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-      elastic:
-        condition: service_healthy
-
-  postgres_to_mongo:
-    restart: always
-    build: ../../images/etl/postgres-to-mongo/
-    command: >
-      sh -c "cd /app/src/
-      && uv run main.py"
-    volumes:
-      - ../../images/etl/postgres-to-mongo/:/app
-    environment:
-      - "MOVIES_DB_NAME=movies"
-      - "MOVIES_DB_USER=postgres"
-      - "MOVIES_DB_PASSWORD=postgres"
-      - "MOVIES_DB_HOST=movies_db"
-      - "MOVIES_DB_PORT=5432"
-      - "AUTH_DB_NAME=auth"
-      - "AUTH_DB_USER=postgres"
-      - "AUTH_DB_PASSWORD=postgres"
-      - "AUTH_DB_HOST=auth_db"
-      - "AUTH_DB_PORT=5432"
-      - "REDIS_HOST=redis"
-      - "REDIS_PORT=6379"
-      - "REDIS_DB=0"
-    depends_on:
-      mongo:
-        condition: service_healthy
-      movies_db:
-        condition: service_healthy
-      auth_db:
-        condition: service_healthy
-      redis:
-        condition: service_healthy
-
   movies_ugc:
     restart: always
     build: ../../images/ugc/
@@ -233,18 +175,6 @@ services:
       timeout: 5s
       retries: 100
 
-  notifications_db:
-    image: postgres:16-alpine
-    restart: always
-    ports:
-      - "5434:5432"
-    environment:
-      - "POSTGRES_DB=notifications"
-      - "POSTGRES_USER=postgres"
-      - "POSTGRES_PASSWORD=postgres"
-    volumes:
-        - notifications_db_volume:/var/lib/postgresql/data/
-
   mongo:
     image: mongo:8.0.1
     ports:
@@ -266,23 +196,6 @@ services:
       timeout: 5s
       retries: 100
 
-  rabbit:
-    image: rabbitmq:4-alpine
-    restart: always
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    expose:
-      - "5672"
-      - "15672"
-    volumes:
-      - rabbit_data_volume:/var/lib/rabbitmq
-    environment:
-      - "RABBITMQ_DEFAULT_USER=user"
-      - "RABBITMQ_DEFAULT_PASS=password"
-
 volumes:
   movies_db_volume:
   auth_db_volume:
-  notifications_db_volume:
-  rabbit_data_volume:
