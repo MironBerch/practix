@@ -1,8 +1,10 @@
-from pymongo.errors import CollectionInvalid
-from config import settings
 from uuid import UUID
+
 from bson.binary import Binary
 from pymongo import MongoClient
+from pymongo.errors import CollectionInvalid
+
+from config import settings
 
 
 class MongoDBStartUpService:
@@ -88,7 +90,7 @@ class MongoDBService:
             # Обновляем всех пользователей, удаляя этот фильм из их bookmarks
             users_result = db['users'].update_many(
                 {'bookmarks.filmwork_id': binary_id},
-                {'$pull': {'bookmarks': {'filmwork_id': binary_id}}}
+                {'$pull': {'bookmarks': {'filmwork_id': binary_id}}},
             )
             print(f"Обновлено пользователей: {users_result.modified_count}")
 

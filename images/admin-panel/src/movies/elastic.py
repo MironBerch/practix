@@ -1,13 +1,33 @@
 import logging
+from typing import Any
 from uuid import UUID
 
-from config import settings
 from elasticsearch import Elasticsearch
-from movies.models import Filmwork, Person, Genre
-from typing import Any
+
+from config import settings
+from movies.models import Filmwork, Genre, Person
 
 logger = logging.getLogger(__name__)
 
+
+class ElasticsearchStartUpService:
+    def __init__(self):
+        self.client = Elasticsearch(
+            f'http://{settings.ELASTICSEARCH_HOST}:{settings.ELASTICSEARCH_PORT}',
+            http_auth=(settings.ELASTICSEARCH_USER, settings.ELASTICSEARCH_PASSWORD),
+        )
+
+    def create_indices(self):
+        """Создаёт индексы если они не существуют"""
+
+        for index_name, mapping in settings.ELASTICSEARCH_INDICES.items():
+            if not self.client.indices.exists(index=index_name):
+                body = {
+                    "settings": settings.ELASTICSEARCH_SETTINGS,
+                    "mappings": {"dynamic": "strict", "properties": mapping},
+                }
+                self.client.indices.create(index=index_name, body=body)
+                logger.info(f"Создан индекс: {index_name}")
 
 class ElasticsearchService:
     """Сервис для работы с Elasticsearch из админ-панели"""
@@ -17,22 +37,6 @@ class ElasticsearchService:
             f'http://{settings.ELASTICSEARCH_HOST}:{settings.ELASTICSEARCH_PORT}',
             http_auth=(settings.ELASTICSEARCH_USER, settings.ELASTICSEARCH_PASSWORD),
         )
-        self._ensure_indices()
-
-    def _ensure_indices(self):
-        """Создаёт индексы если они не существуют"""
-
-        for index_name, mapping in settings.ELASTICSEARCH_INDICES.items():
-            if not self.client.indices.exists(index=index_name):
-                body = {
-                    "settings": settings.ELASTICSEARCH_SETTINGS,
-                    "mappings": {
-                        "dynamic": "strict",
-                        "properties": mapping
-                    }
-                }
-                self.client.indices.create(index=index_name, body=body)
-                logger.info(f"Создан индекс: {index_name}")
 
     def index_filmwork(self, filmwork: Filmwork) -> bool:
         """Индексирует фильм в Elasticsearch"""
@@ -40,10 +44,7 @@ class ElasticsearchService:
             # Преобразуем Django модель в формат для Elasticsearch
             doc = self._filmwork_to_document(filmwork)
             self.client.index(
-                index="movies",
-                id=str(filmwork.id),
-                body=doc,
-                refresh=True  # Синхронное обновление
+                index="movies", id=str(filmwork.id), body=doc, refresh=True  # Синхронное обновление
             )
             logger.info(f"Фильм индексирован: {filmwork.title}")
             return True
@@ -54,16 +55,8 @@ class ElasticsearchService:
     def index_person(self, person: Person) -> bool:
         """Индексирует персону в Elasticsearch"""
         try:
-            doc = {
-                "id": str(person.id),
-                "full_name": person.full_name
-            }
-            self.client.index(
-                index="persons",
-                id=str(person.id),
-                body=doc,
-                refresh=True
-            )
+            doc = {"id": str(person.id), "full_name": person.full_name}
+            self.client.index(index="persons", id=str(person.id), body=doc, refresh=True)
             logger.info(f"Персона индексирована: {person.full_name}")
             return True
         except Exception as e:
@@ -73,17 +66,8 @@ class ElasticsearchService:
     def index_genre(self, genre: Genre) -> bool:
         """Индексирует жанр в Elasticsearch"""
         try:
-            doc = {
-                "id": str(genre.id),
-                "name": genre.name,
-                "description": genre.description or ""
-            }
-            self.client.index(
-                index="genres",
-                id=str(genre.id),
-                body=doc,
-                refresh=True
-            )
+            doc = {"id": str(genre.id), "name": genre.name, "description": genre.description or ""}
+            self.client.index(index="genres", id=str(genre.id), body=doc, refresh=True)
             logger.info(f"Жанр индексирован: {genre.name}")
             return True
         except Exception as e:
@@ -93,11 +77,7 @@ class ElasticsearchService:
     def delete_filmwork(self, filmwork_id: UUID) -> bool:
         """Удаляет фильм из Elasticsearch"""
         try:
-            self.client.delete(
-                index="movies",
-                id=str(filmwork_id),
-                refresh=True
-            )
+            self.client.delete(index="movies", id=str(filmwork_id), refresh=True)
             logger.info(f"Фильм удалён из индекса: {filmwork_id}")
             return True
         except Exception as e:
@@ -116,10 +96,7 @@ class ElasticsearchService:
         writers = []
 
         for pf in persons:
-            person_data = {
-                "id": str(pf.person.id),
-                "name": pf.person.full_name
-            }
+            person_data = {"id": str(pf.person.id), "name": pf.person.full_name}
             if pf.role == 'actor':
                 actors.append(person_data)
             elif pf.role == 'director':
@@ -141,8 +118,9 @@ class ElasticsearchService:
             "writers": writers,
             "actors_names": [p["name"] for p in actors],
             "directors_names": [p["name"] for p in directors],
-            "writers_names": [p["name"] for p in writers]
+            "writers_names": [p["name"] for p in writers],
         }
+
 
 # Синглтон экземпляр
 elastic_service = ElasticsearchService()

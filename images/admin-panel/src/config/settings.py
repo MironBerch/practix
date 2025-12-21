@@ -20,11 +20,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    # drf
-    'rest_framework',
-    'drf_spectacular',
     # django 3rd party
-    'debug_toolbar',
     'django_filters',
     # local
     'movies.apps.MoviesConfig',
@@ -38,7 +34,6 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -119,28 +114,6 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # Default primary key field type
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-
-# Django REST framework settings
-
-REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-    'DEFAULT_FILTER_BACKENDS': ('django_filters.rest_framework.DjangoFilterBackend',),
-}
-
-# Schema settings
-
-SPECTACULAR_SETTINGS = {
-    'TITLE': 'Movies API',
-    'VERSION': '1.0',
-    'SERVE_INCLUDE_SCHEMA': False,
-}
-
-
-# INTERNAL IPS configuration
-
-hostname, _, ips = gethostbyname_ex(gethostname())
-INTERNAL_IPS = [ip[: ip.rfind('.')] + '.1' for ip in ips] + ['127.0.0.1', '10.0.2.2']
 
 
 # Elasticsearch
