@@ -1,5 +1,6 @@
 from models.base import UUIDMixin
 from models.person import BasePerson
+from datetime import date
 
 
 class BaseFilmwork(UUIDMixin):
@@ -13,6 +14,8 @@ class Filmwork(BaseFilmwork):
     """Модель фильма."""
 
     description: str
+    release_date: date
+    type: str
     genres: list[str]
     actors: list[BasePerson]
     writers: list[BasePerson]

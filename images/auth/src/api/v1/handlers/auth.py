@@ -54,8 +54,11 @@ async def signup(
             user_agent=request.headers.get('User-Agent'),
             db=db,
         )
-        with mongo.get_mongo() as mongo_connection:
-            mongo_users.create_user_by_id(mongo=mongo_connection, user_id=str(user.id))
+        try:
+            with mongo.get_mongo() as mongo_connection:
+                mongo_users.create_user_by_id(mongo=mongo_connection, user_id=str(user.id))
+        except Exception:
+            ...
         return {
             'message': 'email confirmed',
             'access_token': access_token,

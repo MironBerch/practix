@@ -103,7 +103,7 @@ services:
   #                          DATASTORES
   #===============================================================
   elastic:
-    image: elasticsearch:8.13.0
+    image: elasticsearch:9.2.0
     expose:
       - "9200"
     ports:

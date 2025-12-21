@@ -21,9 +21,6 @@ class MongoDBStartUpService:
         self._create_users_collection()
         self._create_filmworks_collection()
 
-    def stop(self) -> None:
-        self.mongo.client.close()
-
     def _create_users_collection(self) -> None:
         try:
             self.mongo['ugc_database'].create_collection(
@@ -57,17 +54,14 @@ class MongoDBService:
             uuidRepresentation=settings.MONGO_UUID_REPRESENTATION,
         )
 
-    def stop(self) -> None:
-        self.mongo.client.close()
-
-    def create_filmwork_by_id(self, mongo: MongoClient, filmwork_id: UUID):
+    def create_filmwork_by_id(self, filmwork_id: UUID):
         filmwork_document = {
             '_id': self.to_binary(filmwork_id),
             'rating': {
                 'votes': [],
             },
         }
-        mongo['ugc_database']['filmworks'].insert_one(filmwork_document)
+        self.mongo['ugc_database']['filmworks'].insert_one(filmwork_document)
 
     def delete_filmwork_cascade_by_id(self, filmwork_id: UUID) -> bool:
         """Удаляет фильм и все связанные с ним данные."""

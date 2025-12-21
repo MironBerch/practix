@@ -8,5 +8,5 @@ from movies.elastic import ElasticsearchStartUpService
 class Command(BaseCommand):
 
     def handle(self, *args: Any, **kwargs: Any) -> None:
-        mongo = ElasticsearchStartUpService()
-        mongo.create_indices()
+        elastic = ElasticsearchStartUpService()
+        elastic.create_indices()

@@ -10,6 +10,8 @@ services:
       sh -c "cd /app/src/
       && uv run manage.py migrate --noinput
       && uv run manage.py createsuperuser --noinput || true
+      && uv run manage.py startup_elastic
+      && uv run manage.py startup_mongo
       && uv run manage.py runserver 0.0.0.0:8000"
     volumes:
       - ../../images/admin-panel/:/app/
@@ -30,6 +32,10 @@ services:
       - "DB_PORT=5432"
     depends_on:
       movies_db:
+        condition: service_healthy
+      elastic:
+        condition: service_healthy
+      mongo:
         condition: service_healthy
 
   movies_api:
@@ -126,7 +132,7 @@ services:
   #                          DATASTORES
   #===============================================================
   elastic:
-    image: elasticsearch:8.13.0
+    image: elasticsearch:9.2.0
     expose:
       - "9200"
     ports:
@@ -142,7 +148,7 @@ services:
       retries: 100
 
   movies_db:
-    build: ../../images/etl/infra/postgres/
+    build: ../../images/admin-panel/infra/postgres/
     restart: always
     ports:
       - "5432:5432"

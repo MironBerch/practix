@@ -27,6 +27,7 @@ async def lifespan(app: FastAPI) -> AsyncGenerator[Any, Any]:
     yield
 
     await redis.redis.connection_pool.disconnect()
+    mongo.stop()
 
 
 app = FastAPI(

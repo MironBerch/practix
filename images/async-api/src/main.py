@@ -29,7 +29,6 @@ async def lifespan(app: FastAPI):
         decode_responses=True,
         db=settings.redis_db,
     )
-    await elastic.create_indexes()
 
     yield
 

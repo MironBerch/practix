@@ -22,12 +22,17 @@ class ElasticsearchStartUpService:
 
         for index_name, mapping in settings.ELASTICSEARCH_INDICES.items():
             if not self.client.indices.exists(index=index_name):
-                body = {
-                    "settings": settings.ELASTICSEARCH_SETTINGS,
-                    "mappings": {"dynamic": "strict", "properties": mapping},
-                }
-                self.client.indices.create(index=index_name, body=body)
-                logger.info(f"Создан индекс: {index_name}")
+                try:
+                    body = {
+                        "settings": settings.ELASTICSEARCH_SETTINGS,
+                        "mappings": {"dynamic": "strict", "properties": mapping},
+                    }
+                    self.client.indices.create(index=index_name, body=body)
+                    logger.info(f"Создан индекс: {index_name}")
+                except Exception as e:
+                    logger.info(f"Индекс не создан: {index_name}")
+                    logger.error(f"Индекс не создан: {e}")
+
 
 class ElasticsearchService:
     """Сервис для работы с Elasticsearch из админ-панели"""
@@ -43,6 +48,7 @@ class ElasticsearchService:
         try:
             # Преобразуем Django модель в формат для Elasticsearch
             doc = self._filmwork_to_document(filmwork)
+            print(doc)
             self.client.index(
                 index="movies", id=str(filmwork.id), body=doc, refresh=True  # Синхронное обновление
             )
