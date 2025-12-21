@@ -1,6 +1,7 @@
+from datetime import date
+
 from models.base import UUIDMixin
 from models.person import BasePerson
-from datetime import date
 
 
 class BaseFilmwork(UUIDMixin):

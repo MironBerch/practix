@@ -3,6 +3,7 @@ import uuid
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
+from movies.consts import MAX_ENUM_STRING_LEN, MAX_STRING_LEN
 from movies.enums import FilmworkAccessType, FilmworkAgeRating, FilmworkType, PersonRole
 
 
@@ -33,7 +34,7 @@ class Genre(UUIDMixin, TimeStampedMixin):
     """Жанр кинопроизведения."""
 
     name = models.CharField(
-        max_length=255,
+        max_length=MAX_STRING_LEN,
         unique=True,
     )
     description = models.TextField(blank=True)
@@ -48,7 +49,7 @@ class Genre(UUIDMixin, TimeStampedMixin):
 class Filmwork(UUIDMixin, TimeStampedMixin):
     """Кинопроизведение."""
 
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=MAX_STRING_LEN)
     description = models.TextField(blank=True)
     release_date = models.DateField(
         null=True,
@@ -64,17 +65,17 @@ class Filmwork(UUIDMixin, TimeStampedMixin):
         ],
     )
     access_type = models.CharField(
-        max_length=31,
+        max_length=MAX_ENUM_STRING_LEN,
         choices=FilmworkAccessType.choices,
         default=FilmworkAccessType.PUBLIC,
     )
     type = models.CharField(
-        max_length=31,
+        max_length=MAX_ENUM_STRING_LEN,
         choices=FilmworkType.choices,
         default=FilmworkType.MOVIE,
     )
     age_rating = models.CharField(
-        max_length=31,
+        max_length=MAX_ENUM_STRING_LEN,
         choices=FilmworkAgeRating.choices,
         default=FilmworkAgeRating.GENERAL,
     )
@@ -118,7 +119,7 @@ class GenreFilmwork(UUIDMixin):
 class Person(UUIDMixin, TimeStampedMixin):
     """Персона съемочной группы (актер, режиссер и т.д.)."""
 
-    full_name = models.CharField(max_length=255)
+    full_name = models.CharField(max_length=MAX_STRING_LEN)
 
     class Meta:
         db_table = 'content\".\"person'

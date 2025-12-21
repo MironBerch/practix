@@ -8,7 +8,7 @@ from config import settings
 
 
 class MongoDBStartUpService:
-    def __init__(self):
+    def __init__(self) -> None:
         self.mongo = MongoClient(
             host=settings.MONGO_HOST,
             port=settings.MONGO_PORT,
@@ -45,7 +45,7 @@ class MongoDBStartUpService:
 
 
 class MongoDBService:
-    def __init__(self):
+    def __init__(self) -> None:
         self.mongo = MongoClient(
             host=settings.MONGO_HOST,
             port=settings.MONGO_PORT,
@@ -54,7 +54,7 @@ class MongoDBService:
             uuidRepresentation=settings.MONGO_UUID_REPRESENTATION,
         )
 
-    def create_filmwork_by_id(self, filmwork_id: UUID):
+    def create_filmwork_by_id(self, filmwork_id: UUID) -> None:
         filmwork_document = {
             '_id': self.to_binary(filmwork_id),
             'rating': {

@@ -10,4 +10,4 @@ class Command(BaseCommand):
     def handle(self, *args: Any, **kwargs: Any) -> None:
         mongo = MongoDBStartUpService()
         mongo.start()
-        #mongo.stop()
+        # mongo.stop()

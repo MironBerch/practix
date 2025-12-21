@@ -1,6 +1,5 @@
 from os import environ
 from pathlib import Path
-from socket import gethostbyname_ex, gethostname
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -13,7 +12,7 @@ ALLOWED_HOSTS = environ.get('ALLOWED_HOSTS', '*').split(',')
 
 # Application definition
 
-INSTALLED_APPS = [
+INSTALLED_APPS = [  # noqa: WPS407
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -26,7 +25,7 @@ INSTALLED_APPS = [
     'movies.apps.MoviesConfig',
 ]
 
-MIDDLEWARE = [
+MIDDLEWARE = [  # noqa: WPS407
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -38,7 +37,7 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = 'config.urls'
 
-TEMPLATES = [
+TEMPLATES = [  # noqa: WPS407
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [],
@@ -59,7 +58,7 @@ WSGI_APPLICATION = 'config.wsgi.application'
 
 # Database
 
-DATABASES = {
+DATABASES = {  # noqa: WPS407
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': environ.get('DB_NAME'),
@@ -73,7 +72,7 @@ DATABASES = {
 
 # Password validation
 
-AUTH_PASSWORD_VALIDATORS = [
+AUTH_PASSWORD_VALIDATORS = [  # noqa: WPS407
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
@@ -122,7 +121,7 @@ ELASTICSEARCH_HOST = environ.get('ELASTIC_HOST', 'elastic')
 ELASTICSEARCH_PORT = environ.get('ELASTIC_PORT', '9200')
 ELASTICSEARCH_USER = environ.get('ELASTIC_USER', 'elastic')
 ELASTICSEARCH_PASSWORD = environ.get('ELASTIC_PASSWORD', '')
-ELASTICSEARCH_SETTINGS = {
+ELASTICSEARCH_SETTINGS = {  # noqa: WPS407
     'refresh_interval': '1s',
     'analysis': {
         'filter': {
@@ -162,7 +161,7 @@ ELASTICSEARCH_SETTINGS = {
         },
     },
 }
-ELASTICSEARCH_INDICES = {
+ELASTICSEARCH_INDICES = {  # noqa: WPS407
     'movies': {
         'id': {'type': 'keyword'},
         'rating': {'type': 'float'},
@@ -231,7 +230,7 @@ MONGO_PORT = int(environ.get('MONGO_PORT', 27017))
 MONGO_USERNAME = environ.get('MONGO_USERNAME', None)
 MONGO_PASSWORD = environ.get('MONGO_PASSWORD', None)
 MONGO_UUID_REPRESENTATION = 'standard'
-MONGO_COLLECTION_SCHEMAS = {
+MONGO_COLLECTION_SCHEMAS = {  # noqa: WPS407
     'users': {
         'bsonType': 'object',
         'required': ['_id', 'bookmarks'],

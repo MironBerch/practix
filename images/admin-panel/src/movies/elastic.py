@@ -11,13 +11,13 @@ logger = logging.getLogger(__name__)
 
 
 class ElasticsearchStartUpService:
-    def __init__(self):
+    def __init__(self) -> None:
         self.client = Elasticsearch(
             f'http://{settings.ELASTICSEARCH_HOST}:{settings.ELASTICSEARCH_PORT}',
             http_auth=(settings.ELASTICSEARCH_USER, settings.ELASTICSEARCH_PASSWORD),
         )
 
-    def create_indices(self):
+    def create_indices(self) -> None:
         """Создаёт индексы если они не существуют"""
 
         for index_name, mapping in settings.ELASTICSEARCH_INDICES.items():
@@ -37,7 +37,7 @@ class ElasticsearchStartUpService:
 class ElasticsearchService:
     """Сервис для работы с Elasticsearch из админ-панели"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.client = Elasticsearch(
             f'http://{settings.ELASTICSEARCH_HOST}:{settings.ELASTICSEARCH_PORT}',
             http_auth=(settings.ELASTICSEARCH_USER, settings.ELASTICSEARCH_PASSWORD),
@@ -88,6 +88,26 @@ class ElasticsearchService:
             return True
         except Exception as e:
             logger.error(f"Ошибка удаления фильма {filmwork_id}: {e}")
+            return False
+
+    def delete_genre(self, genre_id: UUID) -> bool:
+        """Удаляет жанр из Elasticsearch"""
+        try:
+            self.client.delete(index="genres", id=str(genre_id), refresh=True)
+            logger.info(f"Жанр удалён из индекса: {genre_id}")
+            return True
+        except Exception as e:
+            logger.error(f"Ошибка удаления жанра {genre_id}: {e}")
+            return False
+
+    def delete_person(self, person_id: UUID) -> bool:
+        """Удаляет персону из Elasticsearch"""
+        try:
+            self.client.delete(index="persons", id=str(person_id), refresh=True)
+            logger.info(f"Персона удалена из индекса: {person_id}")
+            return True
+        except Exception as e:
+            logger.error(f"Ошибка удаления персоны {person_id}: {e}")
             return False
 
     def _filmwork_to_document(self, filmwork: Filmwork) -> dict[str, Any]:
