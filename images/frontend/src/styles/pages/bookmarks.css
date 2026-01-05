@@ -1,0 +1,286 @@
+.bookmarks-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.page-header h1 {
+  margin: 0 0 10px;
+  color: #333;
+  font-size: 2.5em;
+}
+
+.page-header p {
+  margin: 0;
+  color: #666;
+  font-size: 1.1em;
+}
+
+.bookmarks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 25px;
+  margin-bottom: 40px;
+}
+
+.filmwork-card {
+  display: block;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 20px;
+  text-decoration: none;
+  color: inherit;
+  transition: all 0.3s ease;
+  background: white;
+  cursor: pointer;
+  position: relative;
+}
+
+.filmwork-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 25px rgb(0 0 0 / 15%);
+  text-decoration: none;
+  color: inherit;
+}
+
+.filmwork-poster {
+  width: 100%;
+  height: 220px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 15px;
+  position: relative;
+}
+
+.poster-placeholder {
+  font-size: 52px;
+  color: #ccc;
+  font-weight: bold;
+}
+
+.bookmark-indicator {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: rgb(255 255 255 / 90%);
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  color: #f39c12;
+}
+
+.filmwork-info {
+  text-align: center;
+}
+
+.filmwork-title {
+  margin: 0 0 12px;
+  font-size: 1.2em;
+  font-weight: 600;
+  color: #333;
+  line-height: 1.3;
+}
+
+.filmwork-rating {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.rating-star {
+  font-size: 1.3em;
+}
+
+.rating-value {
+  font-weight: 600;
+  color: #f39c12;
+  font-size: 1.1em;
+}
+
+.filmwork-genres {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-bottom: 15px;
+}
+
+.genre-tag {
+  background: #e3f2fd;
+  color: #1976d2;
+  padding: 4px 10px;
+  border-radius: 16px;
+  font-size: 0.85em;
+  font-weight: 500;
+}
+
+.genre-more {
+  color: #666;
+  font-size: 0.85em;
+  align-self: center;
+}
+
+.remove-bookmark-btn {
+  width: 100%;
+  padding: 10px;
+  background: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.remove-bookmark-btn:hover {
+  background: #c0392b;
+}
+
+.remove-bookmark-btn:disabled {
+  background: #bdc3c7;
+  cursor: not-allowed;
+}
+
+.loading-state,
+.error-state,
+.auth-required,
+.empty-bookmarks {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.loading-state {
+  color: #666;
+}
+
+.error-state {
+  color: #e74c3c;
+}
+
+.auth-required {
+  background: #f8f9fa;
+  border-radius: 12px;
+  margin: 40px 0;
+}
+
+.auth-required h2 {
+  margin: 0 0 20px;
+  color: #333;
+}
+
+.auth-link {
+  display: inline-block;
+  background: #3498db;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.auth-link:hover {
+  background: #2980b9;
+  text-decoration: none;
+  color: white;
+}
+
+.empty-state {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 60px 40px;
+}
+
+.empty-state h2 {
+  margin: 0 0 15px;
+  color: #333;
+}
+
+.empty-state p {
+  margin: 0 0 25px;
+  color: #666;
+  font-size: 1.1em;
+}
+
+.explore-link {
+  display: inline-block;
+  background: #27ae60;
+  color: white;
+  padding: 12px 24px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background-color 0.2s;
+}
+
+.explore-link:hover {
+  background: #219a52;
+  text-decoration: none;
+  color: white;
+}
+
+.retry-button {
+  background: #3498db;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+.retry-button:hover {
+  background: #2980b9;
+}
+
+@media (width <= 768px) {
+  .bookmarks-page {
+    padding: 15px;
+  }
+
+  .page-header h1 {
+    font-size: 2em;
+  }
+
+  .bookmarks-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+  }
+
+  .filmwork-card {
+    padding: 15px;
+  }
+
+  .filmwork-poster {
+    height: 180px;
+  }
+
+  .empty-state {
+    padding: 40px 20px;
+  }
+}
+
+@media (width <= 480px) {
+  .bookmarks-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .page-header h1 {
+    font-size: 1.8em;
+  }
+}

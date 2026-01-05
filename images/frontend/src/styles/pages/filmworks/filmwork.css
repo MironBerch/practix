@@ -1,0 +1,495 @@
+/* Стили остаются такими же как в предыдущей версии, но добавляем состояния загрузки */
+.loading-reviews {
+  text-align: center;
+  padding: 20px;
+  color: #666;
+}
+
+.rate-btn:disabled,
+.bookmark-btn:disabled,
+.rating-select:disabled,
+.remove-rating-btn:disabled,
+.add-review-btn:disabled,
+.delete-review-btn:disabled,
+.submit-review-btn:disabled,
+.cancel-review-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Остальные стили остаются без изменений */
+.filmwork-detail {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.breadcrumb {
+  margin-bottom: 20px;
+  font-size: 14px;
+  color: #666;
+}
+
+.breadcrumb a {
+  color: #3498db;
+  text-decoration: none;
+}
+
+.breadcrumb a:hover {
+  text-decoration: underline;
+}
+
+.separator {
+  margin: 0 8px;
+}
+
+.filmwork-header {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  gap: 40px;
+  margin-bottom: 40px;
+}
+
+.poster-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.poster {
+  width: 100%;
+  height: 400px;
+  background: #f5f5f5;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.poster-placeholder {
+  font-size: 72px;
+  color: #ccc;
+  font-weight: bold;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.bookmark-btn {
+  padding: 12px 20px;
+  border: 2px solid #3498db;
+  background: white;
+  color: #3498db;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.bookmark-btn:hover:not(:disabled) {
+  background: #3498db;
+  color: white;
+}
+
+.bookmark-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.bookmark-btn.bookmarked {
+  background: #f39c12;
+  border-color: #f39c12;
+  color: white;
+}
+
+.rating-section {
+  padding: 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background: #fafafa;
+}
+
+.rating-section h4 {
+  margin: 0 0 15px;
+  color: #333;
+}
+
+.average-rating {
+  font-size: 18px;
+  font-weight: 600;
+  color: #f39c12;
+  margin-bottom: 15px;
+}
+
+.user-rating {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.rating-select {
+  padding: 6px 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background: white;
+}
+
+.remove-rating-btn {
+  padding: 6px 12px;
+  background: #e74c3c;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+.remove-rating-btn:hover:not(:disabled) {
+  background: #c0392b;
+}
+
+.remove-rating-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.info-section {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.filmwork-title {
+  font-size: 2.5em;
+  margin: 0;
+  color: #333;
+}
+
+.filmwork-rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 1.2em;
+}
+
+.rating-star {
+  font-size: 1.4em;
+}
+
+.rating-value {
+  font-weight: 600;
+  color: #f39c12;
+}
+
+.filmwork-description h3,
+.filmwork-genres h3,
+.people-section h3 {
+  margin: 0 0 10px;
+  color: #333;
+  font-size: 1.2em;
+}
+
+.filmwork-description p {
+  line-height: 1.6;
+  color: #666;
+  margin: 0;
+}
+
+.genres-list {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.genre-tag {
+  background: #e3f2fd;
+  color: #1976d2;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 0.9em;
+}
+
+.filmwork-people {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.people-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.person-name {
+  background: #f8f9fa;
+  color: #495057;
+  padding: 4px 8px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.person-name:hover {
+  background: #e9ecef;
+}
+
+.reviews-section {
+  border-top: 2px solid #e0e0e0;
+  padding-top: 30px;
+}
+
+.reviews-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.reviews-header h2 {
+  margin: 0;
+  color: #333;
+}
+
+.add-review-btn,
+.delete-review-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.add-review-btn {
+  background: #27ae60;
+  color: white;
+}
+
+.add-review-btn:hover:not(:disabled) {
+  background: #219a52;
+}
+
+.delete-review-btn {
+  background: #e74c3c;
+  color: white;
+}
+
+.delete-review-btn:hover:not(:disabled) {
+  background: #c0392b;
+}
+
+.review-form {
+  background: #f8f9fa;
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+}
+
+.review-form h3 {
+  margin: 0 0 15px;
+  color: #333;
+}
+
+.review-textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  resize: vertical;
+  font-family: inherit;
+}
+
+.review-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.submit-review-btn,
+.cancel-review-btn {
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.submit-review-btn {
+  background: #3498db;
+  color: white;
+}
+
+.submit-review-btn:hover:not(:disabled) {
+  background: #2980b9;
+}
+
+.cancel-review-btn {
+  background: #95a5a6;
+  color: white;
+}
+
+.cancel-review-btn:hover:not(:disabled) {
+  background: #7f8c8d;
+}
+
+.reviews-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.review-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 20px;
+  background: white;
+}
+
+.review-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  font-size: 0.9em;
+  color: #666;
+}
+
+.review-text {
+  line-height: 1.6;
+  margin: 0 0 15px;
+  color: #333;
+}
+
+.review-rating {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 15px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.rating-stats {
+  display: flex;
+  gap: 15px;
+}
+
+.likes {
+  color: #27ae60;
+}
+
+.dislikes {
+  color: #e74c3c;
+}
+
+.rating-actions {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.rate-btn {
+  padding: 6px 12px;
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.rate-btn:hover:not(:disabled) {
+  background: #f8f9fa;
+}
+
+.rate-btn.active {
+  border-color: #3498db;
+  background: #3498db;
+  color: white;
+}
+
+.no-reviews {
+  text-align: center;
+  padding: 40px;
+  color: #666;
+  background: #fafafa;
+  border-radius: 8px;
+}
+
+.message {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  padding: 15px 20px;
+  border-radius: 6px;
+  color: white;
+  font-weight: 600;
+  z-index: 1000;
+  max-width: 300px;
+}
+
+.message.success {
+  background: #27ae60;
+}
+
+.message.error {
+  background: #e74c3c;
+}
+
+.loading-state,
+.error-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+}
+
+.error-state {
+  color: #e74c3c;
+}
+
+.retry-button {
+  background: #3498db;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 15px;
+}
+
+.retry-button:hover {
+  background: #2980b9;
+}
+
+@media (width <= 768px) {
+  .filmwork-header {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .poster {
+    height: 300px;
+  }
+
+  .filmwork-title {
+    font-size: 2em;
+  }
+
+  .reviews-header {
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+  }
+
+  .review-rating {
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+  }
+
+  .user-rating {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}

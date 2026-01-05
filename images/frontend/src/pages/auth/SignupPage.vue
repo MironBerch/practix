@@ -57,5 +57,5 @@ export default defineComponent({
 </script>
 
 <style scoped>
-@import '../../styles/auth-form-styles.css';
+@import '../../styles/pages/auth/auth-form-styles.css';
 </style>

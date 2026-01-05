@@ -12,33 +12,5 @@ import AppHeader from "../components/Header.vue";
 </template>
 
 <style scoped>
-.layout {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  margin: 0 10px;
-}
-
-.main-content {
-  flex: 1;
-  padding: 2rem;
-  background-color: #f5f5f5;
-}
-
-@media (width >= 1280px) {
-  .layout {
-    width: 1280px;
-    margin: 0 auto;
-  }
-}
-
-@media (width <= 768px) {
-  .main-content {
-    padding: 1rem;
-  }
-
-  .layout {
-    margin: 0 5px;
-  }
-}
+@import '../styles/layouts/main.css';
 </style>
