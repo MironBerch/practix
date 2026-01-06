@@ -12,5 +12,5 @@ import AppHeader from "../components/Header.vue";
 </template>
 
 <style scoped>
-@import '../styles/layouts/main.css';
+@import url('../styles/layouts/main.css');
 </style>

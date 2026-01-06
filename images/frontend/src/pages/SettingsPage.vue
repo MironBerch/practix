@@ -180,5 +180,5 @@ onMounted(() => {
 </script>
 
 <style scoped>
-@import '../styles/pages/settings.css';
+@import url('../styles/pages/settings.css');
 </style>

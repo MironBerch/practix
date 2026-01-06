@@ -693,5 +693,5 @@ onMounted(() => {
 </script>
 
 <style scoped>
-@import '../../styles/pages/filmworks/filmwork.css';
+@import url('../../styles/pages/filmworks/filmwork.css');
 </style>

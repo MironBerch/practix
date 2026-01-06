@@ -196,5 +196,5 @@ onMounted(() => {
 </script>
 
 <style scoped>
-@import '../styles/pages/bookmarks.css';
+@import url('../styles/pages/bookmarks.css');
 </style>

@@ -251,5 +251,5 @@ watch([currentPage], () => {
 </script>
 
 <style scoped>
-@import '../../styles/pages/persons/persons.css';
+@import url('../../styles/pages/persons/persons.css');
 </style>

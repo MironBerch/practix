@@ -120,5 +120,5 @@ onUnmounted(() => {
 </template>
 
 <style scoped>
-@import '../styles/components/header.css';
+@import url('../styles/components/header.css');
 </style>

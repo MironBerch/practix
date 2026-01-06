@@ -177,5 +177,5 @@ onMounted(() => {
 </script>
 
 <style scoped>
-@import '../../styles/pagess/person/person.css';
+@import url('../../styles/pagess/person/person.css');
 </style>

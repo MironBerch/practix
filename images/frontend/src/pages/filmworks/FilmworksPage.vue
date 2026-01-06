@@ -288,5 +288,5 @@ watch([currentPage], () => {
 </script>
 
 <style scoped>
-@import '../../styles/pages/filmworks/filmworks.css';
+@import url('../../styles/pages/filmworks/filmworks.css');
 </style>
