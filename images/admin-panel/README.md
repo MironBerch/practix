@@ -6,4 +6,4 @@
 
 ### **Технологии**
 
-```Python``` ```Django``` ```PostgreSQL``` ```Elasticsearch``` ```MongoDB``` ```NGINX``` ```Gunicorn``` ```Docker```
+```Python``` ```Django``` ```PostgreSQL``` ```Elasticsearch``` ```MongoDB``` ```Gunicorn``` ```Docker```
