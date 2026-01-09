@@ -13,6 +13,7 @@ dependencies = [
     { name = "gunicorn" },
     { name = "psycopg2-binary" },
     { name = "pymongo" },
+    { name = "whitenoise" },
 ]
 
 [package.dev-dependencies]
@@ -34,6 +35,7 @@ requires-dist = [
     { name = "gunicorn", specifier = "==23.0.0" },
     { name = "psycopg2-binary", specifier = "==2.9.10" },
     { name = "pymongo", specifier = ">=4.15.5" },
+    { name = "whitenoise", specifier = ">=6.11.0" },
 ]
 
 [package.metadata.requires-dev]
@@ -514,4 +516,13 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/67/76/d8155fcfc8dd8e54d12da1b4505ad6cbd0bf65fd98bc5abecf64ab5f1e29/wemake_python_styleguide-1.2.0.tar.gz", hash = "sha256:85a662a9ca8f85ca731924fcac6029ee7ab169bc52160235c6ddd46d9e59797a", size = 156916 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/4c/97/aafd60d86390eaeb2013d342a039899e29e6b57927085908d11ba166e5e4/wemake_python_styleguide-1.2.0-py3-none-any.whl", hash = "sha256:38880161cd5d4101ba120aa34e26f4028a536b37729cffe2e3103f7ffe10207b", size = 219143 },
+]
+
+[[package]]
+name = "whitenoise"
+version = "6.11.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/15/95/8c81ec6b6ebcbf8aca2de7603070ccf37dbb873b03f20708e0f7c1664bc6/whitenoise-6.11.0.tar.gz", hash = "sha256:0f5bfce6061ae6611cd9396a8231e088722e4fc67bc13a111be74c738d99375f", size = 26432 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/6c/e9/4366332f9295fe0647d7d3251ce18f5615fbcb12d02c79a26f8dba9221b3/whitenoise-6.11.0-py3-none-any.whl", hash = "sha256:b2aeb45950597236f53b5342b3121c5de69c8da0109362aee506ce88e022d258", size = 20197 },
 ]

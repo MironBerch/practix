@@ -26,7 +26,11 @@ INSTALLED_APPS = [  # noqa: WPS407
 ]
 
 MIDDLEWARE = [  # noqa: WPS407
+    # security
     'django.middleware.security.SecurityMiddleware',
+    # whitenoise
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    # other
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -298,5 +302,12 @@ MONGO_COLLECTION_SCHEMAS = {  # noqa: WPS407
                 },
             },
         },
+    },
+}
+
+
+STORAGES = {  # noqa: WPS407
+    'staticfiles': {
+        'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage',
     },
 }

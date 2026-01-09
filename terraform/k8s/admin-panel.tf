@@ -1,37 +1,3 @@
-resource "kubernetes_persistent_volume" "static_volume" {
-  metadata {
-    name = "static-volume"
-  }
-  spec {
-    capacity = {
-      storage = "1Gi"
-    }
-    access_modes = ["ReadWriteOnce"]
-    storage_class_name = "standard"
-    persistent_volume_source {
-      host_path {
-        path = "/mnt/data/static"
-      }
-    }
-  }
-}
-
-resource "kubernetes_persistent_volume_claim" "static_volume_claim" {
-  metadata {
-    name = "static-volume-claim"
-  }
-  spec {
-    access_modes = ["ReadWriteOnce"]
-    resources {
-      requests = {
-        storage = "1Gi"
-      }
-    }
-    storage_class_name = "standard"
-    volume_name = kubernetes_persistent_volume.static_volume.metadata[0].name
-  }
-}
-
 resource "kubernetes_deployment" "admin-panel" {
   metadata {
     name = "admin-panel"
@@ -98,17 +64,6 @@ resource "kubernetes_deployment" "admin-panel" {
           env {
             name  = "SECRET_KEY"
             value = var.secret_key
-          }
-
-          volume_mount {
-            name       = "static-volume"
-            mount_path = "/app/src/static"
-          }
-        }
-        volume {
-          name = "static-volume"
-          persistent_volume_claim {
-            claim_name = kubernetes_persistent_volume_claim.static_volume_claim.metadata[0].name
           }
         }
       }
