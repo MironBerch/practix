@@ -7,7 +7,7 @@
 - [Асинхронный API](https://github.com/MironBerch/practix/tree/main/images/async-api) на фреймворке FastAPI
 - [Авторизация пользователей](https://github.com/MironBerch/practix/tree/main/images/auth) на фреймворке FastAPI
 - [Пользовательский контент](https://github.com/MironBerch/practix/tree/main/images/ugc) c помощью NoSQL базы данных MongoDB
-- [Пользовательский интерфейс](https://github.com/MironBerch/practix/tree/main/images/notifications) на фреймворке Vue
+- [Пользовательский интерфейс](https://github.com/MironBerch/practix/tree/main/images/frontend) на фреймворке Vue
 
 ### **Технологии**
 
