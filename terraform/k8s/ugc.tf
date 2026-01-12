@@ -49,7 +49,7 @@ resource "kubernetes_deployment" "ugc-api" {
 
           env {
             name  = "MONGO_HOST"
-            value = data.terraform_remote_state.vpc.outputs.notifications_db_cluster.host[0].name
+            value = data.terraform_remote_state.vpc.outputs.mongodb_cluster.host[0].name
           }
 
           env {

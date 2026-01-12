@@ -39,31 +39,11 @@ resource "kubernetes_deployment" "nginx" {
             name       = "nginx-config"
             sub_path   = "default.conf"
           }
-          volume_mount {
-            name       = "static-volume"
-            mount_path = "/app/src/static"
-          }
-          volume_mount {
-            name       = "notifications-static-volume"
-            mount_path = "/app/src/notifications/static"
-          }
         }
         volume {
           name = "nginx-config"
           config_map {
             name = kubernetes_config_map.nginx.metadata[0].name
-          }
-        }
-        volume {
-          name = "static-volume"
-          persistent_volume_claim {
-            claim_name = kubernetes_persistent_volume_claim.static_volume_claim.metadata[0].name
-          }
-        }
-        volume {
-          name = "notifications-static-volume"
-          persistent_volume_claim {
-            claim_name = kubernetes_persistent_volume_claim.notifications_static_volume_claim.metadata[0].name
           }
         }
       }
