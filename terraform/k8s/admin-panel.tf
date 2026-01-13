@@ -57,6 +57,22 @@ resource "kubernetes_deployment" "admin-panel" {
             value = "5432"
           }
           env {
+            name  = "ELASTIC_HOST"
+            value = data.terraform_remote_state.vpc.outputs.opensearch_cluster.hosts[0].fqdn
+          }
+          env {
+            name  = "ELASTIC_PORT"
+            value = "9200"
+          }
+          env {
+            name  = "MONGO_HOST"
+            value = data.terraform_remote_state.vpc.outputs.mongodb_cluster.host[0].name
+          }
+          env {
+            name  = "MONGO_PORT"
+            value = "27017"
+          }
+          env {
             name  = "DEBUG"
             value = "False"
           }
