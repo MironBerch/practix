@@ -73,6 +73,14 @@ resource "kubernetes_deployment" "admin-panel" {
             value = "27017"
           }
           env {
+            name  = "MONGO_USERNAME"
+            value = "5432"
+          }
+          env {
+            name  = "MONGO_PASSWORD"
+            value = "5432"
+          }
+          env {
             name  = "DEBUG"
             value = "False"
           }
