@@ -20,6 +20,7 @@ class MongoDBStartUpService:
     def start(self) -> None:
         self._create_users_collection()
         self._create_filmworks_collection()
+        self._create_reviews_collection()
 
     def _create_users_collection(self) -> None:
         try:
@@ -42,6 +43,21 @@ class MongoDBStartUpService:
             )
         except CollectionInvalid:
             ...
+
+    def _create_reviews_collection(self) -> None:
+        try:
+            self.mongo['ugc_database'].create_collection(
+                name='reviews',
+                validator={
+                    '$jsonSchema': settings.MONGO_COLLECTION_SCHEMAS['reviews'],
+                },
+            )
+        except CollectionInvalid:
+            ...
+        self.mongo['ugc_database'].create_index(
+            [('author_id', 1), ('filmwork_id', 1)],
+            unique=True,
+        )
 
 
 class MongoDBService:
