@@ -244,3 +244,32 @@ export const useAuth = () => {
     getUserInfo,
   };
 };
+
+export const refreshToken = async (): Promise<boolean> => {
+  const refresh_token = localStorage.getItem('refresh_token');
+  if (!refresh_token) return false;
+
+  try {
+    const response = await fetch(`${API_URL}/refresh`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${refresh_token}`,
+      },
+    });
+
+    if (!response.ok) {
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('refresh_token');
+      return false;
+    }
+
+    const data = await response.json();
+    localStorage.setItem('access_token', data.access_token);
+    return true;
+  } catch {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('refresh_token');
+    return false;
+  }
+};

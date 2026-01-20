@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import MainLayout from "../layouts/MainLayout.vue";
+import { refreshToken } from '../composables/useAuth';
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -88,18 +89,24 @@ const router = createRouter({
   ],
 });
 
-// Navigation guard for authentication
-router.beforeEach((to, from, next) => {
-  const isAuthenticated =
-    /* your auth check logic, e.g.: */ localStorage.getItem("access_token") !== null;
+router.beforeEach(async (to, from, next) => {
+  const accessToken = localStorage.getItem('access_token');
 
-  if (to.meta.requiresAuth && !isAuthenticated) {
-    next({ name: "signin" });
-  } else if (
-    (to.name === "signin" || to.name === "signup") &&
-    isAuthenticated
-  ) {
-    next({ name: "filmworks" }); // Redirect if user is already authenticated
+  const isTokenValid = (token: string | null): boolean => {
+    if (!token) return false;
+    return true;
+  };
+
+  if (to.meta.requiresAuth) {
+    const refreshed = await refreshToken();
+    if (refreshed) {
+      next();
+    } else {
+      next({ name: 'signin' });
+    }
+  }
+  else if ((to.name === 'signin' || to.name === 'signup') && isTokenValid(accessToken)) {
+    next({ name: 'filmworks' });
   } else {
     next();
   }
