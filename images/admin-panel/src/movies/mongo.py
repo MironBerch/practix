@@ -54,7 +54,7 @@ class MongoDBStartUpService:
             )
         except CollectionInvalid:
             ...
-        self.mongo['ugc_database'].create_index(
+        self.mongo['ugc_database']['reviews'].create_index(
             [('author_id', 1), ('filmwork_id', 1)],
             unique=True,
         )
