@@ -2,7 +2,6 @@ from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorDatabase
 
 from core.config import settings
 
-
 mongo: AsyncIOMotorDatabase
 
 
