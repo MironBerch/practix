@@ -7,7 +7,6 @@ base_dir=$(pwd)
 images=(
   "admin-panel" 
   "async-api" 
-  "auth" 
   "ugc"
 )
 

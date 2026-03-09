@@ -24,15 +24,6 @@ resource "kubernetes_deployment" "auth-api" {
           image = "cr.yandex/${var.container_registry_id}/auth:latest"
           name  = "auth-api"
 
-          command = ["sh", "-c"]
-          args    = [
-            <<EOT
-            uv run alembic upgrade head
-            cd /app/src/
-            uv run main.py
-            EOT
-          ]
-
           port {
             name           = "http"
             container_port = 5000
@@ -46,17 +37,10 @@ resource "kubernetes_deployment" "auth-api" {
             name  = "SECRET_KEY"
             value = var.secret_key
           }
-
           env {
-            name  = "FASTAPI_PORT"
+            name  = "RUN_ADDRESS"
             value = "5000"
           }
-
-          env {
-            name  = "DEBUG"
-            value = "False"
-          }
-
           env {
             name  = "DB_HOST"
             value = data.terraform_remote_state.vpc.outputs.auth_db_cluster.host[0].fqdn
@@ -77,7 +61,6 @@ resource "kubernetes_deployment" "auth-api" {
             name  = "DB_PASSWORD"
             value = var.auth_db_password
           }
-
           env {
             name  = "REDIS_HOST"
             value = data.terraform_remote_state.vpc.outputs.redis_cluster.host[0].fqdn
@@ -89,6 +72,14 @@ resource "kubernetes_deployment" "auth-api" {
           env {
             name  = "REDIS_DB"
             value = "1"
+          }
+          env {
+            name  = "MONGO_HOST"
+            value = data.terraform_remote_state.vpc.outputs.mongodb_cluster.host[0].name
+          }
+          env {
+            name  = "MONGO_PORT"
+            value = "27017"
           }
         }
       }

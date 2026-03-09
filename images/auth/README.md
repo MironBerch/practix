@@ -6,4 +6,4 @@
 
 ### **Технологии**
 
-```Python``` ```FastAPI``` ```PostgreSQL``` ```MongoDB``` ```Redis``` ```Uvicorn``` ```Docker```
+```Python``` ```Go``` ```Chi``` ```PostgreSQL``` ```MongoDB``` ```Redis``` ```Docker```

@@ -1,15 +1,19 @@
-FROM python:3.13-alpine
-
-COPY --from=ghcr.io/astral-sh/uv:latest /uv /uvx /bin/
-
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
-ENV PYTHONPATH=/app
+FROM golang:1.25-alpine AS builder
 
 WORKDIR /app
 
-COPY pyproject.toml uv.lock* ./
-
-RUN uv sync
+COPY go.mod go.sum ./
+RUN go mod download
 
 COPY . .
+
+RUN CGO_ENABLED=0 GOOS=linux go build -o main ./cmd/api
+
+FROM alpine:latest
+
+WORKDIR /root/
+
+COPY --from=builder /app/main .
+COPY --from=builder /app/migrations ./migrations
+
+CMD ["./main"]
