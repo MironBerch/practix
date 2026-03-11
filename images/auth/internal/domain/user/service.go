@@ -96,7 +96,7 @@ func (s *service) RefreshToken(ctx context.Context, refreshToken string) (*Refre
 		return nil, ErrInvalidToken
 	}
 
-	_, _ = s.tokenManager.AddTokenToBlacklist(refreshToken)
+	//_, _ = s.tokenManager.AddTokenToBlacklist(refreshToken)
 
 	accessToken, _ := s.tokenManager.GenerateAccessToken(claims.Subject)
 	return &RefreshTokenResponse{AccessToken: accessToken}, nil
