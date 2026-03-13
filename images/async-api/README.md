@@ -6,4 +6,4 @@
 
 ### **Технологии**
 
-```Python``` ```FastAPI``` ```Redis``` ```Elasticsearch``` ```Docker```
+```Python``` ```Gin``` ```Redis``` ```Elasticsearch``` ```Docker```

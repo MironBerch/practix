@@ -31,21 +31,18 @@ services:
 
   movies_api:
     restart: always
-    build: ../images/async-api/
-    command: >
-      sh -c "cd /app/src/
-      && uv run main.py"
-    environment:
-      - "FASTAPI_PORT=3000"
-      - "ELASTIC_HOST=elastic"
-      - "ELASTIC_PORT=9200"
-      - "REDIS_HOST=redis"
-      - "REDIS_PORT=6379"
-      - "REDIS_DB=1"
+    build: ../../images/async-api/
     expose:
       - "3000"
     ports:
       - "3000:3000"
+    environment:
+      - "RUN_ADDRESS=3000"
+      - "REDIS_HOST=redis"
+      - "REDIS_PORT=6379"
+      - "REDIS_DB=0"
+      - "ELASTIC_HOST=elastic"
+      - "ELASTIC_PORT=9200"
     depends_on:
       elastic:
         condition: service_healthy

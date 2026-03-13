@@ -4,7 +4,7 @@
 
 [PRACTIX](https://github.com/MironBerch/practix) — это микросервисы для онлайн-кинотеатра:
 - [Панель администратора](https://github.com/MironBerch/practix/tree/main/images/admin-panel) на фреймворке Django
-- [Асинхронный API](https://github.com/MironBerch/practix/tree/main/images/async-api) на фреймворке FastAPI
+- [Асинхронный API](https://github.com/MironBerch/practix/tree/main/images/async-api) на фреймворке Gin
 - [Авторизация пользователей](https://github.com/MironBerch/practix/tree/main/images/auth) на фреймворке Chi
 - [Пользовательский контент](https://github.com/MironBerch/practix/tree/main/images/ugc) c помощью NoSQL базы данных MongoDB
 - [Пользовательский интерфейс](https://github.com/MironBerch/practix/tree/main/images/frontend) на фреймворке Vue

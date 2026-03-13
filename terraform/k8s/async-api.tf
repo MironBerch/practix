@@ -24,9 +24,6 @@ resource "kubernetes_deployment" "async-api" {
           image = "cr.yandex/${var.container_registry_id}/async-api:latest"
           name  = "async-api"
 
-          command = ["sh", "-c"]
-          args    = ["cd /app/src/ && uv run main.py"]
-
           port {
             name           = "http"
             container_port = 3000
@@ -44,11 +41,11 @@ resource "kubernetes_deployment" "async-api" {
 
           env {
             name  = "REDIS_DB"
-            value = "1"
+            value = "0"
           }
 
           env {
-            name  = "FASTAPI_PORT"
+            name  = "RUN_ADDRESS"
             value = "3000"
           }
 
