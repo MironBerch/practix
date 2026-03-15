@@ -85,33 +85,20 @@ class MongoDBService:
             binary_id = self.to_binary(filmwork_id)
             db = self.mongo['ugc_database']
 
-            # 1. Удаляем фильм
             filmwork_result = db['filmworks'].delete_one({'_id': binary_id})
 
             if filmwork_result.deleted_count == 0:
-                print(f"Фильм с ID {filmwork_id} не найден")
                 return False
 
-            # 2. Удаляем рецензии к фильму (если есть коллекция reviews)
-            reviews_result = db['reviews'].delete_many({'filmwork_id': binary_id})
-            print(f"Удалено рецензий: {reviews_result.deleted_count}")
+            db['reviews'].delete_many({'filmwork_id': binary_id})
 
-            # 3. Удаляем фильм из закладок пользователей
-            # Обновляем всех пользователей, удаляя этот фильм из их bookmarks
-            users_result = db['users'].update_many(
+            db['users'].update_many(
                 {'bookmarks.filmwork_id': binary_id},
                 {'$pull': {'bookmarks': {'filmwork_id': binary_id}}},
             )
-            print(f"Обновлено пользователей: {users_result.modified_count}")
-
-            # 4. Удаляем оценки фильма из других коллекций если есть
-            # Например, если оценки хранятся отдельно
-
-            print(f"Фильм {filmwork_id} и связанные данные удалены")
             return True
 
         except Exception as e:
-            print(f"Ошибка каскадного удаления: {e}")
             return False
 
     def to_binary(self, value: UUID) -> Binary:

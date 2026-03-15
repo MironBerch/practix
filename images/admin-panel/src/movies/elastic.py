@@ -46,11 +46,9 @@ class ElasticsearchService:
     def index_filmwork(self, filmwork: Filmwork) -> bool:
         """Индексирует фильм в Elasticsearch"""
         try:
-            # Преобразуем Django модель в формат для Elasticsearch
             doc = self._filmwork_to_document(filmwork)
-            print(doc)
             self.client.index(
-                index="movies", id=str(filmwork.id), body=doc, refresh=True  # Синхронное обновление
+                index="movies", id=str(filmwork.id), body=doc, refresh=True
             )
             logger.info(f"Фильм индексирован: {filmwork.title}")
             return True
@@ -112,15 +110,11 @@ class ElasticsearchService:
 
     def _filmwork_to_document(self, filmwork: Filmwork) -> dict[str, Any]:
         """Преобразует Django модель Filmwork в документ Elasticsearch"""
-        # Получаем связанные данные
         genres = list(filmwork.genres.all())
         persons = filmwork.personfilmwork_set.select_related('person').all()
-
-        # Группируем персон по ролям
         actors = []
         directors = []
         writers = []
-
         for pf in persons:
             person_data = {"id": str(pf.person.id), "name": pf.person.full_name}
             if pf.role == 'actor':
@@ -129,7 +123,6 @@ class ElasticsearchService:
                 directors.append(person_data)
             elif pf.role == 'writer':
                 writers.append(person_data)
-
         return {
             "id": str(filmwork.id),
             "title": filmwork.title,
@@ -148,5 +141,4 @@ class ElasticsearchService:
         }
 
 
-# Синглтон экземпляр
 elastic_service = ElasticsearchService()
