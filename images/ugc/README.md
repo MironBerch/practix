@@ -6,4 +6,4 @@
 
 ### **Технологии**
 
-```Python``` ```FastAPI``` ```MongoDB```  ```Docker```
+```Python``` ```Echo``` ```MongoDB```  ```Docker```

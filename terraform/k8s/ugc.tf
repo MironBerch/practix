@@ -24,9 +24,6 @@ resource "kubernetes_deployment" "ugc-api" {
           image = "cr.yandex/${var.container_registry_id}/ugc:latest"
           name  = "ugc-api"
 
-          command = ["sh", "-c"]
-          args    = ["cd /app/src/ && uv run main.py"]
-
           port {
             name           = "http"
             container_port = 4000
@@ -36,14 +33,13 @@ resource "kubernetes_deployment" "ugc-api" {
             name  = "JWT_SECRET_KEY"
             value = var.jwt_secret_key
           }
-
           env {
-            name  = "DEBUG"
-            value = "False"
+            name  = "JWT_SECRET_KEY"
+            value = "HS256"
           }
 
           env {
-            name  = "FASTAPI_PORT"
+            name  = "RUN_ADDRESS"
             value = "4000"
           }
 

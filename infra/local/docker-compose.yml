@@ -95,20 +95,19 @@ services:
   movies_ugc:
     restart: always
     build: ../../images/ugc/
-    command: >
-      sh -c "cd /app/src/
-      && uv run main.py"
     volumes:
       - ../../images/ugc/:/app/
-    environment:
-      - "FASTAPI_PORT=8080"
-      - "MONGO_PORT=27017"
-      - "DEBUG=True"
-      - "JWT_SECRET_KEY=jwtsecretkey"
+      - ugc-system-go-modules:/go/pkg/mod
     expose:
       - "8080"
     ports:
       - "8080:8080"
+    environment:
+      - "JWT_SECRET_KEY=jwtsecretkey"
+      - "JWT_ALGORITHM=HS256"
+      - "RUN_ADDRESS=8080"
+      - "MONGO_HOST=mongo"
+      - "MONGO_PORT=27017"
     depends_on:
       mongo:
         condition: service_healthy
@@ -209,3 +208,4 @@ volumes:
   auth_db_volume:
   auth-system-go-modules:
   async-api-system-go-modules:
+  ugc-system-go-modules:
