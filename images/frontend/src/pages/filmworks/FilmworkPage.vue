@@ -86,9 +86,9 @@
             <div class="people-list">
               <span
                 v-for="person in filmwork.directors"
-                :key="person.uuid"
+                :key="person.id"
                 class="person-name"
-                @click="navigateToPerson(person.uuid)"
+                @click="navigateToPerson(person.id)"
               >
                 {{ person.name }}
               </span>
@@ -100,9 +100,9 @@
             <div class="people-list">
               <span
                 v-for="person in filmwork.actors"
-                :key="person.uuid"
+                :key="person.id"
                 class="person-name"
-                @click="navigateToPerson(person.uuid)"
+                @click="navigateToPerson(person.id)"
               >
                 {{ person.name }}
               </span>
@@ -114,9 +114,9 @@
             <div class="people-list">
               <span
                 v-for="person in filmwork.writers"
-                :key="person.uuid"
+                :key="person.id"
                 class="person-name"
-                @click="navigateToPerson(person.uuid)"
+                @click="navigateToPerson(person.id)"
               >
                 {{ person.name }}
               </span>
@@ -320,7 +320,7 @@ const reviewsLoading = ref(false);
 const reviewRatingLoading = ref<{ [key: string]: boolean }>({});
 
 // Получение UUID из параметров маршрута
-const filmworkUuid = computed(() => route.params.uuid as string);
+const filmworkUuid = computed(() => route.params.id as string);
 
 // Проверка аутентификации через localStorage
 const isAuthenticated = computed(() => {

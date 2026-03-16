@@ -33,8 +33,8 @@
     >
       <router-link
         v-for="filmwork in bookmarkedFilmworks"
-        :key="filmwork.uuid"
-        :to="`/filmworks/${filmwork.uuid}`"
+        :key="filmwork.id"
+        :to="`/filmworks/${filmwork.id}`"
         class="filmwork-card"
       >
         <div class="filmwork-poster">
@@ -65,7 +65,7 @@
             </span>
           </div>
           <button
-            @click.prevent="removeFromBookmarks(filmwork.uuid)"
+            @click.prevent="removeFromBookmarks(filmwork.id)"
             class="remove-bookmark-btn"
           >
             Удалить из закладок
@@ -173,7 +173,7 @@ const removeFromBookmarks = async (filmworkUuid: string) => {
 
     // Удаляем фильм из локального списка
     bookmarkedFilmworks.value = bookmarkedFilmworks.value.filter(
-      (filmwork) => filmwork.uuid !== filmworkUuid,
+      (filmwork) => filmwork.id !== filmworkUuid,
     );
 
     // Обновляем список закладок

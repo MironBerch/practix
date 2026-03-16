@@ -38,8 +38,8 @@
       <div v-else-if="personFilmworks.length > 0" class="filmworks-grid">
         <router-link
           v-for="filmwork in personFilmworks"
-          :key="filmwork.uuid"
-          :to="`/filmworks/${filmwork.uuid}`"
+          :key="filmwork.id"
+          :to="`/filmworks/${filmwork.id}`"
           class="filmwork-card"
         >
           <div class="filmwork-poster">
@@ -103,7 +103,7 @@ const personFilmworks = ref<BaseFilmwork[]>([]);
 const filmworksLoading = ref(false);
 
 // Получение UUID из параметров маршрута
-const personUuid = computed(() => route.params.uuid as string);
+const personUuid = computed(() => route.params.id as string);
 
 // Загрузка данных о персоне
 const loadPersonData = async () => {
@@ -177,5 +177,5 @@ onMounted(() => {
 </script>
 
 <style scoped>
-@import url('../../styles/pagess/person/person.css');
+@import url('../../styles/pages/persons/person.css');
 </style>

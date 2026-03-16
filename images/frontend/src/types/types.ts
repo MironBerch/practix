@@ -15,13 +15,13 @@ export interface HealthCheckResponse {
 }
 
 export interface BaseFilmwork {
-  uuid: string;
+  id: string;
   title: string;
   rating: number;
 }
 
 export interface BasePerson {
-  uuid: string;
+  id: string;
   name: string;
 }
 
@@ -34,13 +34,13 @@ export interface Filmwork extends BaseFilmwork {
 }
 
 export interface Genre {
-  uuid: string;
+  id: string;
   name: string;
   description: string;
 }
 
 export interface Person {
-  uuid: string;
+  id: string;
   name: string;
   roles: string[];
   filmwork_ids: string[];

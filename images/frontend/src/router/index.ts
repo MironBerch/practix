@@ -46,7 +46,7 @@ const router = createRouter({
           component: () => import("../pages/filmworks/FilmworksPage.vue"),
         },
         {
-          path: "filmworks/:uuid",
+          path: "filmworks/:id",
           name: "filmwork",
           component: () => import("../pages/filmworks/FilmworkPage.vue"),
           props: true,
@@ -57,7 +57,7 @@ const router = createRouter({
           component: () => import("../pages/persons/PersonsPage.vue"),
         },
         {
-          path: "persons/:uuid",
+          path: "persons/:id",
           name: "person",
           component: () => import("../pages/persons/PersonPage.vue"),
           props: true,

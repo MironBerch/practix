@@ -19,12 +19,12 @@ export const useUGC = () => {
   const error = ref<string | null>(null);
 
   const addFilmworkToBookmarks = async (
-    uuid: string,
+    id: string,
     access_token: string,
   ): Promise<FilmworkBookmark | null> => {
     try {
       loading.value = true;
-      const response = await fetch(`${API_URL}/filmworks/${uuid}/bookmarks`, {
+      const response = await fetch(`${API_URL}/filmworks/${id}/bookmarks`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -46,12 +46,12 @@ export const useUGC = () => {
   };
 
   const removeFilmworkFromBookmarks = async (
-    uuid: string,
+    id: string,
     access_token: string,
   ): Promise<FilmworkBookmark | null> => {
     try {
       loading.value = true;
-      const response = await fetch(`${API_URL}/filmworks/${uuid}/bookmarks`, {
+      const response = await fetch(`${API_URL}/filmworks/${id}/bookmarks`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -98,10 +98,10 @@ export const useUGC = () => {
     }
   };
 
-  const getFilmworkRating = async (uuid: string): Promise<Rating | null> => {
+  const getFilmworkRating = async (id: string): Promise<Rating | null> => {
     try {
       loading.value = true;
-      const response = await fetch(`${API_URL}/filmworks/${uuid}/ratings`);
+      const response = await fetch(`${API_URL}/filmworks/${id}/ratings`);
 
       if (!response.ok) {
         throw new Error("Failed get filmwork rating");
@@ -117,13 +117,13 @@ export const useUGC = () => {
   };
 
   const addFilmworkRating = async (
-    uuid: string,
+    id: string,
     access_token: string,
     data: Score,
   ): Promise<Rating | null> => {
     try {
       loading.value = true;
-      const response = await fetch(`${API_URL}/filmworks/${uuid}/ratings`, {
+      const response = await fetch(`${API_URL}/filmworks/${id}/ratings`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -146,12 +146,12 @@ export const useUGC = () => {
   };
 
   const deleteFilmworkRating = async (
-    uuid: string,
+    id: string,
     access_token: string,
   ): Promise<Rating | null> => {
     try {
       loading.value = true;
-      const response = await fetch(`${API_URL}/filmworks/${uuid}/bookmarks`, {
+      const response = await fetch(`${API_URL}/filmworks/${id}/bookmarks`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${access_token}`,
@@ -172,11 +172,11 @@ export const useUGC = () => {
   };
 
   const getFilmworkReviews = async (
-    uuid: string,
+    id: string,
   ): Promise<ReviewCollection | null> => {
     try {
       loading.value = true;
-      const response = await fetch(`${API_URL}/filmworks/${uuid}/reviews`);
+      const response = await fetch(`${API_URL}/filmworks/${id}/reviews`);
 
       if (!response.ok) {
         throw new Error("Failed get filmwork reviews");
@@ -192,13 +192,13 @@ export const useUGC = () => {
   };
 
   const addFilmworkReview = async (
-    uuid: string,
+    id: string,
     access_token: string,
     data: Text,
   ): Promise<Review | null> => {
     try {
       loading.value = true;
-      const response = await fetch(`${API_URL}/filmworks/${uuid}/reviews`, {
+      const response = await fetch(`${API_URL}/filmworks/${id}/reviews`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -221,14 +221,14 @@ export const useUGC = () => {
   };
 
   const deleteFilmworkReview = async (
-    uuid: string,
+    id: string,
     review_id: string,
     access_token: string,
   ): Promise<null> => {
     try {
       loading.value = true;
       const response = await fetch(
-        `${API_URL}/filmworks/${uuid}/reviews/${review_id}`,
+        `${API_URL}/filmworks/${id}/reviews/${review_id}`,
         {
           method: "POST",
           headers: {
@@ -252,13 +252,13 @@ export const useUGC = () => {
   };
 
   const getFilmworkReviewRating = async (
-    uuid: string,
+    id: string,
     review_id: string,
   ): Promise<ReviewRating | null> => {
     try {
       loading.value = true;
       const response = await fetch(
-        `${API_URL}/filmworks/${uuid}/reviews/${review_id}/ratings`,
+        `${API_URL}/filmworks/${id}/reviews/${review_id}/ratings`,
       );
 
       if (!response.ok) {
@@ -275,7 +275,7 @@ export const useUGC = () => {
   };
 
   const addFilmworkReviewRating = async (
-    uuid: string,
+    id: string,
     access_token: string,
     data: ReviewScore,
     review_id: string,
@@ -283,7 +283,7 @@ export const useUGC = () => {
     try {
       loading.value = true;
       const response = await fetch(
-        `${API_URL}/filmworks/${uuid}/reviews/${review_id}/ratings`,
+        `${API_URL}/filmworks/${id}/reviews/${review_id}/ratings`,
         {
           method: "POST",
           headers: {
@@ -308,14 +308,14 @@ export const useUGC = () => {
   };
 
   const deleteFilmworkReviewRating = async (
-    uuid: string,
+    id: string,
     access_token: string,
     review_id: string,
   ): Promise<ReviewRating | null> => {
     try {
       loading.value = true;
       const response = await fetch(
-        `${API_URL}/filmworks/${uuid}/reviews/${review_id}/ratings`,
+        `${API_URL}/filmworks/${id}/reviews/${review_id}/ratings`,
         {
           method: "DELETE",
           headers: {

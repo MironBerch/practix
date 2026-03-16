@@ -15,10 +15,10 @@ export const useMovies = () => {
   const loading = ref(false);
   const error = ref<string | null>(null);
 
-  const getFilmwork = async (uuid: string): Promise<Filmwork | null> => {
+  const getFilmwork = async (id: string): Promise<Filmwork | null> => {
     try {
       loading.value = true;
-      const response = await fetch(`${API_URL}/filmworks/${uuid}`);
+      const response = await fetch(`${API_URL}/filmworks/${id}`);
 
       if (!response.ok) {
         throw new Error("Filmworks not found");
@@ -110,10 +110,10 @@ export const useMovies = () => {
     }
   };
 
-  const getGenre = async (uuid: string): Promise<Genre | null> => {
+  const getGenre = async (id: string): Promise<Genre | null> => {
     try {
       loading.value = true;
-      const response = await fetch(`${API_URL}/genres/${uuid}`);
+      const response = await fetch(`${API_URL}/genres/${id}`);
 
       if (!response.ok) {
         throw new Error("Genre not found");
@@ -146,10 +146,10 @@ export const useMovies = () => {
     }
   };
 
-  const getPerson = async (uuid: string): Promise<Person | null> => {
+  const getPerson = async (id: string): Promise<Person | null> => {
     try {
       loading.value = true;
-      const response = await fetch(`${API_URL}/persons/${uuid}`);
+      const response = await fetch(`${API_URL}/persons/${id}`);
 
       if (!response.ok) {
         throw new Error("Person not found");
@@ -186,11 +186,11 @@ export const useMovies = () => {
   };
 
   const getFilmworksByPerson = async (
-    uuid: string,
+    id: string,
   ): Promise<FilmworkCollection[] | null> => {
     try {
       loading.value = true;
-      const response = await fetch(`${API_URL}/persons/${uuid}/filmworks`);
+      const response = await fetch(`${API_URL}/persons/${id}/filmworks`);
 
       if (!response.ok) {
         throw new Error("Failed to fetch filmworks");

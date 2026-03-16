@@ -54,8 +54,8 @@
     <div v-if="!loading && !error" class="persons-grid">
       <router-link
         v-for="person in filteredPersons"
-        :key="person.uuid"
-        :to="`/persons/${person.uuid}`"
+        :key="person.id"
+        :to="`/persons/${person.id}`"
         class="person-card"
       >
         <div class="person-avatar">

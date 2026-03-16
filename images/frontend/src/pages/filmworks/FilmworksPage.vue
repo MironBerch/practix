@@ -46,18 +46,18 @@
           <div class="genres-filter">
             <div
               v-for="genre in availableGenres"
-              :key="genre.uuid"
+              :key="genre.id"
               class="genre-checkbox"
             >
               <input
                 type="checkbox"
-                :id="`genre-${genre.uuid}`"
+                :id="`genre-${genre.id}`"
                 :value="genre.name"
                 v-model="selectedGenres"
                 @change="handleGenreChange"
                 class="genre-input"
               />
-              <label :for="`genre-${genre.uuid}`" class="genre-label">
+              <label :for="`genre-${genre.id}`" class="genre-label">
                 {{ genre.name }}
               </label>
             </div>
@@ -111,9 +111,9 @@
     <div v-if="!loading && !error" class="filmworks-grid">
       <div
         v-for="filmwork in filmworks"
-        :key="filmwork.uuid"
+        :key="filmwork.id"
         class="filmwork-card"
-        @click="navigateToFilmwork(filmwork.uuid)"
+        @click="navigateToFilmwork(filmwork.id)"
       >
         <div class="filmwork-poster">
           <div class="poster-placeholder">{{ filmwork.title.charAt(0) }}</div>
@@ -255,8 +255,8 @@ const clearSearch = () => {
   loadFilmworks();
 };
 
-const navigateToFilmwork = (uuid: string) => {
-  router.push(`/filmworks/${uuid}`);
+const navigateToFilmwork = (id: string) => {
+  router.push(`/filmworks/${id}`);
 };
 
 const previousPage = () => {
