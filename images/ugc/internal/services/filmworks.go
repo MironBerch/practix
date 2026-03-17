@@ -1,6 +1,7 @@
 package services
 
 import (
+	"bytes"
 	"context"
 	"errors"
 
@@ -38,13 +39,18 @@ func (s *FilmworksService) Get(ctx context.Context, filmworkID uuid.UUID) (*mode
 }
 
 func (s *FilmworksService) GetRating(ctx context.Context, filmworkID uuid.UUID) (*models.Rating, error) {
-	return s.Get(ctx, filmworkID)
+	rating, err := s.Get(ctx, filmworkID)
+	if err != nil || rating == nil {
+        return rating, err
+    }
+    rating.CalculateAverage()
+    return rating, nil
 }
 
 func (s *FilmworksService) Rate(ctx context.Context, filmworkID, userID uuid.UUID, score int) (*models.Rating, error) {
 	db := s.mongo.Database("ugc_database")
 	filmworkIDBin := models.UUIDToBinary(filmworkID)
-	//userIDBin := models.UUIDToBinary(userID)
+	userIDBin := models.UUIDToBinary(userID)
 
 	var filmwork struct {
 		Rating models.Rating `bson:"rating"`
@@ -58,14 +64,14 @@ func (s *FilmworksService) Rate(ctx context.Context, filmworkID, userID uuid.UUI
 	votes := filmwork.Rating.Votes
 	found := false
 	for i, v := range votes {
-		if v.UserID == userID {
+		if bytes.Equal(v.UserID.Data, userIDBin.Data) && v.UserID.Subtype == userIDBin.Subtype {
 			votes[i].Score = score
 			found = true
 			break
 		}
 	}
 	if !found {
-		votes = append(votes, models.Vote{UserID: userID, Score: score})
+		votes = append(votes, models.Vote{UserID: userIDBin, Score: score})
 	}
 
 	update := bson.M{"$set": bson.M{"rating.votes": votes}}
@@ -82,6 +88,7 @@ func (s *FilmworksService) Rate(ctx context.Context, filmworkID, userID uuid.UUI
 	if err != nil {
 		return nil, err
 	}
+	updated.Rating.CalculateAverage()
 	return &updated.Rating, nil
 }
 

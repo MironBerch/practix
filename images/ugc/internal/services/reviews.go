@@ -1,6 +1,7 @@
 package services
 
 import (
+	"bytes"
 	"context"
 	"errors"
 	"time"
@@ -67,7 +68,7 @@ func (s *ReviewsService) Update(ctx context.Context, userID, filmworkID uuid.UUI
 		"$setOnInsert": bson.M{
 			"_id":         models.UUIDToBinary(uuid.New()),
 			"pub_date":    time.Now(),
-			"rating":      bson.M{"votes": []bson.M{}},
+			"rating":      bson.M{"votes": bson.A{}},
 			"author_id":   models.UUIDToBinary(userID),
 			"filmwork_id": models.UUIDToBinary(filmworkID),
 		},
@@ -110,13 +111,14 @@ func (s *ReviewsService) GetRating(ctx context.Context, reviewID, filmworkID uui
 	if err != nil {
 		return nil, err
 	}
+	review.Rating.Calculate()
 	return &review.Rating, nil
 }
 
 func (s *ReviewsService) Rate(ctx context.Context, reviewID, userID, filmworkID uuid.UUID, score int) (*models.ReviewRating, error) {
 	db := s.mongo.Database("ugc_database")
 	reviewIDBin := models.UUIDToBinary(reviewID)
-	//userIDBin := models.UUIDToBinary(userID)
+	userIDBin := models.UUIDToBinary(userID)
 
 	var review struct {
 		Rating models.ReviewRating `bson:"rating"`
@@ -130,14 +132,14 @@ func (s *ReviewsService) Rate(ctx context.Context, reviewID, userID, filmworkID 
 	votes := review.Rating.Votes
 	found := false
 	for i, v := range votes {
-		if v.UserID == userID {
+		if bytes.Equal(v.UserID.Data, userIDBin.Data) && v.UserID.Subtype == userIDBin.Subtype {
 			votes[i].Score = score
 			found = true
 			break
 		}
 	}
 	if !found {
-		votes = append(votes, models.Vote{UserID: userID, Score: score})
+		votes = append(votes, models.Vote{UserID: userIDBin, Score: score})
 	}
 
 	update := bson.M{"$set": bson.M{"rating.votes": votes}}
@@ -153,6 +155,7 @@ func (s *ReviewsService) Rate(ctx context.Context, reviewID, userID, filmworkID 
 	if err != nil {
 		return nil, err
 	}
+	updated.Rating.Calculate()
 	return &updated.Rating, nil
 }
 
