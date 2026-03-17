@@ -49,7 +49,7 @@ type ReviewRating struct {
 }
 
 func UUIDToBinary(id uuid.UUID) bson.Binary {
-	return bson.Binary{Subtype: 0x04, Data: id[:]}
+	return bson.Binary{Subtype: 0x00, Data: id[:]}
 }
 
 func BinaryToUUID(b bson.Binary) uuid.UUID {

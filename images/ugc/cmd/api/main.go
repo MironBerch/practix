@@ -11,6 +11,7 @@ import (
 	"ugc/internal/middlewares"
 	"ugc/internal/services"
 	"ugc/pkg/database"
+	"ugc/internal/validator"
 )
 
 func main() {
@@ -36,6 +37,8 @@ func main() {
 	reviewsHandler := handlers.NewReviewsHandler(reviewsService)
 
 	e := echo.New()
+
+	e.Validator = validator.New()
 
 	e.Use(middleware.RequestLogger())
 	e.Use(middleware.Recover())

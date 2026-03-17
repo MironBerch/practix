@@ -20,19 +20,21 @@ func NewFilmworksService(mongo *mongo.Client) *FilmworksService {
 }
 
 func (s *FilmworksService) Get(ctx context.Context, filmworkID uuid.UUID) (*models.Rating, error) {
-	db := s.mongo.Database("ugc_database")
-	var filmwork struct {
-		Rating models.Rating `bson:"rating"`
-	}
-	filter := bson.M{"_id": models.UUIDToBinary(filmworkID)}
-	err := db.Collection("filmworks").FindOne(ctx, filter).Decode(&filmwork)
-	if err != nil {
-		if errors.Is(err, mongo.ErrNoDocuments) {
-			return nil, nil
-		}
-		return nil, err
-	}
-	return &filmwork.Rating, nil
+    db := s.mongo.Database("ugc_database")
+    binID := models.UUIDToBinary(filmworkID)
+
+    var filmwork struct {
+        Rating models.Rating `bson:"rating"`
+    }
+    filter := bson.M{"_id": binID}
+    err := db.Collection("filmworks").FindOne(ctx, filter).Decode(&filmwork)
+    if err != nil {
+        if errors.Is(err, mongo.ErrNoDocuments) {
+            return nil, nil
+        }
+        return nil, err
+    }
+    return &filmwork.Rating, nil
 }
 
 func (s *FilmworksService) GetRating(ctx context.Context, filmworkID uuid.UUID) (*models.Rating, error) {

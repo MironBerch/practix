@@ -38,20 +38,22 @@ func (s *ReviewsService) Get(ctx context.Context, userID, filmworkID uuid.UUID) 
 }
 
 func (s *ReviewsService) Filter(ctx context.Context, filmworkID uuid.UUID, page, size int64) ([]models.Review, error) {
-	db := s.mongo.Database("ugc_database")
-	filter := bson.M{"filmwork_id": models.UUIDToBinary(filmworkID)}
-	opts := options.Find().SetSkip((page - 1) * size).SetLimit(size)
-	cursor, err := db.Collection("reviews").Find(ctx, filter, opts)
-	if err != nil {
-		return nil, err
-	}
-	defer cursor.Close(ctx)
+    db := s.mongo.Database("ugc_database")
+    binFilmworkID := models.UUIDToBinary(filmworkID)
 
-	var reviews []models.Review
-	if err = cursor.All(ctx, &reviews); err != nil {
-		return nil, err
-	}
-	return reviews, nil
+    filter := bson.M{"filmwork_id": binFilmworkID}
+    opts := options.Find().SetSkip((page - 1) * size).SetLimit(size)
+    cursor, err := db.Collection("reviews").Find(ctx, filter, opts)
+    if err != nil {
+        return nil, err
+    }
+    defer cursor.Close(ctx)
+
+    var reviews []models.Review
+    if err = cursor.All(ctx, &reviews); err != nil {
+        return nil, err
+    }
+    return reviews, nil
 }
 
 func (s *ReviewsService) Update(ctx context.Context, userID, filmworkID uuid.UUID, text string) (*models.Review, error) {
