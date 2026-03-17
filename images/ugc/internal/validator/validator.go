@@ -1,20 +1,20 @@
 package validator
 
 import (
-    "github.com/go-playground/validator/v10"
-    "github.com/labstack/echo/v5"
+	"github.com/go-playground/validator/v10"
+	"github.com/labstack/echo/v5"
 )
 
 type CustomValidator struct {
-    validator *validator.Validate
+	validator *validator.Validate
 }
 
 func (cv *CustomValidator) Validate(i interface{}) error {
-    return cv.validator.Struct(i)
+	return cv.validator.Struct(i)
 }
 
 func New() echo.Validator {
-    return &CustomValidator{
-        validator: validator.New(),
-    }
+	return &CustomValidator{
+		validator: validator.New(),
+	}
 }

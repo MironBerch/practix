@@ -21,30 +21,30 @@ func NewFilmworksService(mongo *mongo.Client) *FilmworksService {
 }
 
 func (s *FilmworksService) Get(ctx context.Context, filmworkID uuid.UUID) (*models.Rating, error) {
-    db := s.mongo.Database("ugc_database")
-    binID := models.UUIDToBinary(filmworkID)
+	db := s.mongo.Database("ugc_database")
+	binID := models.UUIDToBinary(filmworkID)
 
-    var filmwork struct {
-        Rating models.Rating `bson:"rating"`
-    }
-    filter := bson.M{"_id": binID}
-    err := db.Collection("filmworks").FindOne(ctx, filter).Decode(&filmwork)
-    if err != nil {
-        if errors.Is(err, mongo.ErrNoDocuments) {
-            return nil, nil
-        }
-        return nil, err
-    }
-    return &filmwork.Rating, nil
+	var filmwork struct {
+		Rating models.Rating `bson:"rating"`
+	}
+	filter := bson.M{"_id": binID}
+	err := db.Collection("filmworks").FindOne(ctx, filter).Decode(&filmwork)
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return nil, nil
+		}
+		return nil, err
+	}
+	return &filmwork.Rating, nil
 }
 
 func (s *FilmworksService) GetRating(ctx context.Context, filmworkID uuid.UUID) (*models.Rating, error) {
 	rating, err := s.Get(ctx, filmworkID)
 	if err != nil || rating == nil {
-        return rating, err
-    }
-    rating.CalculateAverage()
-    return rating, nil
+		return rating, err
+	}
+	rating.CalculateAverage()
+	return rating, nil
 }
 
 func (s *FilmworksService) Rate(ctx context.Context, filmworkID, userID uuid.UUID, score int) (*models.Rating, error) {

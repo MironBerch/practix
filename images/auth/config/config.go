@@ -7,22 +7,22 @@ import (
 )
 
 type Config struct {
-	RunAddress           string
-	DatabaseURI          string
-	DBName               string
-	DBUser               string
-	DBPass               string
-	DBHost               string
-	DBPort               string
-	RedisHost            string
-	RedisPort            string
-	RedisPass            string
-	RedisDB              int
-	MongoHost            string
-	MongoPort            string
-	MongoUser            string
-	MongoPass            string
-	SecretJWT            string
+	RunAddress  string
+	DatabaseURI string
+	DBName      string
+	DBUser      string
+	DBPass      string
+	DBHost      string
+	DBPort      string
+	RedisHost   string
+	RedisPort   string
+	RedisPass   string
+	RedisDB     int
+	MongoHost   string
+	MongoPort   string
+	MongoUser   string
+	MongoPass   string
+	SecretJWT   string
 }
 
 func Load() *Config {

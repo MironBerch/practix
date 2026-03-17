@@ -6,15 +6,15 @@ import (
 )
 
 type Config struct {
-	RunAddress           string
-	RedisHost            string
-	RedisPort            string
-	RedisPass            string
-	RedisDB              int
-	ElasticHost            string
-	ElasticPort            string
-	ElasticUser            string
-	ElasticPass            string
+	RunAddress  string
+	RedisHost   string
+	RedisPort   string
+	RedisPass   string
+	RedisDB     int
+	ElasticHost string
+	ElasticPort string
+	ElasticUser string
+	ElasticPass string
 }
 
 func Load() *Config {

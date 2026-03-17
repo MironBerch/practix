@@ -10,8 +10,8 @@ import (
 	"ugc/internal/handlers"
 	"ugc/internal/middlewares"
 	"ugc/internal/services"
-	"ugc/pkg/database"
 	"ugc/internal/validator"
+	"ugc/pkg/database"
 )
 
 func main() {

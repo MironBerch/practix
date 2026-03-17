@@ -18,19 +18,19 @@ func NewFilmworksHandler(filmworksService *services.FilmworksService) *Filmworks
 }
 
 func (h *FilmworksHandler) GetFilmworkRating(c *echo.Context) error {
-    filmworkID, err := uuid.Parse(c.Param("filmwork_id"))
-    if err != nil {
-        return echo.NewHTTPError(http.StatusBadRequest, "invalid filmwork_id")
-    }
+	filmworkID, err := uuid.Parse(c.Param("filmwork_id"))
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, "invalid filmwork_id")
+	}
 
-    rating, err := h.filmworksService.GetRating(c.Request().Context(), filmworkID)
-    if err != nil {
-        return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
-    }
-    if rating == nil {
-        return echo.NewHTTPError(http.StatusNotFound, "filmwork not found")
-    }
-    return c.JSON(http.StatusOK, rating)
+	rating, err := h.filmworksService.GetRating(c.Request().Context(), filmworkID)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusInternalServerError, err.Error())
+	}
+	if rating == nil {
+		return echo.NewHTTPError(http.StatusNotFound, "filmwork not found")
+	}
+	return c.JSON(http.StatusOK, rating)
 }
 
 func (h *FilmworksHandler) RateFilmwork(c *echo.Context) error {

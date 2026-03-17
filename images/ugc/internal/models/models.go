@@ -32,8 +32,8 @@ type Review struct {
 }
 
 type Vote struct {
-    UserID bson.Binary `json:"user_id" bson:"user_id"`
-    Score  int       `json:"score" bson:"score"`
+	UserID bson.Binary `json:"user_id" bson:"user_id"`
+	Score  int         `json:"score" bson:"score"`
 }
 
 type Rating struct {
@@ -42,16 +42,16 @@ type Rating struct {
 }
 
 func (r *Rating) CalculateAverage() {
-    if len(r.Votes) == 0 {
-        r.AverageRating = nil // или 0, если хотите показывать 0
-        return
-    }
-    sum := 0
-    for _, v := range r.Votes {
-        sum += v.Score
-    }
-    avg := float64(sum) / float64(len(r.Votes))
-    r.AverageRating = &avg
+	if len(r.Votes) == 0 {
+		r.AverageRating = nil // или 0, если хотите показывать 0
+		return
+	}
+	sum := 0
+	for _, v := range r.Votes {
+		sum += v.Score
+	}
+	avg := float64(sum) / float64(len(r.Votes))
+	r.AverageRating = &avg
 }
 
 type ReviewRating struct {
@@ -62,18 +62,18 @@ type ReviewRating struct {
 }
 
 func (rr *ReviewRating) Calculate() {
-    rr.Likes = 0
-    rr.Dislikes = 0
-    rr.LikesSum = 0
-    for _, v := range rr.Votes {
-        if v.Score == 10 {
-            rr.Likes++
-            rr.LikesSum += 10
-        } else if v.Score == 1 {
-            rr.Dislikes++
-            rr.LikesSum += 1
-        }
-    }
+	rr.Likes = 0
+	rr.Dislikes = 0
+	rr.LikesSum = 0
+	for _, v := range rr.Votes {
+		if v.Score == 10 {
+			rr.Likes++
+			rr.LikesSum += 10
+		} else if v.Score == 1 {
+			rr.Dislikes++
+			rr.LikesSum += 1
+		}
+	}
 }
 
 func UUIDToBinary(id uuid.UUID) bson.Binary {

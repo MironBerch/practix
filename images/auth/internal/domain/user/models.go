@@ -44,8 +44,8 @@ type GetUserInfoResponse struct {
 }
 
 type UserSessionResponse struct {
-	UserID         string `json:"user_id"`
-	UserAgent      string `json:"user_agent"`
+	UserID         string    `json:"user_id"`
+	UserAgent      string    `json:"user_agent"`
 	EventDate      time.Time `json:"event_date"`
-	UserDeviceType string `json:"user_device_type"`
+	UserDeviceType string    `json:"user_device_type"`
 }

@@ -61,7 +61,7 @@ def genre_deleted(sender: Type[Genre], instance: Genre, **kwargs) -> None:
     """При удалении жанра"""
     try:
         # Удаляем жанр из Elasticsearch
-        elastic_service.client.delete(index="genres", id=str(instance.id), refresh=True)
+        elastic_service.client.delete(index='genres', id=str(instance.id), refresh=True)
     except Exception:
         ...
     filmwork_ids = getattr(instance, '_filmwork_ids', [])
@@ -81,7 +81,7 @@ def person_pre_delete(sender: Type[Person], instance: Person, **kwargs) -> None:
 def person_deleted(sender: Type[Person], instance: Person, **kwargs) -> None:
     """При удалении персоны"""
     try:
-        elastic_service.client.delete(index="persons", id=str(instance.id), refresh=True)
+        elastic_service.client.delete(index='persons', id=str(instance.id), refresh=True)
     except Exception as e:
         ...
     filmwork_ids = getattr(instance, '_filmwork_ids', [])
