@@ -40,7 +40,7 @@ class Genre(UUIDMixin, TimeStampedMixin):
     description = models.TextField(blank=True)
 
     class Meta:
-        db_table = 'content\".\"genre'
+        db_table = 'genre'
 
     def __str__(self) -> str:
         return self.name
@@ -89,7 +89,7 @@ class Filmwork(UUIDMixin, TimeStampedMixin):
     )
 
     class Meta:
-        db_table = 'content\".\"film_work'
+        db_table = 'film_work'
 
     def __str__(self) -> str:
         return self.title
@@ -109,7 +109,7 @@ class GenreFilmwork(UUIDMixin):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        db_table = 'content\".\"genre_film_work'
+        db_table = 'genre_film_work'
         unique_together = (('film_work', 'genre'),)
 
     def __str__(self) -> str:
@@ -122,7 +122,7 @@ class Person(UUIDMixin, TimeStampedMixin):
     full_name = models.CharField(max_length=MAX_STRING_LEN)
 
     class Meta:
-        db_table = 'content\".\"person'
+        db_table = 'person'
 
     def __str__(self) -> str:
         return self.full_name
@@ -146,7 +146,7 @@ class PersonFilmwork(UUIDMixin):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        db_table = 'content\".\"person_film_work'
+        db_table = 'person_film_work'
         indexes = [
             models.Index(fields=['film_work', 'person']),
         ]
