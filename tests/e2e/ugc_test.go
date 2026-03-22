@@ -374,3 +374,28 @@ func TestUGCUnrateReview(t *testing.T) {
 
 	assert.Equal(t, http.StatusOK, resp.StatusCode)
 }
+
+func TestUGCGetReviewRating(t *testing.T) {
+	client := &http.Client{Timeout: 10 * time.Second}
+	token := getAuthToken(t, "ugc12@example.com", "password123")
+	if token == "" {
+		return
+	}
+
+	filmworkID := "2c132fb2-69a8-4ab3-aee7-399a0f607ade"
+	review, err := createFilmworkReview(t, filmworkID, token)
+	if err != nil {
+		return
+	}
+
+	req, _ := http.NewRequest("GET", ugcBaseURL+"/ugc/api/v1/filmworks/"+filmworkID+"/reviews/"+review.ID.String()+"/ratings", nil)
+
+	resp, err := client.Do(req)
+	if err != nil {
+		t.Skipf("Service not available: %v", err)
+		return
+	}
+	defer resp.Body.Close()
+
+	assert.Equal(t, http.StatusOK, resp.StatusCode)
+}

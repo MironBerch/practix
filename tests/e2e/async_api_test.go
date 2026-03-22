@@ -103,3 +103,43 @@ func TestAsyncAPIGetFilmworkByID(t *testing.T) {
 
 	assert.True(t, resp.StatusCode == http.StatusOK || resp.StatusCode == http.StatusNotFound)
 }
+
+func TestAsyncAPISearchPersons(t *testing.T) {
+	client := &http.Client{Timeout: 10 * time.Second}
+
+	resp, err := client.Get(asyncAPIBaseURL + "/movies/api/v1/persons/search?query=actor")
+	if err != nil {
+		t.Skipf("Service not available: %v", err)
+		return
+	}
+	defer resp.Body.Close()
+
+	assert.Equal(t, http.StatusOK, resp.StatusCode)
+}
+
+func TestAsyncAPIPersonFilmworks(t *testing.T) {
+	client := &http.Client{Timeout: 10 * time.Second}
+
+	personID := "0031feab-8f53-412a-8f53-47098a60ac73"
+	resp, err := client.Get(asyncAPIBaseURL + "/movies/api/v1/persons/" + personID + "/filmworks")
+	if err != nil {
+		t.Skipf("Service not available: %v", err)
+		return
+	}
+	defer resp.Body.Close()
+
+	assert.True(t, resp.StatusCode == http.StatusOK || resp.StatusCode == http.StatusNotFound)
+}
+
+func TestAsyncAPISearchFilmworks(t *testing.T) {
+	client := &http.Client{Timeout: 10 * time.Second}
+
+	resp, err := client.Get(asyncAPIBaseURL + "/movies/api/v1/filmworks/search?query=movie")
+	if err != nil {
+		t.Skipf("Service not available: %v", err)
+		return
+	}
+	defer resp.Body.Close()
+
+	assert.Equal(t, http.StatusOK, resp.StatusCode)
+}
