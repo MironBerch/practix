@@ -12,6 +12,7 @@ services:
       && uv run manage.py createsuperuser --noinput || true
       && uv run manage.py startup_elastic
       && uv run manage.py startup_mongo
+      && uv run manage.py loaddata ../infra/data/dump.json
       && uv run manage.py runserver 0.0.0.0:8000"
     volumes:
       - ../../images/admin-panel/:/app/
