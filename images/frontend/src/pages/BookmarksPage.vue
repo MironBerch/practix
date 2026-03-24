@@ -8,17 +8,10 @@
     </div>
 
     <!-- Состояние загрузки -->
-    <div v-if="loading" class="loading-state">
-      <p>Загрузка закладок...</p>
-    </div>
+    <LoadingSpinner v-if="loading" message="Загрузка закладок..." />
 
     <!-- Сообщение об ошибке -->
-    <div v-if="error" class="error-state">
-      <p>Ошибка: {{ error }}</p>
-      <button @click="loadBookmarks" class="retry-button">
-        Попробовать снова
-      </button>
-    </div>
+    <ErrorMessage v-if="error" :message="error" @retry="loadBookmarks" />
 
     <!-- Сообщение о необходимости авторизации -->
     <div v-if="!isAuthenticated" class="auth-required">
@@ -31,62 +24,38 @@
       v-if="isAuthenticated && !loading && !error && bookmarksCount > 0"
       class="bookmarks-grid"
     >
-      <router-link
+      <FilmworkCard
         v-for="filmwork in bookmarkedFilmworks"
         :key="filmwork.id"
-        :to="`/filmworks/${filmwork.id}`"
-        class="filmwork-card"
+        :id="filmwork.id"
+        :title="filmwork.title"
+        :rating="filmwork.rating"
+        :genres="filmwork.genres"
+        :show-bookmark-indicator="true"
+        @click="(id) => $router.push(`/filmworks/${id}`)"
       >
-        <div class="filmwork-poster">
-          <div class="poster-placeholder">{{ filmwork.title.charAt(0) }}</div>
-          <div class="bookmark-indicator">★</div>
-        </div>
-        <div class="filmwork-info">
-          <h3 class="filmwork-title">{{ filmwork.title }}</h3>
-          <div class="filmwork-rating">
-            <span class="rating-star">⭐</span>
-            <span class="rating-value">{{
-              filmwork.rating?.toFixed(1) || "0.0"
-            }}</span>
-          </div>
-          <div
-            v-if="filmwork.genres && filmwork.genres.length > 0"
-            class="filmwork-genres"
-          >
-            <span
-              v-for="genre in filmwork.genres.slice(0, 2)"
-              :key="genre"
-              class="genre-tag"
-            >
-              {{ genre }}
-            </span>
-            <span v-if="filmwork.genres.length > 2" class="genre-more">
-              +{{ filmwork.genres.length - 2 }}
-            </span>
-          </div>
+        <template #actions>
           <button
-            @click.prevent="removeFromBookmarks(filmwork.id)"
+            @click.stop.prevent="removeFromBookmarks(filmwork.id)"
             class="remove-bookmark-btn"
           >
             Удалить из закладок
           </button>
-        </div>
-      </router-link>
+        </template>
+      </FilmworkCard>
     </div>
 
     <!-- Сообщение о пустых закладках -->
-    <div
+    <EmptyState
       v-if="isAuthenticated && !loading && !error && bookmarksCount === 0"
-      class="empty-bookmarks"
+      message="Закладок пока нет"
     >
-      <div class="empty-state">
-        <h2>Закладок пока нет</h2>
-        <p>Добавляйте фильмы в закладки, чтобы легко находить их позже</p>
+      <template #action>
         <router-link to="/filmworks" class="explore-link"
           >Найти фильмы</router-link
         >
-      </div>
-    </div>
+      </template>
+    </EmptyState>
   </div>
 </template>
 
@@ -94,6 +63,10 @@
 import { ref, onMounted, computed } from "vue";
 import { useMovies } from "../composables/useMovies";
 import { useUGC } from "../composables/useUGC";
+import FilmworkCard from "../components/ui/FilmworkCard.vue";
+import LoadingSpinner from "../components/ui/LoadingSpinner.vue";
+import ErrorMessage from "../components/ui/ErrorMessage.vue";
+import EmptyState from "../components/ui/EmptyState.vue";
 import type { BaseFilmwork, FilmworkBookmark } from "../types/types";
 
 const { getFilmwork, loading: moviesLoading } = useMovies();

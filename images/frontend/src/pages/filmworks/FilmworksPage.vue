@@ -71,18 +71,9 @@
       </transition>
     </div>
 
-    <!-- Состояние загрузки -->
-    <div v-if="loading" class="loading-state">
-      <p>Загрузка фильмов...</p>
-    </div>
+    <LoadingSpinner v-if="loading" message="Загрузка фильмов..." />
 
-    <!-- Сообщение об ошибке -->
-    <div v-if="error" class="error-state">
-      <p>Ошибка: {{ error }}</p>
-      <button @click="refreshData" class="retry-button">
-        Попробовать снова
-      </button>
-    </div>
+    <ErrorMessage v-if="error" :message="error" @retry="refreshData" />
 
     <!-- Результаты поиска -->
     <div v-if="isSearchMode && filmworks.length > 0" class="search-info">
@@ -109,66 +100,41 @@
 
     <!-- Список фильмов -->
     <div v-if="!loading && !error" class="filmworks-grid">
-      <div
+      <FilmworkCard
         v-for="filmwork in filmworks"
         :key="filmwork.id"
-        class="filmwork-card"
-        @click="navigateToFilmwork(filmwork.id)"
-      >
-        <div class="filmwork-poster">
-          <div class="poster-placeholder">{{ filmwork.title.charAt(0) }}</div>
-        </div>
-        <div class="filmwork-info">
-          <h3 class="filmwork-title">{{ filmwork.title }}</h3>
-          <div class="filmwork-rating">
-            <span class="rating-star">⭐</span>
-            <span class="rating-value">{{ filmwork.rating?.toFixed(1) || '0.0' }}</span>
-          </div>
-          <div v-if="filmwork.genres && filmwork.genres.length > 0" class="filmwork-genres">
-            <span
-              v-for="genre in filmwork.genres.slice(0, 2)"
-              :key="genre"
-              class="genre-tag"
-            >
-              {{ genre }}
-            </span>
-            <span v-if="filmwork.genres.length > 2" class="genre-more">
-              +{{ filmwork.genres.length - 2 }}
-            </span>
-          </div>
-        </div>
-      </div>
+        :id="filmwork.id"
+        :title="filmwork.title"
+        :rating="filmwork.rating"
+        :genres="filmwork.genres"
+        @click="navigateToFilmwork"
+      />
     </div>
 
-    <!-- Сообщение о пустом состоянии -->
-    <div
+    <EmptyState
       v-if="!loading && !error && filmworks.length === 0"
-      class="empty-state"
-    >
-      <p v-if="isSearchMode">По вашему запросу ничего не найдено</p>
-      <p v-else-if="selectedGenres.length > 0">По выбранным жанрам ничего не найдено</p>
-      <p v-else>Нет доступных фильмов</p>
-    </div>
+      :message="emptyMessage"
+    />
 
-    <!-- Пагинация -->
-    <div v-if="!loading && !error && filmworks.length > 0" class="pagination">
-      <button
-        :disabled="currentPage === 1"
-        @click="previousPage"
-        class="pagination-button"
-      >
-        Назад
-      </button>
-      <span class="pagination-info">Страница {{ currentPage }}</span>
-      <button @click="nextPage" class="pagination-button">Вперед</button>
-    </div>
+    <Pagination
+      v-if="!loading && !error && filmworks.length > 0"
+      :current-page="currentPage"
+      @previous="previousPage"
+      @next="nextPage"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, watch } from "vue";
+import { ref, onMounted, watch, computed } from "vue";
 import { useRouter } from "vue-router";
 import { useMovies } from "../../composables/useMovies";
+import FilmworkCard from "../../components/ui/FilmworkCard.vue";
+import SearchInput from "../../components/ui/SearchInput.vue";
+import Pagination from "../../components/ui/Pagination.vue";
+import LoadingSpinner from "../../components/ui/LoadingSpinner.vue";
+import ErrorMessage from "../../components/ui/ErrorMessage.vue";
+import EmptyState from "../../components/ui/EmptyState.vue";
 import type { BaseFilmwork, Genre } from "../../types/types";
 
 const router = useRouter();
@@ -258,6 +224,12 @@ const clearSearch = () => {
 const navigateToFilmwork = (id: string) => {
   router.push(`/filmworks/${id}`);
 };
+
+const emptyMessage = computed(() => {
+  if (isSearchMode.value) return "По вашему запросу ничего не найдено";
+  if (selectedGenres.value.length > 0) return "По выбранным жанрам ничего не найдено";
+  return "Нет доступных фильмов";
+});
 
 const previousPage = () => {
   if (currentPage.value > 1) {

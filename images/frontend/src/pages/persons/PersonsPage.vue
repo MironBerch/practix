@@ -29,17 +29,10 @@
     </div>
 
     <!-- Состояние загрузки -->
-    <div v-if="loading" class="loading-state">
-      <p>Загрузка персон...</p>
-    </div>
+    <LoadingSpinner v-if="loading" message="Загрузка персон..." />
 
     <!-- Сообщение об ошибке -->
-    <div v-if="error" class="error-state">
-      <p>Ошибка: {{ error }}</p>
-      <button @click="refreshData" class="retry-button">
-        Попробовать снова
-      </button>
-    </div>
+    <ErrorMessage v-if="error" :message="error" @retry="refreshData" />
 
     <!-- Результаты поиска -->
     <div v-if="isSearchMode && filteredPersons.length > 0" class="search-info">
@@ -56,65 +49,44 @@
         v-for="person in filteredPersons"
         :key="person.id"
         :to="`/persons/${person.id}`"
-        class="person-card"
+        custom
+        v-slot="{ navigate }"
       >
-        <div class="person-avatar">
-          <div class="avatar-placeholder">{{ getInitials(person.name) }}</div>
-        </div>
-        <div class="person-info">
-          <h3 class="person-name">{{ person.name }}</h3>
-          <div class="person-roles">
-            <span
-              v-for="role in person.roles.slice(0, 3)"
-              :key="role"
-              :class="['role-tag', getRoleClass(role)]"
-            >
-              {{ getRoleDisplayName(role) }}
-            </span>
-            <span v-if="person.roles.length > 3" class="role-more">
-              +{{ person.roles.length - 3 }}
-            </span>
-          </div>
-          <div class="person-filmworks">
-            <span class="filmworks-count">
-              Участвовал(а) в {{ person.filmwork_ids?.length || 0 }} фильмах
-            </span>
-          </div>
-        </div>
+        <PersonCard
+          :id="person.id"
+          :name="person.name"
+          :roles="person.roles"
+          :filmwork-count="person.filmwork_ids?.length || 0"
+          @click="navigate"
+        />
       </router-link>
     </div>
 
     <!-- Сообщение о пустом состоянии -->
-    <div
+    <EmptyState
       v-if="!loading && !error && filteredPersons.length === 0"
-      class="empty-state"
-    >
-      <p v-if="isSearchMode">По вашему запросу ничего не найдено</p>
-      <p v-else-if="roleFilter">Нет персон с выбранной ролью</p>
-      <p v-else>Нет доступных персон</p>
-    </div>
+      :message="emptyMessage"
+    />
 
     <!-- Пагинация -->
-    <div
+    <Pagination
       v-if="!loading && !error && filteredPersons.length > 0"
-      class="pagination"
-    >
-      <button
-        :disabled="currentPage === 1"
-        @click="previousPage"
-        class="pagination-button"
-      >
-        Назад
-      </button>
-      <span class="pagination-info">Страница {{ currentPage }}</span>
-      <button @click="nextPage" class="pagination-button">Вперед</button>
-    </div>
+      :current-page="currentPage"
+      @previous="previousPage"
+      @next="nextPage"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 import { ref, onMounted, watch, computed } from "vue";
 import { useMovies } from "../../composables/useMovies";
+import PersonCard from "../../components/ui/PersonCard.vue";
+import SearchInput from "../../components/ui/SearchInput.vue";
+import Pagination from "../../components/ui/Pagination.vue";
+import LoadingSpinner from "../../components/ui/LoadingSpinner.vue";
+import ErrorMessage from "../../components/ui/ErrorMessage.vue";
+import EmptyState from "../../components/ui/EmptyState.vue";
 import type { Person } from "../../types/types";
 
 const { loading, error, getPersons, searchPersons } = useMovies();
@@ -201,43 +173,11 @@ const refreshData = () => {
   loadPersons();
 };
 
-// Вспомогательные функции
-const getInitials = (name: string) => {
-  return name
-    .split(" ")
-    .map((part) => part.charAt(0))
-    .join("")
-    .toUpperCase()
-    .slice(0, 2);
-};
-
-const getRoleClass = (role: string) => {
-  const roleLower = role.toLowerCase();
-  if (roleLower.includes("actor") || roleLower.includes("актер")) {
-    return "role-actor";
-  } else if (roleLower.includes("director") || roleLower.includes("режиссер")) {
-    return "role-director";
-  } else if (roleLower.includes("writer") || roleLower.includes("сценарист")) {
-    return "role-writer";
-  } else if (roleLower.includes("producer") || roleLower.includes("продюсер")) {
-    return "role-producer";
-  }
-  return "role-other";
-};
-
-const getRoleDisplayName = (role: string) => {
-  const roleLower = role.toLowerCase();
-  if (roleLower.includes("actor") || roleLower.includes("актер")) {
-    return "Актер";
-  } else if (roleLower.includes("director") || roleLower.includes("режиссер")) {
-    return "Режиссер";
-  } else if (roleLower.includes("writer") || roleLower.includes("сценарист")) {
-    return "Сценарист";
-  } else if (roleLower.includes("producer") || roleLower.includes("продюсер")) {
-    return "Продюсер";
-  }
-  return role;
-};
+const emptyMessage = computed(() => {
+  if (isSearchMode.value) return "По вашему запросу ничего не найдено";
+  if (roleFilter.value) return "Нет персон с выбранной ролью";
+  return "Нет доступных персон";
+});
 
 // Загрузка при монтировании
 onMounted(() => {
