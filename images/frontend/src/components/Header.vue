@@ -6,6 +6,7 @@ import { useAuth } from "../composables/useAuth";
 const router = useRouter();
 const { signOut } = useAuth();
 const isDropdownOpen = ref(false);
+const isMobileMenuOpen = ref(false);
 const dropdownRef = ref<HTMLElement | null>(null);
 const avatarRef = ref<HTMLElement | null>(null);
 
@@ -22,6 +23,16 @@ const toggleDropdown = () => {
 // Закрытие дропдауна
 const closeDropdown = () => {
   isDropdownOpen.value = false;
+};
+
+// Переключение мобильного меню
+const toggleMobileMenu = () => {
+  isMobileMenuOpen.value = !isMobileMenuOpen.value;
+};
+
+// Закрытие мобильного меню
+const closeMobileMenu = () => {
+  isMobileMenuOpen.value = false;
 };
 
 // Обработка клика вне области
@@ -63,15 +74,24 @@ onUnmounted(() => {
     <div class="navbar">
       <h2 class="logo">PRACTIX</h2>
 
-      <ul class="nav-links">
+      <button class="mobile-menu-toggle" @click="toggleMobileMenu" aria-label="Меню">
+        <svg v-if="!isMobileMenuOpen" class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+        <svg v-else class="menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+
+      <ul class="nav-links" :class="{ 'nav-links-mobile': isMobileMenuOpen }">
         <li>
-          <router-link to="/filmworks" class="nav-link">Фильмы</router-link>
+          <router-link to="/filmworks" class="nav-link" @click="closeMobileMenu">Фильмы</router-link>
         </li>
         <li>
-          <router-link to="/persons" class="nav-link">Персоны</router-link>
+          <router-link to="/persons" class="nav-link" @click="closeMobileMenu">Персоны</router-link>
         </li>
         <li>
-          <router-link to="/bookmarks" class="nav-link">Мой список</router-link>
+          <router-link to="/bookmarks" class="nav-link" @click="closeMobileMenu">Мой список</router-link>
         </li>
       </ul>
 
