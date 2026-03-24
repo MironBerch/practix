@@ -1,12 +1,12 @@
 <template>
   <div class="user-page">
-    <h1>Change Email</h1>
+    <h1>Изменить email</h1>
     <form @submit.prevent="handleSubmit">
       <div class="form-group">
-        <label for="email">New Email</label>
+        <label for="email">Новый email</label>
         <input v-model="email" type="email" id="email" required />
       </div>
-      <button type="submit" :disabled="loading">Change Email</button>
+      <button type="submit" :disabled="loading">Изменить email</button>
       <p v-if="error" class="error">{{ error }}</p>
     </form>
   </div>

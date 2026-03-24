@@ -1,12 +1,12 @@
 <template>
   <div class="user-page">
-    <h1>Your Sessions</h1>
-    <div v-if="loading">Loading...</div>
+    <h1>Ваши сессии</h1>
+    <div v-if="loading">Загрузка...</div>
     <div v-else>
       <div v-for="session in sessions" :key="session.id" class="session-item">
-        <p><strong>Device:</strong> {{ session.user_device_type }}</p>
-        <p><strong>Browser:</strong> {{ session.user_agent }}</p>
-        <p><strong>Date:</strong> {{ session.event_date }}</p>
+        <p><strong>Устройство:</strong> {{ session.user_device_type }}</p>
+        <p><strong>Браузер:</strong> {{ session.user_agent }}</p>
+        <p><strong>Дата:</strong> {{ session.event_date }}</p>
       </div>
     </div>
   </div>

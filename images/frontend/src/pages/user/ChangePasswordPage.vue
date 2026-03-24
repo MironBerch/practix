@@ -1,9 +1,9 @@
 <template>
   <div class="user-page">
-    <h1>Change Password</h1>
+    <h1>Изменить пароль</h1>
     <form @submit.prevent="handleSubmit">
       <div class="form-group">
-        <label for="oldPassword">Old Password</label>
+        <label for="oldPassword">Старый пароль</label>
         <input
           v-model="form.old_password"
           type="password"
@@ -12,7 +12,7 @@
         />
       </div>
       <div class="form-group">
-        <label for="newPassword">New Password</label>
+        <label for="newPassword">Новый пароль</label>
         <input
           v-model="form.new_password"
           type="password"
@@ -20,7 +20,7 @@
           required
         />
       </div>
-      <button type="submit" :disabled="loading">Change Password</button>
+      <button type="submit" :disabled="loading">Изменить пароль</button>
       <p v-if="error" class="error">{{ error }}</p>
     </form>
   </div>

@@ -1,21 +1,21 @@
 <template>
   <div class="auth-page">
-    <h1>Sign In</h1>
+    <h1>Вход</h1>
     <form @submit.prevent="handleSubmit">
       <div class="form-group">
         <label for="email">Email</label>
         <input v-model="form.email" type="email" id="email" required />
       </div>
       <div class="form-group">
-        <label for="password">Password</label>
+        <label for="password">Пароль</label>
         <input v-model="form.password" type="password" id="password" required />
       </div>
-      <button type="submit" :disabled="loading">Sign In</button>
+      <button type="submit" :disabled="loading">Войти</button>
       <p v-if="error" class="error">{{ error }}</p>
     </form>
     <p>
-      Don't have an account?
-      <router-link to="/auth/signup">Sign Up</router-link>
+      Нет аккаунта?
+      <router-link to="/auth/signup">Регистрация</router-link>
     </p>
   </div>
 </template>

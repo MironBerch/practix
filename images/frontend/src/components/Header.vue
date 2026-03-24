@@ -65,13 +65,13 @@ onUnmounted(() => {
 
       <ul class="nav-links">
         <li>
-          <router-link to="/filmworks" class="nav-link">Movies</router-link>
+          <router-link to="/filmworks" class="nav-link">Фильмы</router-link>
         </li>
         <li>
-          <router-link to="/persons" class="nav-link">Persons</router-link>
+          <router-link to="/persons" class="nav-link">Персоны</router-link>
         </li>
         <li>
-          <router-link to="/bookmarks" class="nav-link">My List</router-link>
+          <router-link to="/bookmarks" class="nav-link">Мой список</router-link>
         </li>
       </ul>
 
@@ -99,11 +99,11 @@ onUnmounted(() => {
               to="/settings"
               class="dropdown-item"
               @click="closeDropdown"
-              >Settings</router-link
+              >Настройки</router-link
             >
             <div class="dropdown-divider"></div>
             <button @click="handleLogout" class="dropdown-item logout">
-              Log Out
+              Выйти
             </button>
           </div>
         </div>
