@@ -33,30 +33,29 @@ resource "kubernetes_deployment" "async-api" {
             name  = "REDIS_HOST"
             value = data.terraform_remote_state.vpc.outputs.redis_cluster.host[0].fqdn
           }
-
           env {
             name  = "REDIS_PORT"
             value = "6379"
           }
-
           env {
             name  = "REDIS_DB"
             value = "0"
           }
-
           env {
             name  = "RUN_ADDRESS"
             value = "3000"
           }
-
           env {
             name  = "ELASTIC_HOST"
             value = data.terraform_remote_state.vpc.outputs.opensearch_cluster.hosts[0].fqdn
           }
-
           env {
             name  = "ELASTIC_PORT"
             value = "9200"
+          }
+          env {
+            name  = "DEBUG"
+            value = "False"
           }
         }
       }

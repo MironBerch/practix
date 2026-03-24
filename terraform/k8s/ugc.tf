@@ -34,23 +34,24 @@ resource "kubernetes_deployment" "ugc-api" {
             value = var.jwt_secret_key
           }
           env {
-            name  = "JWT_SECRET_KEY"
+            name  = "JWT_ALGORITHM"
             value = "HS256"
           }
-
           env {
             name  = "RUN_ADDRESS"
             value = "4000"
           }
-
           env {
             name  = "MONGO_HOST"
             value = data.terraform_remote_state.vpc.outputs.mongodb_cluster.host[0].name
           }
-
           env {
             name  = "MONGO_PORT"
             value = "27017"
+          }
+          env {
+            name  = "DEBUG"
+            value = "False"
           }
         }
       }

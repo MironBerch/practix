@@ -81,6 +81,10 @@ resource "kubernetes_deployment" "auth-api" {
             name  = "MONGO_PORT"
             value = "27017"
           }
+          env {
+            name  = "DEBUG"
+            value = "False"
+          }
         }
       }
     }

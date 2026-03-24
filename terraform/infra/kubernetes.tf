@@ -9,9 +9,9 @@ module "kubernetes" {
   ]
   node_groups = {
     "kubernetes-node-group"  = {
-      node_cores    = 12
-      node_memory   = 24
-      disk_size     = 60
+      node_cores    = 5
+      node_memory   = 15
+      disk_size     = 15
       fixed_scale   = {
         size = 1
       }
